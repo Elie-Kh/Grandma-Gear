@@ -2,6 +2,11 @@
     <string name="app_name">Grandma Gear</string>
     <string name="patient">Patient</string>
     <string name="client">Client</string>
+    <string name="id_text">ID: </string>
+    <string name="help_button_text">"Help"</string>
+    <string name="ok_button_text">OK</string>
+    <string name="help_text">This is a holder for the actual help text.</string>
+    <string name="id_hint">"Device ID"</string>
     <string name="title_activity_client_login">Sign in</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
