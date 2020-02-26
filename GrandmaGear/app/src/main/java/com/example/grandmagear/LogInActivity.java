@@ -7,15 +7,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
 public class LogInActivity extends AppCompatActivity {
 
+    protected EditText mEmail, mPassword;
+    protected Button mLoginButton;
+    protected ProgressBar mLoginProgressBar;
+    protected FirebaseAuth firebaseAuth;
     protected TextView mCreateAccountTextView;
 
     @Override
@@ -38,6 +52,54 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     public void setupUI(){
+
+        mEmail = findViewById(R.id.emailLogIn);
+        mPassword = findViewById(R.id.passwordLogIn);
+        mLoginButton = findViewById(R.id.logInButton);
+        mLoginProgressBar = findViewById(R.id.loginProgressBar);
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = mEmail.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+
+                if(TextUtils.isEmpty(email)){
+                    mEmail.setError("Email is required.");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(password)){
+                    mPassword.setError("Password is required.");
+                    return;
+                }
+
+                if(password.length() < 6){
+                    mPassword.setError("Password must be >= 6 characters.");
+                    return;
+                }
+
+                mLoginProgressBar.setVisibility(View.VISIBLE);
+
+                /*authenticate the user*/
+
+                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                        }else{
+                            Toast.makeText(LogInActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            mLoginProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
+
+
         mCreateAccountTextView = findViewById(R.id.createAccountTextView);
 
        String text = "Need Account? Sign Up Here";
