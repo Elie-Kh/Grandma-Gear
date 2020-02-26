@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         if(mSharedPreferences.getDisclaimerStatus() == null
         || mSharedPreferences.getDisclaimerStatus().equals("False")){
             DisclaimerFragment disclaimerFragment = new DisclaimerFragment();
+            disclaimerFragment.setCancelable(false);
             disclaimerFragment.show(getSupportFragmentManager(), "DisclaimerFragment");
         }
         initializePage();
