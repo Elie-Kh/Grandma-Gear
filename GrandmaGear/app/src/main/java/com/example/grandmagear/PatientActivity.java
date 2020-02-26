@@ -46,7 +46,6 @@ public class PatientActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String deviceID = mDeviceID.getText().toString();
-
                 if(deviceID.trim().length() < 5){
                     Toast.makeText(PatientActivity.this, "Invalid ID",
                             Toast.LENGTH_SHORT).show();

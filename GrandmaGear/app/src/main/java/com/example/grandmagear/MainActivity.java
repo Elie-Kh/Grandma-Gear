@@ -16,14 +16,29 @@ public class MainActivity extends AppCompatActivity {
     protected Button mPatientButton;
     protected Button mClientButton;
     protected ImageView mLogo;
-    private SharedPreferences mSharedPreferences;
+    private SharedPreferencesHelper mSharedPreferences;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this);
 
+        //check if user had previously accepted disclaimer. If not, open fragment
+        if(mSharedPreferences.getDisclaimerStatus() == null
+        || mSharedPreferences.getDisclaimerStatus().equals("False")){
+            DisclaimerFragment disclaimerFragment = new DisclaimerFragment();
+            disclaimerFragment.show(getSupportFragmentManager(), "DisclaimerFragment");
+        }
         initializePage();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
     }
 
