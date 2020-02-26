@@ -11,7 +11,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class UserActivity extends AppCompatActivity {
 
-    protected Button mlogoutButton;
+    protected Button mLogoutButton;
+    protected FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +23,10 @@ public class UserActivity extends AppCompatActivity {
     }
 
     void setupUI(){
-        mlogoutButton = findViewById(R.id.logoutButton);
+        mLogoutButton = findViewById(R.id.logoutButton);
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        mlogoutButton.setOnClickListener(new View.OnClickListener() {
+        mLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logout();
@@ -36,5 +38,21 @@ public class UserActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(getApplicationContext(), LogInActivity.class));
         finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(firebaseAuth.getCurrentUser() == null){
+            startActivity(new Intent(getApplicationContext(), LogInActivity.class));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(firebaseAuth.getCurrentUser() == null){
+            startActivity(new Intent(getApplicationContext(), LogInActivity.class));
+        }
     }
 }
