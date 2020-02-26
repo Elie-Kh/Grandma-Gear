@@ -88,15 +88,34 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(RegisterActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "User Created! You can now log in!", Toast.LENGTH_SHORT).show();
+                            FirebaseAuth.getInstance().signOut();
                             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
                         }else{
-                            Toast.makeText(RegisterActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "A user with this email already exists!", Toast.LENGTH_SHORT).show();
                             mRegisterProgressBar.setVisibility(View.GONE);
                         }
                     }
                 });
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mEmail.setText("");
+        mPassword.setText("");
+        mUsername.setText("");
+        mRegisterProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mEmail.setText("");
+        mPassword.setText("");
+        mUsername.setText("");
+        mRegisterProgressBar.setVisibility(View.GONE);
     }
 }

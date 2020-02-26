@@ -91,7 +91,7 @@ public class LogInActivity extends AppCompatActivity {
                             Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), UserActivity.class));
                         }else{
-                            Toast.makeText(LogInActivity.this, "Error!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                             mLoginProgressBar.setVisibility(View.GONE);
                         }
                     }
@@ -116,5 +116,27 @@ public class LogInActivity extends AppCompatActivity {
         ss.setSpan(clickableSpan,14,26, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mCreateAccountTextView.setText(ss);
         mCreateAccountTextView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPassword.setText("");
+        mEmail.setText("");
+        mLoginProgressBar.setVisibility(View.GONE);
+        if(firebaseAuth.getCurrentUser() != null){
+            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPassword.setText("");
+        mEmail.setText("");
+        mLoginProgressBar.setVisibility(View.GONE);
+        if(firebaseAuth.getCurrentUser() != null){
+            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+        }
     }
 }
