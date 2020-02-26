@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "991593463679",
+    "firebase_url": "https://grandma-gear.firebaseio.com",
+    "project_id": "grandma-gear",
+    "storage_bucket": "grandma-gear.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991593463679:android:d3dfaa8463ee7a5c81a44a",
+        "android_client_info": {
+          "package_name": "com.example.grandmagear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991593463679-asdcdcgap0jcbhs6algpib9r8v5j034i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.grandmagear",
+            "certificate_hash": "107eca85c9e595a47b09383558c2d647d9bcd24a"
+          }
+        },
+        {
+          "client_id": "991593463679-ahfgcgfduld89f393ukbivlldhhtqvuu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnQHhdLkQJ7KVQDQAhJvG5cS6PuxvMRbs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991593463679-ahfgcgfduld89f393ukbivlldhhtqvuu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
