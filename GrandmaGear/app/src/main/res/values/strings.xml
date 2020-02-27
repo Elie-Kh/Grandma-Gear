@@ -5,6 +5,7 @@
     <string name="id_text">ID: </string>
     <string name="help_button_text">"Help"</string>
     <string name="ok_button_text">OK</string>
+    <string name="logout">Logout</string>
     <string name="disclaimer_text">This is a holder for the disclaimer text.</string>
     <string name="accept_disclaimer">Accept</string>
     <string name="decline_disclaimer">Decline</string>
