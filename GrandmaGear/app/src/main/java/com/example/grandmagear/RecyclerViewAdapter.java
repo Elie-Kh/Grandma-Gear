@@ -10,8 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
+    ArrayList<PatientDevice> mPatients;
+
+    public RecyclerViewAdapter(ArrayList<PatientDevice> patients) {
+        this.mPatients = patients;
+    }
 
     @NonNull
     @Override
@@ -30,23 +37,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        protected Button mLocation;
-        protected EditText mHeartBeat;
-        protected TextView mDeviceId;
-        protected ImageView mPatientImage;
+        protected PatientDevice patient;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mLocation = itemView.findViewById(R.id.location_button);
-            mHeartBeat = itemView.findViewById(R.id.heart_beat_text);
-            mDeviceId = itemView.findViewById(R.id.device_id);
-            mPatientImage = itemView.findViewById(R.id.patient_image);
+            patient.mLocation = itemView.findViewById(R.id.location_button);
+            patient.mHeartBeat = itemView.findViewById(R.id.heart_beat_text);
+            patient.mDeviceId = itemView.findViewById(R.id.device_id);
+            patient.mPatientImage = itemView.findViewById(R.id.patient_image);
 
-            mLocation.setOnClickListener(new View.OnClickListener() {
+            patient.mLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //go to GPS page.
+
                 }
             });
+
         }
     }
 }
