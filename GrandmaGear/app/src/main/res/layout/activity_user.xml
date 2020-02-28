@@ -6,9 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".UserActivity">
 
+    <Button
+        android:id="@+id/reports_button"
+        android:layout_width="137dp"
+        android:layout_height="59dp"
+        android:text="@string/reports"
+        app:layout_constraintBottom_toTopOf="@+id/device_recycler"
+        app:layout_constraintStart_toEndOf="@+id/notifications_button"
+        tools:text="Reports" />
+
+    <Button
+        android:id="@+id/notifications_button"
+        android:layout_width="137dp"
+        android:layout_height="59dp"
+        android:text="@string/notifications"
+        app:layout_constraintBottom_toTopOf="@+id/device_recycler"
+        app:layout_constraintStart_toEndOf="@+id/patients_view_button"
+        tools:text="Notifications" />
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/device_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/client_settings_button"
+        android:layout_width="97dp"
+        android:layout_height="64dp"
+        android:text="@string/settings"
+        app:layout_constraintBottom_toTopOf="@+id/reports_button"
+        app:layout_constraintEnd_toEndOf="@+id/device_recycler"
+        tools:text="Settings" />
+
+    <Button
+        android:id="@+id/patients_view_button"
+        android:layout_width="137dp"
+        android:layout_height="59dp"
+        android:text="@string/patients"
+        app:layout_constraintBottom_toTopOf="@+id/device_recycler"
+        app:layout_constraintStart_toStartOf="@+id/device_recycler"
+        tools:text="Patients" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_patient_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_input_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>

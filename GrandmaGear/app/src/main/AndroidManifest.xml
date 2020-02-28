@@ -13,14 +13,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PatientLocation"></activity>
-        <activity android:name=".UserActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LogInActivity" />
+        <activity android:name=".PatientLocation"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".UserActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".LogInActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PatientActivity"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
