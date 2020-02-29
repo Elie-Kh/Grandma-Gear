@@ -1,36 +1,45 @@
 package com.example.grandmagear;
 
+import android.content.Context;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class PatientDevice {
-    protected Button mLocation;
-    protected EditText mHeartBeat;
-    protected TextView mDeviceId;
-    protected ImageView mPatientImage;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
-    public PatientDevice(Button mLocation, EditText mHeartBeat, TextView mDeviceId, ImageView mPatientImage) {
+public class PatientDevice extends AppCompatActivity {
+
+    protected String mLocation;
+    protected String mHeartBeat;
+    protected String mDeviceId;
+    protected String mPatient;
+
+
+    public PatientDevice(String mLocation, String mHeartBeat, String mDeviceId, String mPatient)
+                         {
         this.mLocation = mLocation;
         this.mHeartBeat = mHeartBeat;
         this.mDeviceId = mDeviceId;
-        this.mPatientImage = mPatientImage;
+        this.mPatient = mPatient;
     }
 
-    public Button getmLocation() {
+    public String getmLocation() {
         return mLocation;
     }
 
-    public EditText getmHeartBeat() {
+    public String getmHeartBeat() {
         return mHeartBeat;
     }
 
-    public TextView getmDeviceId() {
+    public String getmDeviceId() {
         return mDeviceId;
     }
 
-    public ImageView getmPatientImage() {
-        return mPatientImage;
+    public String getmPatient() {
+        return mPatient;
     }
 }

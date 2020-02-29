@@ -1,5 +1,6 @@
 package com.example.grandmagear;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -17,7 +18,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     ArrayList<PatientDevice> mPatients;
 
     public RecyclerViewAdapter(ArrayList<PatientDevice> patients) {
-        this.mPatients = patients;
+        mPatients = patients;
     }
 
     @NonNull
@@ -37,15 +38,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
+
         protected PatientDevice patient;
+        protected Button mLocationButton;
+        protected EditText mHeartBeatText;
+        protected TextView mDeviceIdText;
+        protected ImageView mPatientImage;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            patient.mLocation = itemView.findViewById(R.id.location_button);
-            patient.mHeartBeat = itemView.findViewById(R.id.heart_beat_text);
-            patient.mDeviceId = itemView.findViewById(R.id.device_id);
-            patient.mPatientImage = itemView.findViewById(R.id.patient_image);
+            mLocationButton = itemView.findViewById(R.id.location_button);
+            mHeartBeatText = itemView.findViewById(R.id.heart_beat_text);
+            mHeartBeatText.setText(patient.mHeartBeat);
+            mDeviceIdText = itemView.findViewById(R.id.device_id);
+            mDeviceIdText.setText(patient.mDeviceId);
+            mPatientImage = itemView.findViewById(R.id.patient_image);
 
-            patient.mLocation.setOnClickListener(new View.OnClickListener() {
+            mLocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //go to GPS page.
