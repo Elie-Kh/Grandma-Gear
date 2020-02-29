@@ -18,6 +18,7 @@ public class AddPatientFragment extends DialogFragment {
     protected EditText mDeviceId;
     protected Button mAdd;
     protected Button mCancel;
+    protected PatientDevice patientDevice;
 
     @Nullable
     @Override
@@ -36,6 +37,7 @@ public class AddPatientFragment extends DialogFragment {
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ((UserActivity) getActivity()).mPatientsTab.mPatientsList.add(patientDevice);
                 /*TODO: Check if Device in Database.
                 * TODO: If it is, get information from database and create new patient device.
                 * TODO: replace userExists below with the actual check from database.
