@@ -4,7 +4,13 @@
     Meaning if a string shows in 2 pages, it will be under the first page reached below.-->
 
     <!-- activity_disclaimer_fragment xml -->
-    <string name="disclaimer_text">This is a holder for the disclaimer text.</string>
+    <string name="disclaimer_text">This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.</string>
     <string name="accept_disclaimer">Accept</string>
     <string name="decline_disclaimer">Decline</string>
 

@@ -7,48 +7,13 @@
     tools:context=".UserActivity">
 
     <Button
-        android:id="@+id/reports_button"
-        android:layout_width="137dp"
-        android:layout_height="59dp"
-        android:text="@string/reports"
-        app:layout_constraintBottom_toTopOf="@+id/device_recycler"
-        app:layout_constraintStart_toEndOf="@+id/notifications_button"
-        tools:text="Reports" />
-
-    <Button
-        android:id="@+id/notifications_button"
-        android:layout_width="137dp"
-        android:layout_height="59dp"
-        android:text="@string/notifications"
-        app:layout_constraintBottom_toTopOf="@+id/device_recycler"
-        app:layout_constraintStart_toEndOf="@+id/patients_view_button"
-        tools:text="Notifications" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/device_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/client_settings_button"
         android:layout_width="97dp"
         android:layout_height="64dp"
         android:text="@string/settings"
-        app:layout_constraintBottom_toTopOf="@+id/reports_button"
-        app:layout_constraintEnd_toEndOf="@+id/device_recycler"
+        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:text="Settings" />
-
-    <Button
-        android:id="@+id/patients_view_button"
-        android:layout_width="137dp"
-        android:layout_height="59dp"
-        android:text="@string/patients"
-        app:layout_constraintBottom_toTopOf="@+id/device_recycler"
-        app:layout_constraintStart_toStartOf="@+id/device_recycler"
-        tools:text="Patients" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_patient_button"
@@ -60,4 +25,33 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="409dp"
+        android:layout_height="473dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

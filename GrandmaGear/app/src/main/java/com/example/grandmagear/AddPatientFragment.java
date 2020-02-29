@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.firebase.firestore.auth.User;
+
 public class AddPatientFragment extends DialogFragment {
 
     protected EditText mDeviceId;
@@ -35,9 +37,14 @@ public class AddPatientFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 /*TODO: Check if Device in Database.
-                * TODO: If it is, pass device ID to UserActivity  and fetch the data from Database.
-                * */
-
+                * TODO: If it is, get information from database and create new patient device.
+                * TODO: replace userExists below with the actual check from database.
+                *
+                * if(userExists) {
+                *   PatientDevice patientDevice = new PatientDevice();
+                *   ((UserActivity) getActivity()).mPatientsTab.mPatientsList.add(patientDevice);
+                * }
+                */
                 getDialog().dismiss();
             }
         });
