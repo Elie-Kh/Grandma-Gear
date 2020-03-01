@@ -4,18 +4,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabsAdapter extends FragmentPagerAdapter {
+public class TabsAdapter extends FragmentStatePagerAdapter {
 
+    private final TabLayout mTabLayout;
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
 
-    public TabsAdapter(@NonNull FragmentManager fm, int behavior) {
+    public TabsAdapter(@NonNull FragmentManager fm, int behavior, TabLayout tabLayout) {
         super(fm, behavior);
+        this.mTabLayout = tabLayout;
     }
 
     public void addFragment(Fragment fragment, String title){
