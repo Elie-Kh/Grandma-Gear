@@ -1,6 +1,7 @@
 package com.example.grandmagear;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.auth.User;
 
 public class AddPatientFragment extends DialogFragment {
 
+    private static final String TAG = "AddPatient__";
     protected EditText mDeviceId;
     protected Button mAdd;
     protected Button mCancel;
@@ -37,7 +39,12 @@ public class AddPatientFragment extends DialogFragment {
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((UserActivity) getActivity()).mPatientsTab.mPatientsList.add(patientDevice);
+                patientDevice = new PatientDevice("Yes", "Yes",
+                        "ok","no");
+                Log.d(TAG, "Created Patient");
+                ((UserActivity)getActivity()).mPatientsTabFragment.addPatient(patientDevice);
+                ((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
+                Log.d(TAG, "Added Patient");
                 /*TODO: Check if Device in Database.
                 * TODO: If it is, get information from database and create new patient device.
                 * TODO: replace userExists below with the actual check from database.

@@ -2,9 +2,6 @@ package com.example.grandmagear;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -18,18 +15,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-
 public class UserActivity extends AppCompatActivity {
     protected MenuItem mLogout;
     protected FirebaseAuth firebaseAuth;
     protected Button mSettings;
     protected FloatingActionButton mAddPatient;
-    protected PatientsTabFragment mPatientsTab = new PatientsTabFragment();
-    protected NotificationsTabFragment mNotificationsTab = new NotificationsTabFragment();
-    protected ReportsTabFragment mReportsTab = new ReportsTabFragment();
-    private TabsAdapter mTabsAdapter;
-    private ViewPager mViewPager;
+    protected PatientsTabFragment mPatientsTabFragment =  new PatientsTabFragment();
+    protected TabsAdapter mTabsAdapter;
+    protected ViewPager mViewPager;
     public static final int BEHAVIOR_SET_USER_VISIBLE_HINT = 1;
 
     @Override
@@ -50,14 +43,28 @@ public class UserActivity extends AppCompatActivity {
         mAddPatient = findViewById(R.id.add_patient_button);
 
         mTabsAdapter = new TabsAdapter(getSupportFragmentManager(),
-                BEHAVIOR_SET_USER_VISIBLE_HINT);
-        mTabsAdapter.addFragment(mPatientsTab, "Patients");
-        mTabsAdapter.addFragment(mNotificationsTab, "Notifications");
-        mTabsAdapter.addFragment(mReportsTab, "Reports");
+                BEHAVIOR_SET_USER_VISIBLE_HINT, tabLayout);
+        mTabsAdapter.addFragment(mPatientsTabFragment, "Patients");
+        mTabsAdapter.addFragment(new NotificationsTabFragment(), "Notifications");
+        mTabsAdapter.addFragment(new ReportsTabFragment(), "Reports");
         mViewPager.setAdapter(mTabsAdapter);
-
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         mAddPatient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
