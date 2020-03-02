@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserActivity">
+    tools:context=".UserActivity"
+    android:id="@+id/user_constraint_layout">
 
     <Button
         android:id="@+id/client_settings_button"
         android:layout_width="97dp"
         android:layout_height="64dp"
         android:text="@string/settings"
-        app:layout_constraintBottom_toTopOf="@+id/tabLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Settings" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -30,10 +31,10 @@
         android:id="@+id/tabLayout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/client_settings_button">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -50,8 +51,10 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
-        android:layout_width="409dp"
-        android:layout_height="473dp"
+        android:layout_width="410dp"
+        android:layout_height="410dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_patient_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this);
+        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this,
+                "DisclaimerPreferences");
 
         //check if user had previously accepted disclaimer. If not, open fragment
         if(mSharedPreferences.getDisclaimerStatus() == null

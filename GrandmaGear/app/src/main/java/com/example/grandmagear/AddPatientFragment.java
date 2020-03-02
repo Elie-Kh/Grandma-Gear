@@ -20,7 +20,7 @@ public class AddPatientFragment extends DialogFragment {
     protected EditText mDeviceId;
     protected Button mAdd;
     protected Button mCancel;
-    protected PatientDevice patientDevice;
+    protected String patientDevice;
 
     @Nullable
     @Override
@@ -39,11 +39,10 @@ public class AddPatientFragment extends DialogFragment {
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                patientDevice = new PatientDevice("Yes", "Yes",
-                        "ok","no");
+                patientDevice = mDeviceId.getText().toString();
                 Log.d(TAG, "Created Patient");
                 ((UserActivity)getActivity()).mPatientsTabFragment.addPatient(patientDevice);
-                ((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
+                //((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
                 Log.d(TAG, "Added Patient");
                 /*TODO: Check if Device in Database.
                 * TODO: If it is, get information from database and create new patient device.

@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.auth.User;
 
 public class UserActivity extends AppCompatActivity {
     protected MenuItem mLogout;
@@ -23,24 +24,25 @@ public class UserActivity extends AppCompatActivity {
     protected PatientsTabFragment mPatientsTabFragment =  new PatientsTabFragment();
     protected TabsAdapter mTabsAdapter;
     protected ViewPager mViewPager;
+    protected TabLayout tabLayout;
+    SharedPreferencesHelper mSharedPreferencesHelper;
     public static final int BEHAVIOR_SET_USER_VISIBLE_HINT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-
         setupUI();
     }
 
     void setupUI(){
         firebaseAuth = FirebaseAuth.getInstance();
 
-        mViewPager = findViewById(R.id.view_pager);
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(UserActivity.this,
+                "PatientIDs");
 
-        mSettings = findViewById(R.id.client_settings_button);
-        mAddPatient = findViewById(R.id.add_patient_button);
+        mViewPager = findViewById(R.id.view_pager);
+        tabLayout = findViewById(R.id.tabLayout);
 
         mTabsAdapter = new TabsAdapter(getSupportFragmentManager(),
                 BEHAVIOR_SET_USER_VISIBLE_HINT, tabLayout);
@@ -49,6 +51,17 @@ public class UserActivity extends AppCompatActivity {
         mTabsAdapter.addFragment(new ReportsTabFragment(), "Reports");
         mViewPager.setAdapter(mTabsAdapter);
         tabLayout.setupWithViewPager(mViewPager);
+
+        mSettings = findViewById(R.id.client_settings_button);
+        mAddPatient = findViewById(R.id.add_patient_button);
+        mAddPatient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddPatientFragment patientFrag = new AddPatientFragment();
+                patientFrag.show(getSupportFragmentManager(), "AddPatientFragment");
+            }
+        });
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -63,13 +76,6 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
 
-            }
-        });
-        mAddPatient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddPatientFragment patientFrag = new AddPatientFragment();
-                patientFrag.show(getSupportFragmentManager(), "AddPatientFragment");
             }
         });
     }
@@ -111,5 +117,6 @@ public class UserActivity extends AppCompatActivity {
         // Invoke the superclass to handle it.
         return super.onOptionsItemSelected(item);
     }
+
 
 }

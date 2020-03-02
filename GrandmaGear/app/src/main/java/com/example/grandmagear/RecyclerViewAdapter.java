@@ -20,9 +20,9 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "Adapter__";
-    ArrayList<PatientDevice> mPatients;
+    ArrayList<String> mPatients;
 
-    public RecyclerViewAdapter(ArrayList<PatientDevice> patients) {
+    public RecyclerViewAdapter(ArrayList<String> patients) {
         this.mPatients = patients;
     }
 
@@ -37,8 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mHeartBeatText.setText(mPatients.get(position).mHeartBeat);
-        holder.mDeviceIdText.setText(mPatients.get(position).mDeviceId);
+        holder.mDeviceIdText.setText(mPatients.get(position));
     }
 
     @Override
