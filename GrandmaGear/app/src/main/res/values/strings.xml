@@ -24,6 +24,8 @@
     <string name="password">Password</string>
     <string name="signup">Need Account? Sign Up Here</string>
 
+    <string name="forgot_password">Forgot Password?</string>
+
     <!-- activity_patient xml -->
     <string name="id_text">ID: </string>
     <string name="device_id_hint">Enter Device ID</string>

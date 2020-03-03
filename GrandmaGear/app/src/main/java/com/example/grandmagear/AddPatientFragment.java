@@ -41,9 +41,11 @@ public class AddPatientFragment extends DialogFragment {
             public void onClick(View view) {
                 patientDevice = mDeviceId.getText().toString();
                 Log.d(TAG, "Created Patient");
-                ((UserActivity)getActivity()).mPatientsTabFragment.addPatient(patientDevice);
+                if(!patientDevice.trim().isEmpty()) {
+                    ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
+                    Log.d(TAG, "Added Patient");
+                }
                 //((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
-                Log.d(TAG, "Added Patient");
                 /*TODO: Check if Device in Database.
                 * TODO: If it is, get information from database and create new patient device.
                 * TODO: replace userExists below with the actual check from database.
