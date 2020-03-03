@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/device_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/id_hint"
+        app:layout_constraintStart_toEndOf="@+id/patient_image"
+        app:layout_constraintTop_toTopOf="@+id/patient_image"
+        tools:text="DeviceID" />
+
+    <ImageView
+        android:id="@+id/patient_image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/heartBeatImage"
+        android:layout_width="45dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/patient_image"
+        app:layout_constraintTop_toBottomOf="@+id/device_id"
+        app:srcCompat="@drawable/heartbeat2" />
+
+    <TextView
+        android:id="@+id/heart_beat_text"
+        android:layout_width="57dp"
+        android:layout_height="21dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="60bpm"
+        app:layout_constraintBottom_toBottomOf="@+id/heartBeatImage"
+        app:layout_constraintStart_toEndOf="@+id/heartBeatImage"
+        app:layout_constraintTop_toTopOf="@+id/heartBeatImage"
+        app:layout_constraintVertical_bias="0.346" />
+
+    <Button
+        android:id="@+id/location_button"
+        android:layout_width="48dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="28dp"
+        android:background="@drawable/pindrop"
+        app:layout_constraintBottom_toBottomOf="@+id/heart_beat_text"
+        app:layout_constraintStart_toEndOf="@+id/heart_beat_text"
+        app:layout_constraintTop_toTopOf="@+id/heart_beat_text"
+        app:layout_constraintVertical_bias="0.482"
+        tools:text="location" />
+
+    <Button
+        android:id="@+id/battery_button"
+        android:layout_width="48dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/battery_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/location_button"
+        app:layout_constraintStart_toEndOf="@+id/location_button"
+        app:layout_constraintTop_toTopOf="@+id/location_button"
+        app:layout_constraintVertical_bias="0.384" />
+
+    <TextView
+        android:id="@+id/battery_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50%"
+        app:layout_constraintBottom_toBottomOf="@+id/battery_button"
+        app:layout_constraintStart_toEndOf="@+id/battery_button" />
+</androidx.constraintlayout.widget.ConstraintLayout>

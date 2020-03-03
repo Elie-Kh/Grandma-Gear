@@ -34,7 +34,8 @@ public class DisclaimerFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 //User accept disclaimer. Save it on phone, doesn't ask anymore.
-                mSharedPreferences = new SharedPreferencesHelper(getActivity());
+                mSharedPreferences = new SharedPreferencesHelper(getActivity(),
+                        "DisclaimerPreferences");
                 mSharedPreferences.saveDisclaimerStatus(true);
                 getDialog().dismiss();
             }
@@ -44,7 +45,8 @@ public class DisclaimerFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 //user declines disclaimer. close app.
-                mSharedPreferences = new SharedPreferencesHelper(getActivity());
+                mSharedPreferences = new SharedPreferencesHelper(getActivity(),
+                        "DisclaimerPreferences");
                 mSharedPreferences.saveDisclaimerStatus(false);
                 getDialog().dismiss();
                 ((MainActivity)getActivity()).finish();
