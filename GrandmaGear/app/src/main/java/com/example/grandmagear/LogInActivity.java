@@ -22,8 +22,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.w3c.dom.Text;
-
 public class LogInActivity extends AppCompatActivity {
 
     protected EditText mEmail, mPassword;
@@ -53,8 +51,8 @@ public class LogInActivity extends AppCompatActivity {
 
     public void setupUI(){
 
-        mEmail = findViewById(R.id.emailLogIn);
-        mPassword = findViewById(R.id.passwordLogIn);
+        mEmail = findViewById(R.id.email_log_in);
+        mPassword = findViewById(R.id.password_log_in);
         mLoginButton = findViewById(R.id.logInButton);
         mLoginProgressBar = findViewById(R.id.loginProgressBar);
         firebaseAuth = FirebaseAuth.getInstance();
