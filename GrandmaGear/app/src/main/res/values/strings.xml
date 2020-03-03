@@ -1,22 +1,68 @@
 <resources>
     <string name="app_name">Grandma Gear</string>
-    <string name="patient">Patient</string>
-    <string name="client">Client</string>
-    <string name="id_text">ID: </string>
-    <string name="help_button_text">"Help"</string>
-    <string name="ok_button_text">OK</string>
-    <string name="disclaimer_text">This is a holder for the disclaimer text.</string>
+    <!-- Strings are shown by the order of where they appear first and then per page.
+    Meaning if a string shows in 2 pages, it will be under the first page reached below.-->
+
+    <!-- activity_disclaimer_fragment xml -->
+    <string name="disclaimer_text">This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.\n
+    This is a holder for the disclaimer text.</string>
     <string name="accept_disclaimer">Accept</string>
     <string name="decline_disclaimer">Decline</string>
+
+    <!-- activity_main xml -->
+    <string name="patient">Patient</string>
+    <string name="client">Client</string>
+
+    <!-- activity_log_in xml -->
+    <string name="login">Log In</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signup">Need Account? Sign Up Here</string>
+
+    <string name="forgot_password">Forgot Password?</string>
+
+    <!-- activity_patient xml -->
+    <string name="id_text">ID: </string>
+    <string name="device_id_hint">Enter Device ID</string>
+    <string name="help_button_text">"Help"</string>
+    <string name="ok_button_text">OK</string>
+
+    <!-- help fragment xml -->
     <string name="help_text">This is a holder for the actual help text.</string>
+
+    <!-- activity_register xml -->
+    <string name="join_today">Join Today</string>
+    <string name="name">Name</string>
+    <string name="register">Register</string>
+
+    <!-- activity_user xml -->
+    <string name="settings">Settings</string>
+    <string name="patients">Patients</string>
+    <string name="notifications">Notifications</string>
+    <string name="reports">Reports</string>
+
+    <!-- activity_add_patient_fragment xml -->
+    <string name="cancel_button">Cancel</string>
+    <string name="add_button">Add</string>
     <string name="id_hint">"Device ID"</string>
+
+    <!-- menu xml -->
+    <string name="logout">Logout</string>
+
+
     <string name="title_activity_client_login">Sign in</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+
+
 </resources>

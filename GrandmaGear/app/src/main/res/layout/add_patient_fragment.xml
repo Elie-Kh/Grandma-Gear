@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/device_id_adding_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:hint="@string/device_id_hint"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/add_device_adding_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/add_button"
+        app:layout_constraintStart_toStartOf="@+id/device_id_adding_fragment"
+        app:layout_constraintTop_toBottomOf="@+id/device_id_adding_fragment" />
+
+    <Button
+        android:id="@+id/cancel_device_adding_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel_button"
+        app:layout_constraintBottom_toBottomOf="@+id/add_device_adding_fragment"
+        app:layout_constraintEnd_toEndOf="@+id/device_id_adding_fragment"
+        app:layout_constraintTop_toTopOf="@+id/add_device_adding_fragment" />
+</androidx.constraintlayout.widget.ConstraintLayout>
