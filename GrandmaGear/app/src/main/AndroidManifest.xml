@@ -15,12 +15,14 @@
         android:theme="@style/AppTheme">
         <activity android:name=".PatientLocation"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".ForgotPasswordActivity"
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".UserActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".RegisterActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity android:name=".LogInActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".PatientActivity"
             android:screenOrientation="portrait"

@@ -48,7 +48,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         protected Button mLocationButton;
-        protected EditText mHeartBeatText;
+        protected Button mBatteryButton;
+        protected TextView mHeartBeatText;
         protected TextView mDeviceIdText;
         protected ImageView mPatientImage;
         protected ImageView mHeartGraph;
@@ -60,13 +61,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mDeviceIdText = itemView.findViewById(R.id.device_id);
             mPatientImage = itemView.findViewById(R.id.patient_image);
             mHeartGraph = itemView.findViewById(R.id.heartBeatImage);
+            mBatteryButton = itemView.findViewById(R.id.battery_button);
 
 
             mLocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //go to GPS page.
-
                 }
             });
 
@@ -74,6 +75,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 @Override
                 public void onClick(View view) {
                     //go to heart graph
+                }
+            });
+
+            mBatteryButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //go to battery display level
                 }
             });
 

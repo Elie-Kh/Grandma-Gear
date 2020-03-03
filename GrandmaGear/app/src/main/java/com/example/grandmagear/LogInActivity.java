@@ -28,7 +28,7 @@ public class LogInActivity extends AppCompatActivity {
     protected Button mLoginButton;
     protected ProgressBar mLoginProgressBar;
     protected FirebaseAuth firebaseAuth;
-    protected TextView mCreateAccountTextView;
+    protected TextView mCreateAccountTextView, mForgotPassTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +100,10 @@ public class LogInActivity extends AppCompatActivity {
 
         mCreateAccountTextView = findViewById(R.id.createAccountTextView);
 
-       String text = "Need Account? Sign Up Here";
-        SpannableString ss = new SpannableString(text);
+        String text1 = "Need Account? Sign Up Here";
+        SpannableString ss1 = new SpannableString(text1);
 
-        ClickableSpan clickableSpan = new ClickableSpan() {
+        ClickableSpan clickableSpan1 = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
                 Intent intent = new Intent(LogInActivity.this, RegisterActivity.class);
@@ -111,9 +111,26 @@ public class LogInActivity extends AppCompatActivity {
             }
         };
 
-        ss.setSpan(clickableSpan,14,26, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mCreateAccountTextView.setText(ss);
+        ss1.setSpan(clickableSpan1,14,26, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mCreateAccountTextView.setText(ss1);
         mCreateAccountTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        mForgotPassTextView = findViewById(R.id.forgotPass);
+
+        String text2 = "Forgot Password?";
+        SpannableString ss2 = new SpannableString(text2);
+
+        ClickableSpan clickableSpan2 = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Intent intent = new Intent(LogInActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+            }
+        };
+
+        ss2.setSpan(clickableSpan2,0, 16, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mForgotPassTextView.setText(ss2);
+        mForgotPassTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override

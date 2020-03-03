@@ -30,8 +30,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="429dp"
         android:ems="10"
+
         android:hint="@string/email"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,16 +73,14 @@
         android:id="@+id/createAccountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="177dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="175dp"
-        android:layout_marginBottom="206dp"
         android:clickable="true"
         android:text="@string/signup"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logInButton" />
+        app:layout_constraintTop_toBottomOf="@+id/logInButton"
+        app:layout_constraintVertical_bias="0.113" />
 
     <ProgressBar
         android:id="@+id/loginProgressBar"
@@ -90,6 +89,17 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createAccountTextView" />
+
+    <TextView
+        android:id="@+id/forgotPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/forgot_password"
+        app:layout_constraintBottom_toTopOf="@+id/loginProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createAccountTextView" />
