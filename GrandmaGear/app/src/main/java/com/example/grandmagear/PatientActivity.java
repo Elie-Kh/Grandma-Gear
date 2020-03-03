@@ -2,6 +2,7 @@ package com.example.grandmagear;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.grandmagear.Patient_Main_Lobby.HeartRate_MPP_1_1;
+import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
 
 import org.w3c.dom.Text;
 
@@ -52,10 +56,20 @@ public class PatientActivity extends AppCompatActivity {
                 }
                 else {
                     //Check if device ID is in database. If not, create it.
+                    goToHomePage_MPP_1();
                 }
             }
         });
 
 
     }
+
+    public void goToHomePage_MPP_1(){
+
+        Intent intent = new Intent(this, HomePage_MPP_1.class);
+        intent.putExtra(getString(R.string.PC_ID), "0");
+        startActivity(intent);
+
+    }
+
 }
