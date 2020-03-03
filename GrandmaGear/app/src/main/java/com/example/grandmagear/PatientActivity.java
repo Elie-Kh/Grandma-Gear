@@ -37,7 +37,7 @@ public class PatientActivity extends AppCompatActivity {
         mHelpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HelpFragment helpFragment = new HelpFragment();
+                HelpFragment helpFragment = new HelpFragment()git add .;
                 helpFragment.show(getSupportFragmentManager(),"HelpFragment");
             }
         });

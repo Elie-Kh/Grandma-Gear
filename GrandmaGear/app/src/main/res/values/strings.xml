@@ -19,4 +19,40 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+
+
+
+
+
+
+
+    <string name="PC_ID">PC_ID</string> //string served to differentiate a Client from a Patient
+
+    //MPP_1 Home Page
+
+    <string name="MPP_1_textView_FullName">Full Name:</string>
+    <string name="MPP_1_textView_FullName_Displayed"></string>
+    <string name="MPP_1_textView_Age">Age:</string>
+    <string name="MPP_1_textView_Age_Displayed"></string>
+    <string name="MPP_1_textView_Height">Height:</string>
+    <string name="MPP_1_textView_Height_Displayed"></string>
+    <string name="MPP_1_textView_Weight">Weight:</string>
+    <string name="MPP_1_textView_Weight_Displayed"></string>
+
+
+    //MPP_1_1 Heart Rate
+    <string name="MPP_1_1_textView_BPM">BPM:</string>
+    <string name="MPP_1_1_textView_BPM_value"></string>
+
+    //MPP_1_2 Location
+    <string name="MPP_1_2_textView_Location">Location:</string>
+    <string name="MPP_1_2_textView_Location_Display"></string>
+
+    //MPP_1_3 Battery Level
+    <string name="MPP_1_3_textView_BatteryLevel">Battery Level (%):</string>
+    <string name="MPP_1_3_textView_BatteryLevel_CurrentValue"></string>
+
+
+
 </resources>
