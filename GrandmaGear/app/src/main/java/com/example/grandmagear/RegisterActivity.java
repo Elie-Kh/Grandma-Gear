@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,9 +77,17 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = mPassword.getText().toString().trim();
                 final String name = mName.getText().toString();
 
+                if(TextUtils.isEmpty(name)){
+                    mName.setError("Name is required");
+                }
+
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email is required.");
                     return;
+                }
+
+                if(!isValidEmail(email)){
+                    mEmail.setError("Email is not valid");
                 }
 
                 if(TextUtils.isEmpty(password)){
@@ -144,5 +153,9 @@ public class RegisterActivity extends AppCompatActivity {
         mPassword.setText("");
         mName.setText("");
         mRegisterProgressBar.setVisibility(View.GONE);
+    }
+
+    public boolean isValidEmail(String email){
+        return email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }
