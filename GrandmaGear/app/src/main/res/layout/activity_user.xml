@@ -51,8 +51,8 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
-        android:layout_width="410dp"
-        android:layout_height="410dp"
+        android:layout_width="413dp"
+        android:layout_height="485dp"
         app:layout_constraintBottom_toTopOf="@+id/add_patient_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabLayout"
