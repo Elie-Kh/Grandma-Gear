@@ -120,14 +120,14 @@ public class FirebaseHelper {
         });
     }
 
-    public void editDevice(FirebaseObjects.DevicesDBO device, final String type, final Object field){
+    public void editDevice(FirebaseObjects.DevicesDBO device, final String field, final Object newVal){
         final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(device.deviceID);
 
         firebaseFirestore.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                transaction.update(documentReference, type, field);
+                transaction.update(documentReference, field, newVal);
                 return null;
             }
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
