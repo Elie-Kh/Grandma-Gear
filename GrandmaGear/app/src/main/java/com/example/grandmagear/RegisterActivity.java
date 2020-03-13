@@ -22,6 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,23 +110,30 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
-                            userID = firebaseAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
-                            Map<String,Object> user = new HashMap<>();
-                            user.put("Name", name);
-                            user.put("Email", email);
-                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "onSuccess: user Profile is created for " + userID);
-                                }
-                            });
-                            documentReference.set(user).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: " + e.toString());
-                                }
-                            });
+                            //TODO: Remove the ";" and the comment delimiter, and create the user.
+                            FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, name);
+                            FirebaseHelper firebaseHelper = new FirebaseHelper();
+                            firebaseHelper.AddUser(newUser);
+                            //TODO: Delete comments below and replace with "FirebaseHelper.AddUser(newUser);"
+//
+//                            userID = firebaseAuth.getCurrentUser().getUid();
+//                            DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
+//                            Map<String,Object> user = new HashMap<>();
+//                            user.put("Name", name);
+//                            user.put("Email", email);
+//                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
+//                                    Log.d(TAG, "onSuccess: user Profile is created for " + userID);
+//                                }
+//                            });
+//                            documentReference.set(user).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Log.d(TAG, "onFailure: " + e.toString());
+//                                }
+//                            });
+                            //TODO: Include deleting this line with all above comments
                             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
                         }else{
                             Toast.makeText(RegisterActivity.this, "A user with this email already exists!", Toast.LENGTH_SHORT).show();
