@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,24 +17,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
-
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     public static final String TAG = "_RegisterActivity";
 
-    protected EditText mName, mEmail, mPassword, mAge, mWeight, mHeight;
+    protected EditText mFirstName,mLastName, mEmail, mPassword, mAge, mWeight, mHeight;
     protected Button mRegisterButton;
     protected Spinner mRegisterSpinner;
     protected ProgressBar mRegisterProgressBar;
@@ -64,7 +54,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     void setupUI(){
-        mName = findViewById(R.id.name);
+        mFirstName = findViewById(R.id.firstName);
+        mLastName = findViewById(R.id.lastName);
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
         mAge = findViewById(R.id.age);
@@ -89,12 +80,12 @@ public class RegisterActivity extends AppCompatActivity {
                     mAge.setVisibility(View.GONE);
                     mHeight.setVisibility(View.GONE);
                     mWeight.setVisibility(View.GONE);
-                    acc_type = false;
+                    acc_type = true;
                 }else{
                     mAge.setVisibility(View.VISIBLE);
                     mHeight.setVisibility(View.VISIBLE);
                     mWeight.setVisibility(View.VISIBLE);
-                    acc_type = true;
+                    acc_type = false;
                 }
 
             }
@@ -118,13 +109,18 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String email = mEmail.getText().toString().trim();
                 final String password = mPassword.getText().toString().trim();
-                final String name = mName.getText().toString();
+                final String firstName = mFirstName.getText().toString();
+                final String lastName = mLastName.getText().toString();
                 final String age = mAge.getText().toString();
                 final String weight = mWeight.getText().toString();
                 final String height = mHeight.getText().toString();
 
-                if(TextUtils.isEmpty(name)){
-                    mName.setError("Name is required");
+                if(TextUtils.isEmpty(firstName)){
+                    mFirstName.setError("First Name is required");
+                }
+
+                if(TextUtils.isEmpty(lastName)){
+                    mLastName.setError("Last Name is required");
                 }
 
                 if(TextUtils.isEmpty(email)){
@@ -136,20 +132,22 @@ public class RegisterActivity extends AppCompatActivity {
                     mEmail.setError("Email is not valid");
                 }
 
-                if(TextUtils.isEmpty(age)){
-                    mAge.setError("Age is required");
-                }
+                if(!acc_type) {
+                    if (TextUtils.isEmpty(age)) {
+                        mAge.setError("Age is required");
+                    }
 
-                if(Integer.parseInt(age) < 12){
-                    mAge.setError("You are to young to use this app");
-                }
+                    if (Integer.parseInt(age) < 12) {
+                        mAge.setError("You are to young to use this app");
+                    }
 
-                if(TextUtils.isEmpty(weight)){
-                    mWeight.setError("Weight is required");
-                }
+                    if (TextUtils.isEmpty(weight)) {
+                        mWeight.setError("Weight is required");
+                    }
 
-                if(TextUtils.isEmpty(height)){
-                    mHeight.setError("Height is required");
+                    if (TextUtils.isEmpty(height)) {
+                        mHeight.setError("Height is required");
+                    }
                 }
 
                 if(TextUtils.isEmpty(password)){
@@ -173,11 +171,11 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
                             //TODO: Remove the ";" and the comment delimiter, and create the user.
                             if(acc_type) {
-                                FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, name, password, acc_type);
+                                FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type);
                                 FirebaseHelper firebaseHelper = new FirebaseHelper();
                                 firebaseHelper.AddUser(newUser);
                             }else{
-                                FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, name, password, acc_type, Integer.parseInt(age),
+                                FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type, Integer.parseInt(age),
                                         Integer.parseInt(weight), Integer.parseInt(height));
                                 FirebaseHelper firebaseHelper = new FirebaseHelper();
                                 firebaseHelper.AddUser(newUser);
@@ -218,7 +216,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onStart();
         mEmail.setText("");
         mPassword.setText("");
-        mName.setText("");
+        mFirstName.setText("");
+        mLastName.setText("");
+        mAge.setText("");
+        mHeight.setText("");
+        mWeight.setText("");
         mRegisterProgressBar.setVisibility(View.GONE);
     }
 
@@ -227,7 +229,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onResume();
         mEmail.setText("");
         mPassword.setText("");
-        mName.setText("");
+        mFirstName.setText("");
+        mLastName.setText("");
+        mAge.setText("");
+        mHeight.setText("");
+        mWeight.setText("");
         mRegisterProgressBar.setVisibility(View.GONE);
     }
 
