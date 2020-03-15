@@ -24,16 +24,16 @@ public class FirebaseObjects {
             this.name = name;
         }
 
-        public UserDBO(String username, String email, String name, String password, Boolean acc_type) {
-            this.username = username;
+        public UserDBO(/*String username,*/ String email, String name, String password, Boolean acc_type) {
+            //this.username = username;
             this.email = email;
             this.name = name;
             this.password = password;
             this.acc_type = acc_type;
         }
 
-        public UserDBO(String username, String email, String name, String password, Boolean acc_type, int age, short weight, short height) {
-            this.username = username;
+        public UserDBO(/*String username,*/ String email, String name, String password, Boolean acc_type, int age, int weight, int height) {
+            //this.username = username;
             this.email = email;
             this.name = name;
             this.password = password;
