@@ -13,32 +13,42 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Patient_Main_Lobby.BatteryLevel_MPP_1_3"
+        <activity
+            android:name=".Patient_Main_Lobby.BatteryLevel_MPP_1_3"
             android:parentActivityName=".Patient_Main_Lobby.HomePage_MPP_1"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".Patient_Main_Lobby.Location_MPP_1_2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Patient_Main_Lobby.Location_MPP_1_2"
             android:parentActivityName=".Patient_Main_Lobby.HomePage_MPP_1"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Patient_Main_Lobby.HeartRate_MPP_1_1"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Patient_Main_Lobby.HeartRate_MPP_1_1"
             android:parentActivityName=".Patient_Main_Lobby.HomePage_MPP_1"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Patient_Main_Lobby.HomePage_MPP_1"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".PatientLocation"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".ForgotPasswordActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".UserActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".RegisterActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".LogInActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Patient_Main_Lobby.HomePage_MPP_1"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PatientLocation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LogInActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PatientActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
