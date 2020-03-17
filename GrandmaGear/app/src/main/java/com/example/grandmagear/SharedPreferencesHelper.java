@@ -4,6 +4,7 @@ import android.content.ContentQueryMap;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
@@ -37,6 +38,38 @@ public class SharedPreferencesHelper {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putStringSet("PatientIDs", new HashSet<String>(IDs));
         editor.apply();
+    }
+
+    public void saveNotificationTitle(ArrayList<String> title){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putStringSet("Notification Title", new HashSet<String>(title));
+        editor.apply();
+    }
+
+    public void saveNotificationText(ArrayList<String> text){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putStringSet("Notification Text", new HashSet<String>(text));
+        editor.apply();
+    }
+
+    public ArrayList<String> getNotificationTitle(){
+        ArrayList<String> notificationTitle = new ArrayList<String>
+                (mSharedPreferences.getStringSet("Notification Title", new HashSet<String>()));
+        if(notificationTitle.size() < 1){
+            return new ArrayList<>();
+        }else{
+            return notificationTitle;
+        }
+    }
+
+    public ArrayList<String> getNotificationText(){
+        ArrayList<String> notificationText = new ArrayList<String>
+                (mSharedPreferences.getStringSet("Notification Text", new HashSet<String>()));
+        if(notificationText.size() < 1){
+            return new ArrayList<>();
+        }else{
+            return notificationText;
+        }
     }
 
     public ArrayList<String> getIDs(){
