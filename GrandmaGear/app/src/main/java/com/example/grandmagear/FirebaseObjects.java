@@ -16,7 +16,8 @@ public class FirebaseObjects {
     public static class UserDBO{
         protected String username;
         protected String email;
-        protected String name;
+        protected String firstName;
+        protected String lastName;
         protected String password;
         protected Boolean acc_type;
         protected int age = 0;
@@ -27,23 +28,26 @@ public class FirebaseObjects {
 
         /*the following constructor is strictly for testing purposes*/
 
-        public UserDBO(String email, String name) {
+        public UserDBO(String email, String firstName, String lastName) {
             this.email = email;
-            this.name = name;
+            this.firstName = firstName;
+            this.lastName = lastName;
         }
 
-        public UserDBO(String username, String email, String name, String password, Boolean acc_type) {
-            this.username = username;
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type) {
+            //this.username = username;
             this.email = email;
-            this.name = name;
+            this.firstName = firstName;
+            this.lastName = lastName;
             this.password = password;
             this.acc_type = acc_type;
         }
 
-        public UserDBO(String username, String email, String name, String password, Boolean acc_type, int age, short weight, short height) {
-            this.username = username;
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, int age, int weight, int height) {
+            //this.username = username;
             this.email = email;
-            this.name = name;
+            this.firstName = firstName;
+            this.lastName = lastName;
             this.password = password;
             this.acc_type = acc_type;
             this.age = age;
