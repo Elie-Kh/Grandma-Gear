@@ -43,7 +43,8 @@ public class FirebaseHelper {
         Map<String,Object> user = new HashMap<>();
         user.put("Username", newUser.username);
         user.put("Email", newUser.email);
-        user.put("Name", newUser.name);
+        user.put("First Name", newUser.firstName);
+        user.put("Last Name", newUser.lastName);
         user.put("Password", newUser.password);
         user.put("Account Type", newUser.acc_type);
         user.put("Age", newUser.age);
