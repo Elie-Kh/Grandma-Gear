@@ -5,6 +5,14 @@ import android.bluetooth.BluetoothClass;
 import java.util.ArrayList;
 
 public class FirebaseObjects {
+    public static final String ID = "ID";
+    public static final String Longitude = "Longitude";
+    public static final String Latitude = "Latitude";
+    public static final String Heartrate = "Heartrate";
+    public static final String Notifications = "Notifications";
+    public static final String DeviceBattery = "Device Battery";
+    public static final String PhoneBattery = "Phone Battery";
+
     public static class UserDBO{
         protected String username;
         protected String email;

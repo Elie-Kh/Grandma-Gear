@@ -7,12 +7,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
@@ -105,7 +109,13 @@ public class FirebaseHelper {
         device.deviceID = firebaseAuth.getUid();
         final DocumentReference documentReference = firebaseFirestore.collection(deviceDB).document(device.deviceID);
         Map<String,Object> devices = new HashMap<>();
-        devices.put("deviceID", device.deviceID);
+        devices.put(FirebaseObjects.ID, device.deviceID);
+        devices.put(FirebaseObjects.Longitude, device.lonGPS);
+        devices.put(FirebaseObjects.Latitude, device.latGPS);
+        devices.put(FirebaseObjects.Heartrate, device.bpm);
+        devices.put(FirebaseObjects.PhoneBattery, device.phoneBattery);
+        devices.put(FirebaseObjects.DeviceBattery, device.deviceBattery);
+        devices.put(FirebaseObjects.Notifications, device.notifications);
         documentReference.set(devices).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -143,4 +153,57 @@ public class FirebaseHelper {
                     }
                 });
     }
+
+    public void editLocation(FirebaseObjects.DevicesDBO device, final Object newLongitude,
+                             final Object newLatitude){
+        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(device.deviceID);
+
+        firebaseFirestore.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                transaction.update(documentReference, FirebaseObjects.Longitude , newLongitude);
+                transaction.update(documentReference, FirebaseObjects.Latitude , newLatitude);
+                return null;
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Edit success!");
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Edit failure.", e);
+                    }
+                });
+    }
+
+    public Boolean getType(final String email){
+        final boolean[] val = {false};
+        firebaseFirestore.collection("userDB")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                if(document.get("Email") == email){
+                                    if(document.get("Account Type") == "True"){
+                                        val[0] = true;
+                                    };
+                                }
+                            }
+                            val[0] =  false;
+                        }
+                        else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                            val[0] =  false;
+                        }
+                    }
+                });
+        return val[0];
+    }
+
 }

@@ -29,6 +29,7 @@ public class LogInActivity extends AppCompatActivity {
     protected ProgressBar mLoginProgressBar;
     protected FirebaseAuth firebaseAuth;
     protected TextView mCreateAccountTextView, mForgotPassTextView;
+    FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +57,11 @@ public class LogInActivity extends AppCompatActivity {
         mLoginButton = findViewById(R.id.logInButton);
         mLoginProgressBar = findViewById(R.id.loginProgressBar);
         firebaseAuth = FirebaseAuth.getInstance();
-
+        firebaseHelper = new FirebaseHelper();
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = mEmail.getText().toString().trim();
+                final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
                 if(TextUtils.isEmpty(email)){
@@ -87,6 +88,9 @@ public class LogInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
+                            if(firebaseHelper.getType(email)){
+
+                            }
                             startActivity(new Intent(getApplicationContext(), UserActivity.class));
                         }else{
                             Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
