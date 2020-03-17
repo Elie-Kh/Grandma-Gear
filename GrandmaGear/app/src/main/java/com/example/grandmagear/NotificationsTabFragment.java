@@ -19,8 +19,7 @@ public class NotificationsTabFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private NotificationsRecyclerView mAdapter;
-    private ArrayList<String> mNotificationTitle = new ArrayList<String>();
-    private ArrayList<String> mNotificationText = new ArrayList<String>();
+    private ArrayList<String> mNotifications = new ArrayList<String>();
     private SharedPreferencesHelper mSharedPreferencesHelper;
 
 
@@ -29,7 +28,7 @@ public class NotificationsTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_tab_fragment, container, false);
         mRecyclerView = view.findViewById(R.id.notificationRecycler);
-        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText);
+        mAdapter = new NotificationsRecyclerView(mNotifications);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
@@ -37,11 +36,9 @@ public class NotificationsTabFragment extends Fragment {
         return view;
     }
 
-    public void addNotification(String notificationTitle, String notificationText){
-        mNotificationTitle.add(notificationTitle);
-        mNotificationText.add(notificationText);
-        mSharedPreferencesHelper.saveNotificationTitle(mNotificationTitle);
-        mSharedPreferencesHelper.saveNotificationText(mNotificationText);
+    public void addNotification(String notification){
+        mNotifications.add(notification);
+        mSharedPreferencesHelper.saveNotification(mNotifications);
     }
 
     @Override
@@ -49,20 +46,21 @@ public class NotificationsTabFragment extends Fragment {
         super.onCreate(savedInstanceState);
         String title1 = "Heart Attack";
         String title2 = "Fell Down";
+        String title3 = "Fell again";
+        String title4 = "Healed";
         String text1 = "Grandma had a heart attack";
         String text2 = "Grandma fell down";
-        mNotificationTitle.add(title1);
-        mNotificationTitle.add(title2);
-        mNotificationText.add(text1);
-        mNotificationText.add(text2);
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
-        if(mSharedPreferencesHelper.getNotificationTitle() != null){
-            mNotificationTitle = mSharedPreferencesHelper.getNotificationTitle();
-        }
+        String text3 = "She fell again";
+        String text4 = "She healed";
+        mNotifications.add(title1 + "\n" + text1);
+        mNotifications.add(title2 + "\n" + text2);
+        mNotifications.add(title3 + "\n" + text3);
+        mNotifications.add(title4 + "\n" + text4);
 
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Text");
-        if(mSharedPreferencesHelper.getNotificationText() != null){
-            mNotificationText = mSharedPreferencesHelper.getNotificationText();
-        }
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "NotificationIDs");
+        mSharedPreferencesHelper.saveNotification(mNotifications);
+        /*if(mSharedPreferencesHelper.getNotification() != null){
+            mNotifications = mSharedPreferencesHelper.getNotification();
+        }*/
     }
 }

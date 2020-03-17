@@ -13,12 +13,10 @@ import java.util.ArrayList;
 
 public class NotificationsRecyclerView extends RecyclerView.Adapter<NotificationsRecyclerView.ViewHolder> {
 
-    private ArrayList<String> notificationTitle;
-    private ArrayList<String> notificationText;
+    private ArrayList<String> notifications;
 
-    public NotificationsRecyclerView(ArrayList<String> notificationTitle, ArrayList<String> notificationText ){
-        this.notificationTitle = notificationTitle;
-        this.notificationText = notificationText;
+    public NotificationsRecyclerView(ArrayList<String> notifications){
+        this.notifications = notifications;
     }
 
     @NonNull
@@ -32,27 +30,24 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mNotificationsTitle.setText(notificationTitle.get(position));
-        holder.mNotificationsText.setText(notificationText.get(position));
+        holder.mNotification.setText(notifications.get(getItemCount() - position -1));
     }
 
     @Override
     public int getItemCount() {
-        return notificationTitle.size();
+        return notifications.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         protected ImageView mPatientImage;
-        protected TextView mNotificationsTitle;
-        protected TextView mNotificationsText;
+        protected TextView mNotification;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             mPatientImage = itemView.findViewById(R.id.patient_image_notifications);
-            mNotificationsTitle = itemView.findViewById(R.id.notificationTitle);
-            mNotificationsText = itemView.findViewById(R.id.notificationText);
+            mNotification = itemView.findViewById(R.id.notification);
         }
     }
 }
