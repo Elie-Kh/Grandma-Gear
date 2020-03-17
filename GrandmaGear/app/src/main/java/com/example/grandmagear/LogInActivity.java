@@ -88,10 +88,13 @@ public class LogInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
-                            if(firebaseHelper.getType(email)){
-
+                            boolean emails = firebaseHelper.getType(email);
+                            if(emails){
+                                startActivity(new Intent(getApplicationContext(), UserActivity.class));
                             }
-                            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                            else {
+                                startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                            }
                         }else{
                             Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                             mLoginProgressBar.setVisibility(View.GONE);
