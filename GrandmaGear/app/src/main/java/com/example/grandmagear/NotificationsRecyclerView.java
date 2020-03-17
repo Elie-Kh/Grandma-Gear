@@ -13,10 +13,12 @@ import java.util.ArrayList;
 
 public class NotificationsRecyclerView extends RecyclerView.Adapter<NotificationsRecyclerView.ViewHolder> {
 
-    private ArrayList<String> mNotifications;
+    private ArrayList<String> notificationTitle;
+    private ArrayList<String> notificationText;
 
-    public NotificationsRecyclerView(ArrayList<String> notifications){
-        this.mNotifications = notifications;
+    public NotificationsRecyclerView(ArrayList<String> notificationTitle, ArrayList<String> notificationText ){
+        this.notificationTitle = notificationTitle;
+        this.notificationText = notificationText;
     }
 
     @NonNull
@@ -24,18 +26,19 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notifications_recycler_item,
                 parent, false);
-        view.setTag("notifications recycler view");
+        view.setTag("notificationsRecyclerView");
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mNotificationsTitle.setText(mNotifications.get(position));
+        holder.mNotificationsTitle.setText(notificationTitle.get(position));
+        holder.mNotificationsText.setText(notificationText.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mNotifications.size();
+        return notificationTitle.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

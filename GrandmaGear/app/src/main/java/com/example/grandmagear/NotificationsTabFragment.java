@@ -9,21 +9,60 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 public class NotificationsTabFragment extends Fragment {
+
+    private RecyclerView mRecyclerView;
+    private NotificationsRecyclerView mAdapter;
+    private ArrayList<String> mNotificationTitle = new ArrayList<String>();
+    private ArrayList<String> mNotificationText = new ArrayList<String>();
+    private SharedPreferencesHelper mSharedPreferencesHelper;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_tab_fragment, container, false);
-
-        /*Think of way to display notifications.
-         * Possibly a recycler view.
-         * Make adapter for that view.
-         * Adapt it in here.
-         * */
-
+        mRecyclerView = view.findViewById(R.id.notificationRecycler);
+        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL));
         return view;
+    }
+
+    public void addNotification(String notificationTitle, String notificationText){
+        mNotificationTitle.add(notificationTitle);
+        mNotificationText.add(notificationText);
+        mSharedPreferencesHelper.saveNotificationTitle(mNotificationTitle);
+        mSharedPreferencesHelper.saveNotificationText(mNotificationText);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String title1 = "Heart Attack";
+        String title2 = "Fell Down";
+        String text1 = "Grandma had a heart attack";
+        String text2 = "Grandma fell down";
+        mNotificationTitle.add(title1);
+        mNotificationTitle.add(title2);
+        mNotificationText.add(text1);
+        mNotificationText.add(text2);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
+        if(mSharedPreferencesHelper.getNotificationTitle() != null){
+            mNotificationTitle = mSharedPreferencesHelper.getNotificationTitle();
+        }
+
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Text");
+        if(mSharedPreferencesHelper.getNotificationText() != null){
+            mNotificationText = mSharedPreferencesHelper.getNotificationText();
+        }
     }
 }
