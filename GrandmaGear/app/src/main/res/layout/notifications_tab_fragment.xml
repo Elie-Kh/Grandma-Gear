@@ -9,6 +9,6 @@
         android:id="@+id/notificationRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:stackFromEnd="true"
+        app:stackFromEnd="false"
         app:reverseLayout="true"/>
 </LinearLayout>
