@@ -41,7 +41,9 @@ public class NotificationsTabFragment extends Fragment {
     public void addNotification(String title, String text){
         mNotificationTitle.add(title);
         mNotificationText.add(text);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
         mSharedPreferencesHelper.saveNotificationTitle(mNotificationTitle);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Text");
         mSharedPreferencesHelper.saveNotificationText(mNotificationText);
     }
 
