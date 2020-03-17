@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,6 +23,8 @@ import com.google.firebase.firestore.Transaction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -183,27 +186,34 @@ public class FirebaseHelper {
 
     public Boolean getType(final String email){
         final boolean[] val = {false};
-        firebaseFirestore.collection("userDB")
+        Log.d("__GettingType", email);
+        while(!firebaseFirestore.collection("userDB")
+                .whereEqualTo("Email",email)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
+                            Log.d("__GettingType", "Success");
                             for(QueryDocumentSnapshot document : task.getResult()){
-                                if(document.get("Email") == email){
-                                    if(document.get("Account Type") == "True"){
+                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("Email")));
+                                if(((String) document.get("Email")).equals(email)){
+                                    if((Boolean) document.get("Account Type")){
                                         val[0] = true;
-                                    };
+                                        break;
+                                    }
+                                    else {
+                                        break;
+                                    }
                                 }
                             }
-                            val[0] =  false;
                         }
                         else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                             val[0] =  false;
                         }
                     }
-                });
+                }).isComplete());
         return val[0];
     }
 
