@@ -40,29 +40,29 @@ public class SharedPreferencesHelper {
         editor.apply();
     }
 
-    public void saveNotificationTitle(ArrayList<String> title){
+    public void saveNotification(ArrayList<String> notification){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putStringSet("Notification Title", new HashSet<String>(title));
+        editor.putStringSet("NotificationIDs", new HashSet<String>(notification));
         editor.apply();
     }
 
-    public void saveNotificationText(ArrayList<String> text){
+   /* public void saveNotificationText(ArrayList<String> text){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putStringSet("Notification Text", new HashSet<String>(text));
         editor.apply();
-    }
+    }*/
 
-    public ArrayList<String> getNotificationTitle(){
-        ArrayList<String> notificationTitle = new ArrayList<String>
-                (mSharedPreferences.getStringSet("Notification Title", new HashSet<String>()));
-        if(notificationTitle.size() < 1){
+    public ArrayList<String> getNotification(){
+        ArrayList<String> notification = new ArrayList<String>
+                (mSharedPreferences.getStringSet("NotificationIDs", new HashSet<String>()));
+        if(notification.size() < 1){
             return new ArrayList<>();
         }else{
-            return notificationTitle;
+            return notification;
         }
     }
 
-    public ArrayList<String> getNotificationText(){
+    /*public ArrayList<String> getNotificationText(){
         ArrayList<String> notificationText = new ArrayList<String>
                 (mSharedPreferences.getStringSet("Notification Text", new HashSet<String>()));
         if(notificationText.size() < 1){
@@ -70,7 +70,7 @@ public class SharedPreferencesHelper {
         }else{
             return notificationText;
         }
-    }
+    }*/
 
     public ArrayList<String> getIDs(){
         ArrayList<String> IDs = new ArrayList<String>
