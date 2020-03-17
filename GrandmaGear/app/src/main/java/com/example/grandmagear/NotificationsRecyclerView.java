@@ -41,9 +41,16 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
         return (notificationTitle.size() + notificationText.size())/2;
     }
 
+    public void delete(int position){
+        notificationTitle.remove(position);
+        notificationText.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         protected ImageView mPatientImage;
+        protected ImageView mDeleteNotification;
         protected TextView mNotificationTitle;
         protected TextView mNotificationText;
 
@@ -51,8 +58,16 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
             super(itemView);
 
             mPatientImage = itemView.findViewById(R.id.patient_image_notifications);
+            mDeleteNotification = itemView.findViewById(R.id.deleteNotification);
             mNotificationTitle = itemView.findViewById(R.id.notificationTitle);
             mNotificationText = itemView.findViewById(R.id.notificationText);
+
+            mDeleteNotification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    delete(getAdapterPosition());
+                }
+            });
         }
     }
 }
