@@ -115,11 +115,11 @@ public class RegisterActivity extends AppCompatActivity {
                 final String weight = mWeight.getText().toString();
                 final String height = mHeight.getText().toString();
 
-                if(TextUtils.isEmpty(firstName)){
+                if(TextUtils.isEmpty(firstName) || firstName.trim().isEmpty()){
                     mFirstName.setError("First Name is required");
                 }
 
-                if(TextUtils.isEmpty(lastName)){
+                if(TextUtils.isEmpty(lastName) || lastName.trim().isEmpty()){
                     mLastName.setError("Last Name is required");
                 }
 
@@ -133,20 +133,22 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 if(!acc_type) {
-                    if (TextUtils.isEmpty(age)) {
+                    if (TextUtils.isEmpty(age) && mAge.getText().toString().equals("")) {
                         mAge.setError("Age is required");
-                    }
+                    }else if (Integer.parseInt(age) < 12){
+                            mAge.setError("You are to young to use this app");
+                        }
 
-                    if (Integer.parseInt(age) < 12) {
-                        mAge.setError("You are to young to use this app");
-                    }
-
-                    if (TextUtils.isEmpty(weight)) {
+                    if (TextUtils.isEmpty(weight) && mWeight.getText().toString().equals("")) {
                         mWeight.setError("Weight is required");
+                    }else if(Integer.parseInt(weight) < 80){
+                        mWeight.setError("Minimum is 80 lbs");
                     }
 
-                    if (TextUtils.isEmpty(height)) {
+                    if (TextUtils.isEmpty(height) && mHeight.getText().toString().equals("")) {
                         mHeight.setError("Height is required");
+                    }else if(Integer.parseInt(height) < 120){
+                        mHeight.setError("Minimum height is 120cm");
                     }
                 }
 
