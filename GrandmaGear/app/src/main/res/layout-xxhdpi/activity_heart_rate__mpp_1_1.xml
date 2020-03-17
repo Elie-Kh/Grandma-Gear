@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Patient_Main_Lobby.HeartRate_MPP_1_1">
+
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/Graph_BatteryLevel_MPP_1_3"
+        id="@+id/graph"
+        layout_height="200dip"
+        layout_width="match_parent"
+        android:layout_width="320dp"
+        android:layout_height="271dp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignStart="@+id/imageView"
+        android:layout_marginStart="-65dp"
+        android:layout_marginTop="32dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="180dp"
+        android:layout_height="146dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        app:srcCompat="@drawable/heart" />
+
+    <TextView
+        android:id="@+id/textView_HeartRate_MPP_1_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Graph_BatteryLevel_MPP_1_3"
+        android:layout_alignStart="@+id/Graph_BatteryLevel_MPP_1_3"
+        android:layout_marginStart="78dp"
+        android:layout_marginTop="29dp"
+        android:text="@string/MPP_1_1_textView_BPM"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/textView_HeartRate_MPP_1_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView_HeartRate_MPP_1_1"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toEndOf="@+id/textView_HeartRate_MPP_1_1"
+        android:text="@string/MPP_1_1_textView_BPM_value"
+        android:textSize="36sp" />
+</RelativeLayout>

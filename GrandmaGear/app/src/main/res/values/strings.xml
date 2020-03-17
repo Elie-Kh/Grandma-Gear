@@ -37,7 +37,11 @@
 
     <!-- activity_register xml -->
     <string name="join_today">Join Today</string>
-    <string name="name">Name</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="weight">Weight lbs</string>
+    <string name="age">Age</string>
+    <string name="height">Height</string>
     <string name="register">Register</string>
 
     <!-- activity_user xml -->
@@ -88,5 +92,11 @@
     //MPP_1_3 Battery Level
     <string name="MPP_1_3_textView_BatteryLevel">Battery Level (%):</string>
     <string name="MPP_1_3_textView_BatteryLevel_CurrentValue"></string>
+
+    //array for register spinner
+    <string-array name="selection_array">
+        <item>Wearer</item>
+        <item>Follower</item>
+    </string-array>
 
 </resources>
