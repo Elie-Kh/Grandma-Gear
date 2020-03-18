@@ -89,7 +89,7 @@ public class LogInActivity extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
                             final boolean[] emails = new boolean[1];
-                            firebaseHelper.getType(new FirebaseHelper.Callback() {
+                            firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
                                 @Override
                                 public void onCallback(boolean checker) {
                                     emails[0] = checker;
