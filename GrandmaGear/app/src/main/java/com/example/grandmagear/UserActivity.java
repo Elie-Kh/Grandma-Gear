@@ -22,6 +22,7 @@ public class UserActivity extends AppCompatActivity {
     protected Button mSettings;
     protected FloatingActionButton mAddPatient;
     protected PatientsTabFragment mPatientsTabFragment =  new PatientsTabFragment();
+    protected NotificationsTabFragment mNotificationTabFragment = new NotificationsTabFragment();
     protected TabsAdapter mTabsAdapter;
     protected ViewPager mViewPager;
     protected TabLayout tabLayout;
@@ -47,7 +48,7 @@ public class UserActivity extends AppCompatActivity {
         mTabsAdapter = new TabsAdapter(getSupportFragmentManager(),
                 BEHAVIOR_SET_USER_VISIBLE_HINT, tabLayout);
         mTabsAdapter.addFragment(mPatientsTabFragment, "Patients");
-        mTabsAdapter.addFragment(new NotificationsTabFragment(), "Notifications");
+        mTabsAdapter.addFragment(mNotificationTabFragment, "Notifications");
         mTabsAdapter.addFragment(new ReportsTabFragment(), "Reports");
         mViewPager.setAdapter(mTabsAdapter);
         tabLayout.setupWithViewPager(mViewPager);
