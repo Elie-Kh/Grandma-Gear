@@ -180,11 +180,11 @@ public class FirebaseHelper {
                 });
     }
 
-    public interface Callback {
+    public interface Callback_Type {
         void onCallback(boolean checker);
     }
 
-    public void getType(final Callback callback, final String email){
+    public void getType(final Callback_Type callback, final String email){
         Log.d("__GettingType", email);
         firebaseFirestore.collection("userDB")
             .whereEqualTo("Email",email)
@@ -218,7 +218,14 @@ public class FirebaseHelper {
 
                 }
             });
+    }
 
+    public interface Callback_Notifications {
+        void onCallback(ArrayList<FirebaseObjects.Notifications> notifications);
+    }
+
+    public void getNotifications(final Callback_Notifications callback_notifications){
+        
     }
 
 }
