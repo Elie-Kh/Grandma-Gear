@@ -88,13 +88,21 @@ public class LogInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
-                            boolean emails = firebaseHelper.getType(email);
-                            if(emails){
-                                startActivity(new Intent(getApplicationContext(), UserActivity.class));
-                            }
-                            else {
-                                startActivity(new Intent(getApplicationContext(), PatientActivity.class));
-                            }
+                            final boolean[] emails = new boolean[1];
+                            firebaseHelper.getType(new FirebaseHelper.Callback() {
+                                @Override
+                                public void onCallback(boolean checker) {
+                                    emails[0] = checker;
+                                    if(emails[0]){
+                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                    }
+                                    else {
+                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                    }
+                                }
+                            }, email);
+
+
                         }else{
                             Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                             mLoginProgressBar.setVisibility(View.GONE);
