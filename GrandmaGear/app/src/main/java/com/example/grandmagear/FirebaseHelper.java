@@ -1,5 +1,6 @@
 package com.example.grandmagear;
 
+import android.app.Notification;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -11,14 +12,20 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -146,12 +153,12 @@ public class FirebaseHelper {
                 Log.d(TAG, "Edit success!");
             }
         })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Edit failure.", e);
-                    }
-                });
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Edit failure.", e);
+            }
+        });
     }
 
     public void editLocation(FirebaseObjects.DevicesDBO device, final Object newLongitude,
@@ -172,12 +179,12 @@ public class FirebaseHelper {
                 Log.d(TAG, "Edit success!");
             }
         })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Edit failure.", e);
-                    }
-                });
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Edit failure.", e);
+            }
+        });
     }
 
     public interface Callback_Type {
@@ -186,46 +193,79 @@ public class FirebaseHelper {
 
     public void getType(final Callback_Type callback, final String email){
         Log.d("__GettingType", email);
-        firebaseFirestore.collection("userDB")
-            .whereEqualTo("Email",email)
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if(task.isSuccessful()){
-                        Log.d("__GettingType", "Success");
-                        for(QueryDocumentSnapshot document : task.getResult()){
-                            Log.d("__GettingType", (String) Objects.requireNonNull(document.get("Email")));
-                            if(((String) document.get("Email")).equals(email)){
-                                if((Boolean) document.get("Account Type")){
-                                    ///true
-                                    callback.onCallback(true);
-                                    break;
-                                }
-                                else {
-                                    //false
-                                    callback.onCallback(false);
-                                    break;
-                                }
-                            }
+        firebaseFirestore.collection(userDB)
+        .whereEqualTo("Email",email)
+        .get()
+        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    Log.d("__GettingType", "Success");
+                    for(QueryDocumentSnapshot document : task.getResult()){
+                        Log.d("__GettingType", (String) Objects.requireNonNull(document.get("Email")));
+                        if((Boolean) document.get("Account Type")){
+                            ///true
+                            callback.onCallback(true);
+                            break;
+                        }
+                        else {
+                            //false
+                            callback.onCallback(false);
+                            break;
                         }
                     }
-                    else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                        //false
-                        callback.onCallback(false);
-                    }
-
                 }
-            });
+                else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                    //false
+                    callback.onCallback(false);
+                }
+
+            }
+        });
     }
 
     public interface Callback_Notifications {
         void onCallback(ArrayList<FirebaseObjects.Notifications> notifications);
     }
 
-    public void getNotifications(final Callback_Notifications callback_notifications){
-        
+    public void getNotifications_follower(final Callback_Notifications callback_notifications,
+                                          final ArrayList<FirebaseObjects.Notifications> notifications,
+                                          final FirebaseObjects.DevicesDBO device){
+        //get notifications of all devices followed by the follower.
+        firebaseFirestore.collection(deviceDB).whereEqualTo(FirebaseObjects.ID, device.deviceID)
+        .get()
+        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+                        Log.d("__GettingType", (String) Objects.requireNonNull(document.get("Email")));
+
+                          Object valsObj = document.get(FirebaseObjects.Notifications);
+                          String vals = new Gson().toJson(valsObj);
+                        try {
+                            JSONObject infoObj=new JSONObject(vals).getJSONObject("info");
+                            Iterator<String> iterator = infoObj.keys();
+                            while (iterator.hasNext()) {
+                                String key = iterator.next();
+                                JSONObject objArray=infoObj.getJSONObject(key);
+                                FirebaseObjects.Notifications notificationTemp
+                                        = new FirebaseObjects.Notifications(
+                                                objArray.getString("notificationsType"),
+                                                objArray.getString("notificationsInfo"),
+                                                objArray.getInt("time"));
+                                notifications.add(notificationTemp);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        callback_notifications.onCallback(notifications);
+                        }
+                    }
+                }
+
+        });
     }
 
 }

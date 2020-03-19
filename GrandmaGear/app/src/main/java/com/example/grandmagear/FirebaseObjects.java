@@ -108,8 +108,16 @@ public class FirebaseObjects {
     }
 
     public static class Notifications{
+
         protected String notificationType;
         protected String notificationInfo;
+        protected int time;
+
+        public Notifications(String notificationType, String notificationInfo, int time) {
+            this.notificationType = notificationType;
+            this.notificationInfo = notificationInfo;
+            this.time = time;
+        }
 
         public String getNotificationType() {
             return notificationType;

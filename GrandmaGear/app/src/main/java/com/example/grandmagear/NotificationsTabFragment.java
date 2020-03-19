@@ -22,6 +22,7 @@ public class NotificationsTabFragment extends Fragment {
     private NotificationsRecyclerView mAdapter;
     private ArrayList<String> mNotificationTitle = new ArrayList<String>();
     private ArrayList<String> mNotificationText = new ArrayList<String>();
+    private ArrayList<Long> mNotificationTime = new ArrayList<Long>();
     private SharedPreferencesHelper mSharedPreferencesHelper;
 
 
@@ -30,7 +31,7 @@ public class NotificationsTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_tab_fragment, container, false);
         mRecyclerView = view.findViewById(R.id.notificationRecycler);
-        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText);
+        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
@@ -38,18 +39,22 @@ public class NotificationsTabFragment extends Fragment {
         return view;
     }
 
-    public void addNotification(String title, String text){
+    public void addNotification(String title, String text, long time){
         mNotificationTitle.add(title);
         mNotificationText.add(text);
+        mNotificationTime.add(time);
         mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
         mSharedPreferencesHelper.saveNotificationTitle(mNotificationTitle);
         mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Text");
         mSharedPreferencesHelper.saveNotificationText(mNotificationText);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Time");
+        mSharedPreferencesHelper.saveNotificationTime(mNotificationTime);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         String title1 = "Heart Attack";
         String title2 = "Fell Down";
         String title3 = "Fell again";
@@ -58,6 +63,10 @@ public class NotificationsTabFragment extends Fragment {
         String text2 = "Grandma fell down";
         String text3 = "She fell again";
         String text4 = "She healed";
+        long time1 = 1;
+        long time2 = 2;
+        long time3 = 3;
+        long time4 = 4;
         mNotificationTitle.add(title1);
         mNotificationTitle.add(title2);
         mNotificationTitle.add(title3);
@@ -68,12 +77,19 @@ public class NotificationsTabFragment extends Fragment {
         mNotificationText.add(text3);
         mNotificationText.add(text4);
         Collections.reverse(mNotificationText);
+        mNotificationTime.add(time1);
+        mNotificationTime.add(time2);
+        mNotificationTime.add(time3);
+        mNotificationTime.add(time4);
+        Collections.reverse(mNotificationTime);
 
 
         mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
         mSharedPreferencesHelper.saveNotificationTitle(mNotificationTitle);
         mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Text");
         mSharedPreferencesHelper.saveNotificationText(mNotificationText);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Time");
+        mSharedPreferencesHelper.saveNotificationTime(mNotificationTime);
         /*if(mSharedPreferencesHelper.getNotification() != null){
             mNotifications = mSharedPreferencesHelper.getNotification();
         }*/

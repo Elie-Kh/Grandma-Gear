@@ -1,14 +1,10 @@
 package com.example.grandmagear;
 
-import android.content.ContentQueryMap;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 public class SharedPreferencesHelper {
 
@@ -49,6 +45,16 @@ public class SharedPreferencesHelper {
     public void saveNotificationText(ArrayList<String> text){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putStringSet("Notification Text", new HashSet<String>(text));
+        editor.apply();
+    }
+
+    public void saveNotificationTime(ArrayList<Long> time){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        HashSet<String> temp = new HashSet<String>(time.size());
+        for(long longs : time){
+            temp.add(time.toString());
+        }
+        editor.putStringSet("Notification Time", new HashSet<String>(temp));
         editor.apply();
     }
 
