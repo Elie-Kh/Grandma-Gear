@@ -71,7 +71,12 @@ public class UserActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                if(position!=0){
+                    mAddPatient.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    mAddPatient.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
