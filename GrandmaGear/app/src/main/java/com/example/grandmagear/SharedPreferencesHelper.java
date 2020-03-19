@@ -15,6 +15,18 @@ public class SharedPreferencesHelper {
                 Context.MODE_PRIVATE);
     };
 
+    public void saveEmail(String email){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("email", email);
+        editor.apply();
+    }
+
+    public void savePassword(String password){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("password", password);
+        editor.apply();
+    }
+
     public void saveDisclaimerStatus(boolean stat){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         if(stat){
@@ -66,6 +78,14 @@ public class SharedPreferencesHelper {
         }else{
             return notificationTitle;
         }
+    }
+
+    public String getEmail(){
+        return mSharedPreferences.getString("email",null);
+    }
+
+    public String getPassword(){
+        return mSharedPreferences.getString("password",null);
     }
 
     public ArrayList<String> getNotificationText(){
