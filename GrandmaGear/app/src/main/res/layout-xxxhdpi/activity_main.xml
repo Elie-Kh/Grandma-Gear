@@ -17,7 +17,7 @@
         tools:srcCompat="@drawable/sooken" />
 
     <Button
-        android:id="@+id/patient_button"
+        android:id="@+id/main_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="104dp"
@@ -27,14 +27,4 @@
         app:layout_constraintStart_toStartOf="@+id/app_logo"
         app:layout_constraintTop_toBottomOf="@+id/app_logo" />
 
-    <Button
-        android:id="@+id/client_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="@string/client"
-        app:layout_constraintEnd_toEndOf="@+id/patient_button"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/patient_button"
-        app:layout_constraintTop_toBottomOf="@+id/patient_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>
