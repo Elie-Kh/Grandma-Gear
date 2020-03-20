@@ -10,9 +10,9 @@
         android:id="@+id/textView_FullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="9dp"
+        android:layout_alignTop="@+id/imageView_ProfilePicture_MPP_1"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/imageView_ProfilePicture_MPP_1"
         android:text="@string/MPP_1_textView_FullName" />
 
@@ -30,10 +30,10 @@
         android:id="@+id/textView_Height"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_Age"
-        android:layout_alignStart="@+id/textView_Age"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_alignStart="@+id/textViewFullName_Displayed_MPP_1"
+        android:layout_alignBottom="@+id/textView_FullName"
+        android:layout_marginStart="46dp"
+        android:layout_marginBottom="0dp"
         android:text="@string/MPP_1_textView_Height" />
 
     <TextView
@@ -48,35 +48,35 @@
 
     <ImageView
         android:id="@+id/imageView_BatteryLevel_MPP_1"
-        android:layout_width="187dp"
-        android:layout_height="207dp"
+        android:layout_width="42dp"
+        android:layout_height="65dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:onClick="goToBatteryLevel_MPP_1_3"
+        android:layout_marginStart="29dp"
+        android:layout_marginBottom="104dp"
         android:src="@drawable/battery" />
 
     <ImageView
         android:id="@+id/imageView_Heart_MPP_1"
-        android:layout_width="202dp"
-        android:layout_height="184dp"
+        android:layout_width="159dp"
+        android:layout_height="76dp"
         android:layout_above="@+id/imageView_BatteryLevel_MPP_1"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/heart"
-        android:onClick="goToHeartRate_MPP_1_1"/>
+        android:layout_marginStart="17dp"
+        android:layout_marginBottom="14dp"
+        android:src="@drawable/heart" />
 
     <ImageView
         android:id="@+id/imageView_Earth_MPP_1"
-        android:layout_width="178dp"
-        android:layout_height="185dp"
-        android:layout_alignBottom="@+id/imageView_Heart_MPP_1"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/imageView_Heart_MPP_1"
-        android:src="@drawable/earth"
-        android:onClick="goToLocation_MPP_1_2"/>
+        android:layout_width="84dp"
+        android:layout_height="79dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="124dp"
+        android:layout_marginBottom="23dp"
+        android:onClick="goToLocation"
+        android:src="@drawable/earth" />
 
     <TextView
         android:id="@+id/textViewFullName_Displayed_MPP_1"
@@ -120,12 +120,85 @@
 
     <ImageView
         android:id="@+id/imageView_ProfilePicture_MPP_1"
-        android:layout_width="174dp"
-        android:layout_height="172dp"
+        android:layout_width="102dp"
+        android:layout_height="100dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="14dp"
         android:src="@drawable/sooken" />
+
+    <TextView
+        android:id="@+id/textView_2dots"
+        android:layout_width="43dp"
+        android:layout_height="150dp"
+        android:layout_alignBottom="@+id/imageView_Heart_MPP_1"
+        android:layout_marginStart="-37dp"
+        android:layout_marginBottom="-7dp"
+        android:layout_toEndOf="@+id/imageView_Heart_MPP_1"
+        android:text=":"
+        android:textSize="136sp" />
+
+    <TextView
+        android:id="@+id/textView_BPM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView_2dots"
+        android:layout_marginStart="7dp"
+        android:layout_marginBottom="-10dp"
+        android:layout_toEndOf="@+id/textView_2dots"
+        android:text="@string/MPP_1_textView_BPM_value"
+        android:textSize="90dp" />
+
+    <TextView
+        android:id="@+id/textView_BPM_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView_BPM"
+        android:layout_marginStart="47dp"
+        android:layout_marginBottom="-40dp"
+        android:layout_toEndOf="@+id/textView_2dots"
+        android:text="@string/MPP_1_textView_BPM"
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/textView_BraceletBatteryLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_1"
+        android:layout_marginStart="1dp"
+        android:layout_marginBottom="49dp"
+        android:layout_toEndOf="@+id/imageView_BatteryLevel_MPP_1"
+        android:text="@string/MPP_1_textView_BraceletBatteryLevel" />
+
+    <TextView
+        android:id="@+id/textView_PhoneBatteryLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_BraceletBatteryLevel"
+        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_1"
+        android:layout_marginStart="-2dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/MPP_1_textView_PhoneBatteryLevel" />
+
+    <Button
+        android:id="@+id/buttonPanic"
+        android:layout_width="68dp"
+        android:layout_height="36dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="50dp"
+        android:text="@string/MPP_1_PanicButton" />
+
+    <Button
+        android:id="@+id/buttonReports"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="-1dp"
+        android:layout_marginBottom="52dp"
+        android:text="@string/MPP_1_ReportsButton" />
 
 </RelativeLayout>
