@@ -48,8 +48,8 @@ public class UserActivity extends AppCompatActivity {
         mTabsAdapter = new TabsAdapter(getSupportFragmentManager(),
                 BEHAVIOR_SET_USER_VISIBLE_HINT, tabLayout);
         mTabsAdapter.addFragment(mPatientsTabFragment, "Patients");
-        mTabsAdapter.addFragment(mNotificationTabFragment, "Notifications");
-        mTabsAdapter.addFragment(new ReportsTabFragment(), "Reports");
+        mTabsAdapter.addFragment(mNotificationTabFragment, "Reports");
+        //mTabsAdapter.addFragment(new ReportsTabFragment(), "Reports");
         mViewPager.setAdapter(mTabsAdapter);
         tabLayout.setupWithViewPager(mViewPager);
 

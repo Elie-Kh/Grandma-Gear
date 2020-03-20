@@ -5,6 +5,22 @@ import android.bluetooth.BluetoothClass;
 import java.util.ArrayList;
 
 public class FirebaseObjects {
+
+    //variable names for user
+    public static final String Username = "Username";
+    public static final String Email = "Email";
+    public static final String First_Name = "First Name";
+    public static final String Last_Name = "Last Name";
+    public static final String Password = "Password";
+    public static final String Account_Type = "Account Type";
+    public static final String Age = "Age";
+    public static final String Height = "Height";
+    public static final String Weight = "Weight";
+    public static final String GPS_Follow = "GPS Follow";
+    public static final String Devices_Followed = "Devices Followed";
+    public static final String Events = "Events";
+
+    //variable names for device
     public static final String ID = "ID";
     public static final String Longitude = "Longitude";
     public static final String Latitude = "Latitude";
@@ -20,6 +36,7 @@ public class FirebaseObjects {
         protected String lastName;
         protected String password;
         protected Boolean acc_type;
+        protected Boolean gps_follow = false;
         protected int age = 0;
         protected int weight = 0;
         protected int height = 0;
@@ -53,6 +70,14 @@ public class FirebaseObjects {
             this.age = age;
             this.weight = weight;
             this.height = height;
+        }
+
+        public Boolean getGps_follow() {
+            return gps_follow;
+        }
+
+        public void setGps_follow(Boolean gps_follow) {
+            this.gps_follow = gps_follow;
         }
 
         public void setDevice_ids(ArrayList<String> device_ids) {
