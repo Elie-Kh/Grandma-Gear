@@ -47,17 +47,18 @@ public class FirebaseHelper {
         newUser.username = firebaseAuth.getCurrentUser().getUid();
         DocumentReference documentReference = firebaseFirestore.collection(userDB).document(newUser.username);
         Map<String,Object> user = new HashMap<>();
-        user.put("Username", newUser.username);
-        user.put("Email", newUser.email);
-        user.put("First Name", newUser.firstName);
-        user.put("Last Name", newUser.lastName);
-        user.put("Password", newUser.password);
-        user.put("Account Type", newUser.acc_type);
-        user.put("Age", newUser.age);
-        user.put("Height", newUser.height);
-        user.put("Weight", newUser.weight);
-        user.put("Devices Followed", newUser.device_ids);
-        user.put("Events", newUser.events);
+        user.put(FirebaseObjects.Username, newUser.username);
+        user.put(FirebaseObjects.Email, newUser.email);
+        user.put(FirebaseObjects.First_Name, newUser.firstName);
+        user.put(FirebaseObjects.Last_Name, newUser.lastName);
+        user.put(FirebaseObjects.Password, newUser.password);
+        user.put(FirebaseObjects.Account_Type, newUser.acc_type);
+        user.put(FirebaseObjects.Age, newUser.age);
+        user.put(FirebaseObjects.Height, newUser.height);
+        user.put(FirebaseObjects.Weight, newUser.weight);
+        user.put(FirebaseObjects.GPS_Follow, false);
+        user.put(FirebaseObjects.Devices_Followed, newUser.device_ids);
+        user.put(FirebaseObjects.Events, newUser.events);
 
 
         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
