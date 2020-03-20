@@ -8,13 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.grandmagear.Patient_Main_Lobby.HeartRate_MPP_1_1;
 import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
-
-import org.w3c.dom.Text;
 
 public class PatientActivity extends AppCompatActivity {
 
