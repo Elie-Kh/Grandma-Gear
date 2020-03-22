@@ -14,11 +14,13 @@ import android.widget.Button;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 
 public class UserActivity extends AppCompatActivity {
     protected MenuItem mLogout;
     protected FirebaseAuth firebaseAuth;
+    protected FirebaseFirestore firebaseFirestore;
     protected Button mSettings;
     protected FloatingActionButton mAddPatient;
     protected PatientsTabFragment mPatientsTabFragment =  new PatientsTabFragment();
@@ -38,7 +40,7 @@ public class UserActivity extends AppCompatActivity {
 
     void setupUI(){
         firebaseAuth = FirebaseAuth.getInstance();
-
+        firebaseFirestore = FirebaseFirestore.getInstance();
         mSharedPreferencesHelper = new SharedPreferencesHelper(UserActivity.this,
                 "PatientIDs");
 
