@@ -116,6 +116,34 @@ public class FirebaseObjects {
             this.deviceBattery = deviceBattery;
             this.phoneBattery = phoneBattery;
         }
+
+        public String getDeviceID() {
+            return deviceID;
+        }
+
+        public int getBpm() {
+            return bpm;
+        }
+
+        public long getLatGPS() {
+            return latGPS;
+        }
+
+        public long getLonGPS() {
+            return lonGPS;
+        }
+
+        public int getDeviceBattery() {
+            return deviceBattery;
+        }
+
+        public int getPhoneBattery() {
+            return phoneBattery;
+        }
+
+        public ArrayList<FirebaseObjects.Notifications> getNotifications() {
+            return notifications;
+        }
     }
 
     public static class EventsDBO{
