@@ -110,7 +110,12 @@ public class FirebaseObjects {
             this.deviceID = deviceID;
         }
 
-
+        public DevicesDBO(String deviceID, int bpm, int deviceBattery, int phoneBattery) {
+            this.deviceID = deviceID;
+            this.bpm = bpm;
+            this.deviceBattery = deviceBattery;
+            this.phoneBattery = phoneBattery;
+        }
     }
 
     public static class EventsDBO{

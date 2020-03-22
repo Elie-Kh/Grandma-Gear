@@ -167,7 +167,7 @@ public class LogInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogInActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
                             final boolean[] emails = new boolean[1];
                             firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
                                 @Override
@@ -208,7 +208,7 @@ public class LogInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogInActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
                             final boolean[] emails = new boolean[1];
                             firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
                                 @Override
