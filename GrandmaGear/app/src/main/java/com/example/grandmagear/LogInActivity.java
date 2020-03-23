@@ -97,6 +97,8 @@ public class LogInActivity extends AppCompatActivity {
                                 @Override
                                 public void onCallback(boolean checker) {
                                     emails[0] = checker;
+                                    mSharedPreferencesHelper.saveEmail(email);
+                                    mSharedPreferencesHelper.saveType(emails[0]);
                                     if(emails[0]){
                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                     }
@@ -173,6 +175,8 @@ public class LogInActivity extends AppCompatActivity {
                                 @Override
                                 public void onCallback(boolean checker) {
                                     emails[0] = checker;
+                                    mSharedPreferencesHelper.saveEmail(email);
+                                    mSharedPreferencesHelper.saveType(emails[0]);
                                     if(emails[0]){
                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                     }

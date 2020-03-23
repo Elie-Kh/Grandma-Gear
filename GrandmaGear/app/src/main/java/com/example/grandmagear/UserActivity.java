@@ -28,7 +28,10 @@ public class UserActivity extends AppCompatActivity {
     protected TabsAdapter mTabsAdapter;
     protected ViewPager mViewPager;
     protected TabLayout tabLayout;
+    protected FirebaseObjects.UserDBO thisUser;
+    protected FirebaseHelper firebaseHelper;
     SharedPreferencesHelper mSharedPreferencesHelper;
+    SharedPreferencesHelper mSharedPreferencesHelper_Login;
     public static final int BEHAVIOR_SET_USER_VISIBLE_HINT = 1;
 
     @Override
@@ -48,7 +51,10 @@ public class UserActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         mSharedPreferencesHelper = new SharedPreferencesHelper(UserActivity.this,
                 "PatientIDs");
-
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(UserActivity.this,
+                "Login");
+        thisUser = firebaseHelper.getUser(mSharedPreferencesHelper_Login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
         mViewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tabLayout);
 
