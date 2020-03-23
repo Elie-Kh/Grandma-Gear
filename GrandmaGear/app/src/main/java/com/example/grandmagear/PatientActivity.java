@@ -1,9 +1,12 @@
 package com.example.grandmagear;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,10 +14,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class PatientActivity extends AppCompatActivity {
 
     protected Button mHelpButton;
+    protected MenuItem mLogout;
     protected Button mOKButton;
     protected EditText mDeviceID;
     protected ImageView mLogo;
@@ -25,6 +30,13 @@ public class PatientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_patient);
         initializePage();
     }
+
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
+
 
     protected void initializePage(){
         mHelpButton = findViewById(R.id.help_button);
@@ -66,6 +78,32 @@ public class PatientActivity extends AppCompatActivity {
         intent.putExtra(getString(R.string.PC_ID), "0");
         startActivity(intent);
 
+    }
+
+    public void logout(){
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(), LogInActivity.class));
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.user_action_bar,menu);
+        mLogout = findViewById(R.id.logoutAction);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.logoutAction) {// User chose the "Settings" item, show the app settings UI...
+            logout();
+        }// If we got here, the user's action was not recognized.
+        // Invoke the superclass to handle it.
+        return super.onOptionsItemSelected(item);
     }
 
 }
