@@ -42,8 +42,9 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
  * 8- get Type -- Gets the type of a user (Patient or Client)
  * 9- Get Device -- Gets device information from Firestore DB
  * 10- Get Notifications Follower -- Gets notifications of all followed devices
- * 11- ??
- * */
+ * 11- Get User -- Gets user info from the Firestore DB
+ * 12- ??
+ * **/
 
 public class FirebaseHelper {
     protected static final String userDB = "userDB";
@@ -117,6 +118,13 @@ public class FirebaseHelper {
     public void addDeviceFollowed(final FirebaseObjects.UserDBO userDBO, String deviceID){
         ArrayList<String> devices = userDBO.getDevice_ids();
         devices.add(deviceID);
+        firebaseFirestore.collection(deviceDB).whereEqualTo(FirebaseObjects.Username, userDBO.username)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+            }
+        });
     }
 
     public void addNotification(final FirebaseObjects.UserDBO userDBO,
@@ -311,6 +319,45 @@ public class FirebaseHelper {
                 }
 
         });
+
+    }
+
+    public FirebaseObjects.UserDBO getUser(String email, final boolean type){
+        final FirebaseObjects.UserDBO[] returnable = {null};
+        firebaseFirestore
+                .collection(FirebaseHelper.userDB)
+                .whereEqualTo(FirebaseObjects.Email, email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("email")));
+                                if(type) {
+                                    returnable[0] = new FirebaseObjects.UserDBO(
+                                            (String) document.get(FirebaseObjects.Email),
+                                            (String) document.get(FirebaseObjects.First_Name),
+                                            (String) document.get(FirebaseObjects.Last_Name),
+                                            (String) document.get(FirebaseObjects.Password),
+                                            (Boolean) document.get(FirebaseObjects.Account_Type));
+                                } else {
+                                    returnable[0] = new FirebaseObjects.UserDBO(
+                                            (String) document.get(FirebaseObjects.Email),
+                                            (String) document.get(FirebaseObjects.First_Name),
+                                            (String) document.get(FirebaseObjects.Last_Name),
+                                            (String) document.get(FirebaseObjects.Password),
+                                            (Boolean) document.get(FirebaseObjects.Account_Type),
+                                            (Integer) document.get(FirebaseObjects.Age),
+                                            (Integer) document.get(FirebaseObjects.Weight),
+                                            (Integer) document.get(FirebaseObjects.Height));
+                                }
+                                // callback_notifications.onCallback(notifications);
+                            }
+                        }
+                    }
+                });
+        return returnable[0];
     }
 
 }

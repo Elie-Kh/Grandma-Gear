@@ -23,6 +23,9 @@ public class PatientActivity extends AppCompatActivity {
     protected Button mOKButton;
     protected EditText mDeviceID;
     protected ImageView mLogo;
+    protected FirebaseObjects.UserDBO thisUser;
+    protected FirebaseHelper firebaseHelper;
+    SharedPreferencesHelper mSharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +46,11 @@ public class PatientActivity extends AppCompatActivity {
         mOKButton = findViewById(R.id.ok_button);
         mDeviceID = findViewById(R.id.device_id_edit_text);
         mLogo = findViewById(R.id.app_logo);
-
         mLogo.setImageResource(R.drawable.sooken);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(PatientActivity.this,
+                "Login");
+        thisUser = firebaseHelper.getUser(mSharedPreferencesHelper.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper.getType()));
 
         mHelpButton.setOnClickListener(new View.OnClickListener() {
             @Override
