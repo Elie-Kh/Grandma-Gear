@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,7 +46,7 @@ public class AddPatientFragment extends DialogFragment {
                 patientDevice = mDeviceId.getText().toString();
                 Log.d(TAG, "Created Patient");
                 if(!patientDevice.trim().isEmpty()) {
-                    FirebaseObjects.DevicesDBO device;
+                    final FirebaseObjects.DevicesDBO device = new FirebaseObjects.DevicesDBO(patientDevice);
                     ((UserActivity)getActivity()).firebaseFirestore
                             .collection(FirebaseHelper.deviceDB)
                             .whereEqualTo(FirebaseObjects.ID,patientDevice)
@@ -53,7 +54,13 @@ public class AddPatientFragment extends DialogFragment {
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if(task.isSuccessful()){
 
+                                        FirebaseHelper firebaseHelper = new FirebaseHelper();
+                                        firebaseHelper.addDevice(device);
+                                    }else{
+
+                                    }
                                 }
                             });
                     ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
