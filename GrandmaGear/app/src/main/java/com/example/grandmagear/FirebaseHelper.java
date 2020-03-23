@@ -31,6 +31,20 @@ import java.util.Objects;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
+/** Functions implemented in this helper class:
+ * 1- Add User -- Adds user to Firestore DB
+ * 2- Edit User -- Edit a field of a user in Firestore DB
+ * 3- Add Device Followed -- Adds a new device to the array of devices in Firestore TODO: FINISH THIS
+ * 4- Add Notification -- Adds notification TODO: FINISH THIS
+ * 5- Add Device -- adds device to Firestore DB
+ * 6- Edit Device -- Edit a field of a device in Firestore DB
+ * 7- Edit Location -- Edit the longitude and latitude of a device in Firestore DB
+ * 8- get Type -- Gets the type of a user (Patient or Client)
+ * 9- Get Device -- Gets device information from Firestore DB
+ * 10- Get Notifications Follower -- Gets notifications of all followed devices
+ * 11- ??
+ * */
+
 public class FirebaseHelper {
     protected static final String userDB = "userDB";
     protected static final String deviceDB = "deviceDB";
