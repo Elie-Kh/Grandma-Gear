@@ -14,11 +14,13 @@ import android.widget.Button;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 
 public class UserActivity extends AppCompatActivity {
     protected MenuItem mLogout;
     protected FirebaseAuth firebaseAuth;
+    protected FirebaseFirestore firebaseFirestore;
     protected Button mSettings;
     protected FloatingActionButton mAddPatient;
     protected PatientsTabFragment mPatientsTabFragment =  new PatientsTabFragment();
@@ -36,9 +38,14 @@ public class UserActivity extends AppCompatActivity {
         setupUI();
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
     void setupUI(){
         firebaseAuth = FirebaseAuth.getInstance();
-
+        firebaseFirestore = FirebaseFirestore.getInstance();
         mSharedPreferencesHelper = new SharedPreferencesHelper(UserActivity.this,
                 "PatientIDs");
 
@@ -48,8 +55,8 @@ public class UserActivity extends AppCompatActivity {
         mTabsAdapter = new TabsAdapter(getSupportFragmentManager(),
                 BEHAVIOR_SET_USER_VISIBLE_HINT, tabLayout);
         mTabsAdapter.addFragment(mPatientsTabFragment, "Patients");
-        mTabsAdapter.addFragment(mNotificationTabFragment, "Notifications");
-        mTabsAdapter.addFragment(new ReportsTabFragment(), "Reports");
+        mTabsAdapter.addFragment(mNotificationTabFragment, "Reports");
+        //mTabsAdapter.addFragment(new ReportsTabFragment(), "Reports");
         mViewPager.setAdapter(mTabsAdapter);
         tabLayout.setupWithViewPager(mViewPager);
 
@@ -71,7 +78,12 @@ public class UserActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                if(position!=0){
+                    mAddPatient.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    mAddPatient.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -86,6 +98,7 @@ public class UserActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), LogInActivity.class));
         finish();
     }
+
 
     @Override
     protected void onStart() {
@@ -107,6 +120,10 @@ public class UserActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.user_action_bar,menu);
         mLogout = findViewById(R.id.logoutAction);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

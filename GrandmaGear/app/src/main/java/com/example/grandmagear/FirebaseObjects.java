@@ -5,6 +5,30 @@ import android.bluetooth.BluetoothClass;
 import java.util.ArrayList;
 
 public class FirebaseObjects {
+
+    //variable names for user
+    public static final String Username = "Username";
+    public static final String Email = "Email";
+    public static final String First_Name = "First Name";
+    public static final String Last_Name = "Last Name";
+    public static final String Password = "Password";
+    public static final String Account_Type = "Account Type";
+    public static final String Age = "Age";
+    public static final String Height = "Height";
+    public static final String Weight = "Weight";
+    public static final String GPS_Follow = "GPS Follow";
+    public static final String Devices_Followed = "Devices Followed";
+    public static final String Events = "Events";
+
+    //variable names for device
+    public static final String ID = "ID";
+    public static final String Longitude = "Longitude";
+    public static final String Latitude = "Latitude";
+    public static final String Heartrate = "Heartrate";
+    public static final String Notifications = "Notifications";
+    public static final String DeviceBattery = "Device Battery";
+    public static final String PhoneBattery = "Phone Battery";
+
     public static class UserDBO{
         protected String username;
         protected String email;
@@ -12,6 +36,7 @@ public class FirebaseObjects {
         protected String lastName;
         protected String password;
         protected Boolean acc_type;
+        protected Boolean gps_follow = false;
         protected int age = 0;
         protected int weight = 0;
         protected int height = 0;
@@ -47,6 +72,14 @@ public class FirebaseObjects {
             this.height = height;
         }
 
+        public Boolean getGps_follow() {
+            return gps_follow;
+        }
+
+        public void setGps_follow(Boolean gps_follow) {
+            this.gps_follow = gps_follow;
+        }
+
         public void setDevice_ids(ArrayList<String> device_ids) {
             this.device_ids = device_ids;
         }
@@ -77,7 +110,40 @@ public class FirebaseObjects {
             this.deviceID = deviceID;
         }
 
+        public DevicesDBO(String deviceID, int bpm, int deviceBattery, int phoneBattery) {
+            this.deviceID = deviceID;
+            this.bpm = bpm;
+            this.deviceBattery = deviceBattery;
+            this.phoneBattery = phoneBattery;
+        }
 
+        public String getDeviceID() {
+            return deviceID;
+        }
+
+        public int getBpm() {
+            return bpm;
+        }
+
+        public long getLatGPS() {
+            return latGPS;
+        }
+
+        public long getLonGPS() {
+            return lonGPS;
+        }
+
+        public int getDeviceBattery() {
+            return deviceBattery;
+        }
+
+        public int getPhoneBattery() {
+            return phoneBattery;
+        }
+
+        public ArrayList<FirebaseObjects.Notifications> getNotifications() {
+            return notifications;
+        }
     }
 
     public static class EventsDBO{
@@ -100,8 +166,16 @@ public class FirebaseObjects {
     }
 
     public static class Notifications{
+
         protected String notificationType;
         protected String notificationInfo;
+        protected int time;
+
+        public Notifications(String notificationType, String notificationInfo, int time) {
+            this.notificationType = notificationType;
+            this.notificationInfo = notificationInfo;
+            this.time = time;
+        }
 
         public String getNotificationType() {
             return notificationType;

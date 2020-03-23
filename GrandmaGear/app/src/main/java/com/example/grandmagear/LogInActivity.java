@@ -29,12 +29,15 @@ public class LogInActivity extends AppCompatActivity {
     protected ProgressBar mLoginProgressBar;
     protected FirebaseAuth firebaseAuth;
     protected TextView mCreateAccountTextView, mForgotPassTextView;
+    protected SharedPreferencesHelper mSharedPreferencesHelper;
+    FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        mSharedPreferencesHelper = new SharedPreferencesHelper(LogInActivity.this, "Login");
         setupUI();
 
         /*show back button*/
@@ -56,12 +59,12 @@ public class LogInActivity extends AppCompatActivity {
         mLoginButton = findViewById(R.id.logInButton);
         mLoginProgressBar = findViewById(R.id.loginProgressBar);
         firebaseAuth = FirebaseAuth.getInstance();
-
+        firebaseHelper = new FirebaseHelper();
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = mEmail.getText().toString().trim();
-                String password = mPassword.getText().toString().trim();
+                final String email = mEmail.getText().toString().trim();
+                final String password = mPassword.getText().toString().trim();
 
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email is required.");
@@ -86,8 +89,24 @@ public class LogInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
+                            mSharedPreferencesHelper.saveEmail(email);
+                            mSharedPreferencesHelper.savePassword(password);
                             Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                            final boolean[] emails = new boolean[1];
+                            firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
+                                @Override
+                                public void onCallback(boolean checker) {
+                                    emails[0] = checker;
+                                    if(emails[0]){
+                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                    }
+                                    else {
+                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                    }
+                                }
+                            }, email);
+
+
                         }else{
                             Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                             mLoginProgressBar.setVisibility(View.GONE);
@@ -139,8 +158,39 @@ public class LogInActivity extends AppCompatActivity {
         mPassword.setText("");
         mEmail.setText("");
         mLoginProgressBar.setVisibility(View.GONE);
+
         if(firebaseAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+            if(mSharedPreferencesHelper.getEmail() != null) {
+                final String email = mSharedPreferencesHelper.getEmail();
+                final String password = mSharedPreferencesHelper.getPassword();
+                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(LogInActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                            final boolean[] emails = new boolean[1];
+                            firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
+                                @Override
+                                public void onCallback(boolean checker) {
+                                    emails[0] = checker;
+                                    if(emails[0]){
+                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                    }
+                                    else {
+                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                    }
+                                }
+                            }, email);
+
+
+                        }else{
+                            Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
+                            mLoginProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+
         }
     }
 
@@ -151,7 +201,36 @@ public class LogInActivity extends AppCompatActivity {
         mEmail.setText("");
         mLoginProgressBar.setVisibility(View.GONE);
         if(firebaseAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+            if(mSharedPreferencesHelper.getEmail() != null) {
+                final String email = mSharedPreferencesHelper.getEmail();
+                final String password = mSharedPreferencesHelper.getPassword();
+                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(LogInActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+                            final boolean[] emails = new boolean[1];
+                            firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
+                                @Override
+                                public void onCallback(boolean checker) {
+                                    emails[0] = checker;
+                                    if(emails[0]){
+                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                    }
+                                    else {
+                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                    }
+                                }
+                            }, email);
+
+
+                        }else{
+                            Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
+                            mLoginProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
         }
     }
 }
