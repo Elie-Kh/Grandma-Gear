@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
 public class AddPatientFragment extends DialogFragment {
@@ -42,6 +45,17 @@ public class AddPatientFragment extends DialogFragment {
                 patientDevice = mDeviceId.getText().toString();
                 Log.d(TAG, "Created Patient");
                 if(!patientDevice.trim().isEmpty()) {
+                    FirebaseObjects.DevicesDBO device;
+                    ((UserActivity)getActivity()).firebaseFirestore
+                            .collection(FirebaseHelper.deviceDB)
+                            .whereEqualTo(FirebaseObjects.ID,patientDevice)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                }
+                            });
                     ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
                     Log.d(TAG, "Added Patient");
                 }

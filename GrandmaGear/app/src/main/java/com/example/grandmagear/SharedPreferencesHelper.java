@@ -1,14 +1,10 @@
 package com.example.grandmagear;
 
-import android.content.ContentQueryMap;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 public class SharedPreferencesHelper {
 
@@ -18,6 +14,18 @@ public class SharedPreferencesHelper {
         mSharedPreferences = context.getSharedPreferences(pref,
                 Context.MODE_PRIVATE);
     };
+
+    public void saveEmail(String email){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("email", email);
+        editor.apply();
+    }
+
+    public void savePassword(String password){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("password", password);
+        editor.apply();
+    }
 
     public void saveDisclaimerStatus(boolean stat){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
@@ -52,6 +60,16 @@ public class SharedPreferencesHelper {
         editor.apply();
     }
 
+    public void saveNotificationTime(ArrayList<Long> time){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        HashSet<String> temp = new HashSet<String>(time.size());
+        for(long longs : time){
+            temp.add(time.toString());
+        }
+        editor.putStringSet("Notification Time", new HashSet<String>(temp));
+        editor.apply();
+    }
+
     public ArrayList<String> getNotificationTitle(){
         ArrayList<String> notificationTitle = new ArrayList<String>
                 (mSharedPreferences.getStringSet("Notification Title", new HashSet<String>()));
@@ -60,6 +78,14 @@ public class SharedPreferencesHelper {
         }else{
             return notificationTitle;
         }
+    }
+
+    public String getEmail(){
+        return mSharedPreferences.getString("email",null);
+    }
+
+    public String getPassword(){
+        return mSharedPreferences.getString("password",null);
     }
 
     public ArrayList<String> getNotificationText(){

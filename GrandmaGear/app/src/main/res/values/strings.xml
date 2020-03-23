@@ -15,7 +15,7 @@
     <string name="decline_disclaimer">Decline</string>
 
     <!-- activity_main xml -->
-    <string name="patient">Patient</string>
+    <string name="patient">Login</string>
     <string name="client">Client</string>
 
     <!-- activity_log_in xml -->
