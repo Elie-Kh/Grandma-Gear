@@ -117,6 +117,7 @@ public class FirebaseHelper {
     public void addDeviceFollowed(final FirebaseObjects.UserDBO userDBO, String deviceID){
         ArrayList<String> devices = userDBO.getDevice_ids();
         devices.add(deviceID);
+        userDBO.setDevice_ids(devices);
     }
 
     public void addNotification(final FirebaseObjects.UserDBO userDBO,
@@ -128,10 +129,10 @@ public class FirebaseHelper {
 
     public void addDevice(final FirebaseObjects.DevicesDBO device){
 
-        device.deviceID = firebaseAuth.getUid();
+        //device.deviceID = firebaseAuth.getUid();
         final DocumentReference documentReference = firebaseFirestore.collection(deviceDB).document(device.deviceID);
         Map<String,Object> devices = new HashMap<>();
-        devices.put(FirebaseObjects.ID, device.deviceID);
+        devices.put(FirebaseObjects.ID, firebaseAuth.getUid());
         devices.put(FirebaseObjects.Longitude, device.lonGPS);
         devices.put(FirebaseObjects.Latitude, device.latGPS);
         devices.put(FirebaseObjects.Heartrate, device.bpm);
