@@ -333,7 +333,7 @@ public class FirebaseHelper {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("email")));
+                                //Log.d("__GettingType", (String) Objects.requireNonNull(document.get("email")));
                                 if(type) {
                                     returnable[0] = new FirebaseObjects.UserDBO(
                                             (String) document.get(FirebaseObjects.Email),
@@ -342,15 +342,17 @@ public class FirebaseHelper {
                                             (String) document.get(FirebaseObjects.Password),
                                             (Boolean) document.get(FirebaseObjects.Account_Type));
                                 } else {
+                                    Log.d("__TESTERS__", (String) Objects.requireNonNull(document.get(FirebaseObjects.Email)));
                                     returnable[0] = new FirebaseObjects.UserDBO(
                                             (String) document.get(FirebaseObjects.Email),
                                             (String) document.get(FirebaseObjects.First_Name),
                                             (String) document.get(FirebaseObjects.Last_Name),
                                             (String) document.get(FirebaseObjects.Password),
-                                            (Boolean) document.get(FirebaseObjects.Account_Type),
-                                            (Integer) document.get(FirebaseObjects.Age),
-                                            (Integer) document.get(FirebaseObjects.Weight),
-                                            (Integer) document.get(FirebaseObjects.Height));
+                                            (Boolean) document.get(FirebaseObjects.Account_Type)
+                                            //(Integer) document.get(FirebaseObjects.Age),
+                                            //(Integer) document.get(FirebaseObjects.Weight),
+                                            //(Integer) document.get(FirebaseObjects.Height)
+                                            );
                                 }
                                 // callback_notifications.onCallback(notifications);
                             }

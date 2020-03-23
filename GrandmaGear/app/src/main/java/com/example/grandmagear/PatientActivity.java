@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +50,9 @@ public class PatientActivity extends AppCompatActivity {
         mLogo.setImageResource(R.drawable.sooken);
         mSharedPreferencesHelper = new SharedPreferencesHelper(PatientActivity.this,
                 "Login");
+        firebaseHelper = new FirebaseHelper();
+        Log.d("__THISTAG__", String.valueOf(Boolean.parseBoolean(mSharedPreferencesHelper.getType())));
+        Log.d("__THISTAG__", mSharedPreferencesHelper.getEmail());
         thisUser = firebaseHelper.getUser(mSharedPreferencesHelper.getEmail(),
                 Boolean.parseBoolean(mSharedPreferencesHelper.getType()));
 

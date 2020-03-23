@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,10 +50,14 @@ public class UserActivity extends AppCompatActivity {
     void setupUI(){
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseHelper = new FirebaseHelper();
         mSharedPreferencesHelper = new SharedPreferencesHelper(UserActivity.this,
                 "PatientIDs");
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(UserActivity.this,
                 "Login");
+        Log.d("__THISTAG__", String.valueOf(Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType())));
+        Log.d("__THISTAG__", mSharedPreferencesHelper_Login.getEmail());
+
         thisUser = firebaseHelper.getUser(mSharedPreferencesHelper_Login.getEmail(),
                 Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
         mViewPager = findViewById(R.id.view_pager);
