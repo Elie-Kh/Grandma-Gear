@@ -38,6 +38,11 @@ public class UserActivity extends AppCompatActivity {
         setupUI();
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
     void setupUI(){
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -94,6 +99,7 @@ public class UserActivity extends AppCompatActivity {
         finish();
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -114,6 +120,10 @@ public class UserActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.user_action_bar,menu);
         mLogout = findViewById(R.id.logoutAction);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
