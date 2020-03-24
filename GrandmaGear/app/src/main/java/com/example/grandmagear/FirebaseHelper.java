@@ -42,10 +42,12 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
  * 8- get Type -- Gets the type of a user (Patient or Client)
  * 9- Get Device -- Gets device information from Firestore DB
  * 10- Get Notifications Follower -- Gets notifications of all followed devices
- * 11- ??
- * */
+ * 11- Get User -- Gets user info from the Firestore DB
+ * 12- ??
+ * **/
 
 public class FirebaseHelper {
+    protected static final String TAG = "_FirebaseHelper";
     protected static final String userDB = "userDB";
     protected static final String deviceDB = "deviceDB";
     protected static final String eventDB = "eventDB";
@@ -115,9 +117,23 @@ public class FirebaseHelper {
     }
 
     public void addDeviceFollowed(final FirebaseObjects.UserDBO userDBO, String deviceID){
-        ArrayList<String> devices = userDBO.getDevice_ids();
+        final ArrayList<String> devices;
+        if(userDBO.getDevice_ids() == null){
+            devices = new ArrayList<String>();
+        }else{
+            devices = userDBO.getDevice_ids();
+        }
         devices.add(deviceID);
-        userDBO.setDevice_ids(devices);
+        firebaseFirestore.collection(deviceDB).whereEqualTo(FirebaseObjects.Username, userDBO.username)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    userDBO.setDevice_ids(devices);
+                    editUser(userDBO, FirebaseObjects.Devices_Followed, devices);
+                }
+            }
+        });
     }
 
     public void addNotification(final FirebaseObjects.UserDBO userDBO,
@@ -312,6 +328,47 @@ public class FirebaseHelper {
                 }
 
         });
+
+    }
+
+    public FirebaseObjects.UserDBO getUser(String email, final boolean type){
+        final FirebaseObjects.UserDBO[] returnable = {null};
+        firebaseFirestore
+                .collection(FirebaseHelper.userDB)
+                .whereEqualTo(FirebaseObjects.Email, email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Log.d("__GettingType", (String) Objects.requireNonNull(document.get("email")));
+                                if(type) {
+                                    returnable[0] = new FirebaseObjects.UserDBO(
+                                            (String) document.get(FirebaseObjects.Email),
+                                            (String) document.get(FirebaseObjects.First_Name),
+                                            (String) document.get(FirebaseObjects.Last_Name),
+                                            (String) document.get(FirebaseObjects.Password),
+                                            (Boolean) document.get(FirebaseObjects.Account_Type));
+                                } else {
+                                    Log.d("__TESTERS__", (String) Objects.requireNonNull(document.get(FirebaseObjects.Email)));
+                                    returnable[0] = new FirebaseObjects.UserDBO(
+                                            (String) document.get(FirebaseObjects.Email),
+                                            (String) document.get(FirebaseObjects.First_Name),
+                                            (String) document.get(FirebaseObjects.Last_Name),
+                                            (String) document.get(FirebaseObjects.Password),
+                                            (Boolean) document.get(FirebaseObjects.Account_Type)
+                                            //(Integer) document.get(FirebaseObjects.Age),
+                                            //(Integer) document.get(FirebaseObjects.Weight),
+                                            //(Integer) document.get(FirebaseObjects.Height)
+                                            );
+                                }
+                                // callback_notifications.onCallback(notifications);
+                            }
+                        }
+                    }
+                });
+        return returnable[0];
     }
 
 }

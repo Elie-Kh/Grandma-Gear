@@ -51,6 +51,10 @@ public class FirebaseObjects {
             this.lastName = lastName;
         }
 
+        public String getEmail() {
+            return email;
+        }
+
         public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type) {
             //this.username = username;
             this.email = email;
@@ -58,6 +62,8 @@ public class FirebaseObjects {
             this.lastName = lastName;
             this.password = password;
             this.acc_type = acc_type;
+            this.device_ids = new ArrayList<String>();
+            this.events = new ArrayList<EventsDBO>();
         }
 
         public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, int age, int weight, int height) {
@@ -70,6 +76,8 @@ public class FirebaseObjects {
             this.age = age;
             this.weight = weight;
             this.height = height;
+            this.device_ids = new ArrayList<String>();
+            this.events = new ArrayList<EventsDBO>();
         }
 
         public Boolean getGps_follow() {

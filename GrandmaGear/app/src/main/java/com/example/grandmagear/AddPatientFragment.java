@@ -1,5 +1,6 @@
 package com.example.grandmagear;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
+import java.util.ConcurrentModificationException;
+
 public class AddPatientFragment extends DialogFragment {
 
     private static final String TAG = "AddPatient__";
@@ -25,6 +28,12 @@ public class AddPatientFragment extends DialogFragment {
     protected Button mAdd;
     protected Button mCancel;
     protected String patientDevice;
+    protected FirebaseObjects.UserDBO user;
+    protected FirebaseHelper firebaseHelper;
+
+    public AddPatientFragment(FirebaseObjects.UserDBO userDBO) {
+        this.user = userDBO;
+    }
 
     @Nullable
     @Override
@@ -39,6 +48,7 @@ public class AddPatientFragment extends DialogFragment {
         mDeviceId = view.findViewById(R.id.device_id_adding_fragment);
         mAdd = view.findViewById(R.id.add_device_adding_fragment);
         mCancel = view.findViewById(R.id.cancel_device_adding_fragment);
+        firebaseHelper = new FirebaseHelper();
 
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,9 +65,8 @@ public class AddPatientFragment extends DialogFragment {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if(task.isSuccessful()){
-
-                                        FirebaseHelper firebaseHelper = new FirebaseHelper();
                                         firebaseHelper.addDevice(device);
+                                        firebaseHelper.addDeviceFollowed(user, patientDevice);
                                     }else{
 
                                     }

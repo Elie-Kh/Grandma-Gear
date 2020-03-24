@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,9 @@ public class PatientActivity extends AppCompatActivity {
     protected Button mOKButton;
     protected EditText mDeviceID;
     protected ImageView mLogo;
+    protected FirebaseObjects.UserDBO thisUser;
+    protected FirebaseHelper firebaseHelper;
+    SharedPreferencesHelper mSharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +47,14 @@ public class PatientActivity extends AppCompatActivity {
         mOKButton = findViewById(R.id.ok_button);
         mDeviceID = findViewById(R.id.device_id_edit_text);
         mLogo = findViewById(R.id.app_logo);
-
         mLogo.setImageResource(R.drawable.sooken);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(PatientActivity.this,
+                "Login");
+        firebaseHelper = new FirebaseHelper();
+        Log.d("__THISTAG__", String.valueOf(Boolean.parseBoolean(mSharedPreferencesHelper.getType())));
+        Log.d("__THISTAG__", mSharedPreferencesHelper.getEmail());
+        thisUser = firebaseHelper.getUser(mSharedPreferencesHelper.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper.getType()));
 
         mHelpButton.setOnClickListener(new View.OnClickListener() {
             @Override
