@@ -155,6 +155,7 @@ public class FirebaseHelper {
         devices.put(FirebaseObjects.PhoneBattery, device.phoneBattery);
         devices.put(FirebaseObjects.DeviceBattery, device.deviceBattery);
         devices.put(FirebaseObjects.Notifications, device.notifications);
+
         documentReference.set(devices).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

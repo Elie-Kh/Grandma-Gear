@@ -84,15 +84,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
         android:padding="10dp"
         android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/registerButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weight" />
 
@@ -101,10 +103,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="19dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:hint="@string/register"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/registerProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -117,21 +121,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="181dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="182dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerButton" />
 
     <EditText
         android:id="@+id/weight"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="166dp"
+        android:layout_height="41dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="220dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:digits="1234567890"
         android:ems="10"
@@ -140,8 +144,7 @@
         android:maxLength="3"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/deviceID"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/age" />
 
@@ -196,5 +199,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/deviceID"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:hint="@string/device_id"
+        android:inputType="textPersonName"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/weight"
+        app:layout_constraintTop_toBottomOf="@+id/height" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
