@@ -65,7 +65,8 @@ public class AddPatientFragment extends DialogFragment {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if(task.isSuccessful()){
-                                        firebaseHelper.addDevice(device);
+                                        //firebaseHelper.addDevice(device);
+                                        Log.d("__ADDPATIENT__", user.email);
                                         firebaseHelper.addDeviceFollowed(user, patientDevice);
                                     }else{
 
