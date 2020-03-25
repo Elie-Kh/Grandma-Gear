@@ -115,20 +115,20 @@ public class FirebaseHelper {
             }
         });
     }
+    public interface Callback_DeviceFollowed {
+        void onCallback(boolean checker);
+    }
 
-    public void addDeviceFollowed(final FirebaseObjects.UserDBO userDBO, String deviceID){
-        final ArrayList<String> devices;
-        if(userDBO.getDevice_ids() == null){
-            devices = new ArrayList<String>();
-        }else{
-            devices = userDBO.getDevice_ids();
-        }
-        devices.add(deviceID);
+    public void addDeviceFollowed(final FirebaseObjects.UserDBO userDBO, final String deviceID){
+
         firebaseFirestore.collection(deviceDB).whereEqualTo(FirebaseObjects.Username, userDBO.username)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    ArrayList<String> devices = new ArrayList<String>();
+                    devices = userDBO.getDevice_ids();
+                    devices.add(deviceID);
                     userDBO.setDevice_ids(devices);
                     editUser(userDBO, FirebaseObjects.Devices_Followed, devices);
                 }
