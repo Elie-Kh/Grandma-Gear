@@ -58,7 +58,12 @@ public class UserActivity extends AppCompatActivity {
         Log.d("__THISTAG__", String.valueOf(Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType())));
         Log.d("__THISTAG__", mSharedPreferencesHelper_Login.getEmail());
 
-        thisUser = firebaseHelper.getUser(mSharedPreferencesHelper_Login.getEmail(),
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(FirebaseObjects.UserDBO user) {
+                                       thisUser = user;
+                                   }
+                               }, mSharedPreferencesHelper_Login.getEmail(),
                 Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
         mViewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tabLayout);
@@ -76,6 +81,15 @@ public class UserActivity extends AppCompatActivity {
         mAddPatient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                    @Override
+                    public void onCallback(FirebaseObjects.UserDBO user) {
+                        thisUser = user;
+                    }
+                }, mSharedPreferencesHelper_Login.getEmail(),
+                        Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+                thisUser.setDevice_ids(mPatientsTabFragment.getmPatientsList());
                 AddPatientFragment patientFrag = new AddPatientFragment(thisUser);
                 patientFrag.show(getSupportFragmentManager(), "AddPatientFragment");
             }

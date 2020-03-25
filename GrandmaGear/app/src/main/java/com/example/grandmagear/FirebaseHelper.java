@@ -92,13 +92,22 @@ public class FirebaseHelper {
     }
 
     public void editUser(final FirebaseObjects.UserDBO userDBO, final String field, final Object newVar){
-        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(userDBO.username);
+        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(firebaseAuth.getCurrentUser().getUid());
 
         firebaseFirestore.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                transaction.update(documentReference, field, newVar);
+                if(newVar instanceof ArrayList<?>){
+                    Map<String, String> map = new HashMap<>();
+                    for(int i = 0; i < ((ArrayList) newVar).size()-1; i++){
+                        map.put(String.valueOf(i), ((ArrayList) newVar).get(i).toString());
+                    }
+                    transaction.update(documentReference, field, map);
+                }
+                else {
+                    transaction.update(documentReference, field, newVar);
+                }
 
                 return null;
             }
@@ -219,8 +228,33 @@ public class FirebaseHelper {
         });
     }
 
+    public interface Callback_AddPatient {
+        void onCallback();
+    }
+
     public interface Callback_Type {
         void onCallback(boolean checker);
+    }
+
+    public void addingPatient(final Callback_AddPatient callback,final FirebaseObjects.UserDBO user,
+                           final String patientDevice){
+        firebaseFirestore
+                .collection(FirebaseHelper.deviceDB)
+                .whereEqualTo(FirebaseObjects.ID,patientDevice)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            //firebaseHelper.addDevice(device);
+                            Log.d("__ADDPATIENT__", user.email);
+                            addDeviceFollowed(user, patientDevice);
+                        }else{
+
+                        }
+                    }
+                });
+        callback.onCallback();
     }
 
     public void getType(final Callback_Type callback, final String email){
@@ -331,7 +365,11 @@ public class FirebaseHelper {
 
     }
 
-    public FirebaseObjects.UserDBO getUser(String email, final boolean type){
+    public interface Callback_getUser{
+        void onCallback(FirebaseObjects.UserDBO user);
+    }
+
+    public void getUser(final Callback_getUser callback, String email, final boolean type){
         final FirebaseObjects.UserDBO[] returnable = {null};
         firebaseFirestore
                 .collection(FirebaseHelper.userDB)
@@ -363,12 +401,11 @@ public class FirebaseHelper {
                                             //(Integer) document.get(FirebaseObjects.Height)
                                             );
                                 }
-                                // callback_notifications.onCallback(notifications);
+                                callback.onCallback(returnable[0]);
                             }
                         }
                     }
                 });
-        return returnable[0];
     }
 
 }
