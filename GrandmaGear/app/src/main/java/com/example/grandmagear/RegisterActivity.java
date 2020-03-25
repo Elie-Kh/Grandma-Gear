@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.LoginFilter;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -31,14 +32,15 @@ public class RegisterActivity extends AppCompatActivity {
     protected ProgressBar mRegisterProgressBar;
     protected FirebaseAuth firebaseAuth;
     protected FirebaseFirestore firebaseFirestore;
+    protected SharedPreferencesHelper mSharedPreferencesHelper;
     protected String userID;
-    protected boolean acc_type;
+    protected boolean acc_type = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        mSharedPreferencesHelper = new SharedPreferencesHelper(RegisterActivity.this, "Login");
         setupUI();
 
         /*show back button*/
@@ -166,7 +168,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 /*Register the user in Firebase*/
 
-                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                firebaseAuth
+                        .createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
@@ -176,33 +179,17 @@ public class RegisterActivity extends AppCompatActivity {
                                 FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type);
                                 FirebaseHelper firebaseHelper = new FirebaseHelper();
                                 firebaseHelper.AddUser(newUser);
+
                             }else{
                                 FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type, Integer.parseInt(age),
                                         Integer.parseInt(weight), Integer.parseInt(height));
                                 FirebaseHelper firebaseHelper = new FirebaseHelper();
                                 firebaseHelper.AddUser(newUser);
                             }
-                            //TODO: Delete comments below and replace with "FirebaseHelper.AddUser(newUser);"
-//
-//                            userID = firebaseAuth.getCurrentUser().getUid();
-//                            DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
-//                            Map<String,Object> user = new HashMap<>();
-//                            user.put("Name", name);
-//                            user.put("Email", email);
-//                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                @Override
-//                                public void onSuccess(Void aVoid) {
-//                                    Log.d(TAG, "onSuccess: user Profile is created for " + userID);
-//                                }
-//                            });
-//                            documentReference.set(user).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Log.d(TAG, "onFailure: " + e.toString());
-//                                }
-//                            });
-                            //TODO: Include deleting this line with all above comments
-                            startActivity(new Intent(getApplicationContext(), LogInActivity.class));
+                            mSharedPreferencesHelper.saveEmail(email);
+                            mSharedPreferencesHelper.savePassword(password);
+                            mSharedPreferencesHelper.saveType(acc_type);
+                            startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
                         }else{
                             Toast.makeText(RegisterActivity.this, "A user with this email already exists!", Toast.LENGTH_SHORT).show();
                             mRegisterProgressBar.setVisibility(View.GONE);
