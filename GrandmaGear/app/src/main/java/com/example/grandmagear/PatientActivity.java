@@ -53,7 +53,12 @@ public class PatientActivity extends AppCompatActivity {
         firebaseHelper = new FirebaseHelper();
         Log.d("__THISTAG__", String.valueOf(Boolean.parseBoolean(mSharedPreferencesHelper.getType())));
         Log.d("__THISTAG__", mSharedPreferencesHelper.getEmail());
-        thisUser = firebaseHelper.getUser(mSharedPreferencesHelper.getEmail(),
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(FirebaseObjects.UserDBO user) {
+                                       thisUser = user;
+                                   }
+                               }, mSharedPreferencesHelper.getEmail(),
                 Boolean.parseBoolean(mSharedPreferencesHelper.getType()));
 
         mHelpButton.setOnClickListener(new View.OnClickListener() {
