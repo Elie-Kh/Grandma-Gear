@@ -25,7 +25,7 @@ public class PatientsTabFragment extends Fragment {
     private static final String TAG = "PatientsTabFrag__";
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter mAdapter;
-    private ArrayList<String> mPatientsList = new ArrayList<String>();
+    protected ArrayList<String> mPatientsList = new ArrayList<String>();
     private SharedPreferencesHelper mSharedPreferencesHelper;
 
     @Nullable
@@ -47,6 +47,10 @@ public class PatientsTabFragment extends Fragment {
         mPatientsList.add(patientDevice);
         mSharedPreferencesHelper.savePatientsList(mPatientsList);
 
+    }
+
+    public ArrayList<String> getmPatientsList(){
+        return mPatientsList;
     }
 
     @Override

@@ -57,24 +57,31 @@ public class AddPatientFragment extends DialogFragment {
                 Log.d(TAG, "Created Patient");
                 if(!patientDevice.trim().isEmpty()) {
                     final FirebaseObjects.DevicesDBO device = new FirebaseObjects.DevicesDBO(patientDevice);
-                    ((UserActivity)getActivity()).firebaseFirestore
-                            .collection(FirebaseHelper.deviceDB)
-                            .whereEqualTo(FirebaseObjects.ID,patientDevice)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if(task.isSuccessful()){
-                                        //firebaseHelper.addDevice(device);
-                                        Log.d("__ADDPATIENT__", user.email);
-                                        firebaseHelper.addDeviceFollowed(user, patientDevice);
-                                    }else{
+//                    ((UserActivity)getActivity()).firebaseFirestore
+//                            .collection(FirebaseHelper.deviceDB)
+//                            .whereEqualTo(FirebaseObjects.ID,patientDevice)
+//                            .get()
+//                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                    if(task.isSuccessful()){
+//                                        //firebaseHelper.addDevice(device);
+//                                        Log.d("__ADDPATIENT__", user.email);
+//                                        firebaseHelper.addDeviceFollowed(user, patientDevice);
+//                                    }else{
+//
+//                                    }
+//                                }
+//                            });
+                    ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
+                        @Override
+                        public void onCallback() {
 
-                                    }
-                                }
-                            });
-                    ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
-                    Log.d(TAG, "Added Patient");
+                            ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
+                            Log.d(TAG, "Added Patient");
+                        }
+                    }, ((UserActivity)getActivity()).thisUser, patientDevice);
                 }
                 //((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
                 /*TODO: Check if Device in Database.
