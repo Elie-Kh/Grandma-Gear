@@ -73,15 +73,26 @@ public class AddPatientFragment extends DialogFragment {
 //                                    }
 //                                }
 //                            });
+
+
+                    /**TEMPORARY FIX FOR ADDING TWICE IN DB.
+                     * **/
+                    if(((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size() != 0){
+                        ((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.remove(
+                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
+                        );
+                    }
                     ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
                     firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
                         @Override
                         public void onCallback() {
 
-                            ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
+                           // ((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList = ((UserActivity)getActivity()).thisUser.getDevice_ids();
                             Log.d(TAG, "Added Patient");
                         }
                     }, ((UserActivity)getActivity()).thisUser, patientDevice);
+
+                    ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
                 }
                 //((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
                 /*TODO: Check if Device in Database.
