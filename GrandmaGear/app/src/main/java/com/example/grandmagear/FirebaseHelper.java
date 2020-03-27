@@ -103,6 +103,7 @@ public class FirebaseHelper {
                     for(int i = 0; i < ((ArrayList) newVar).size()-1; i++){
                         map.put(String.valueOf(i), ((ArrayList) newVar).get(i).toString());
                     }
+                    userDBO.setDevice_ids((ArrayList<String>) newVar);
                     transaction.update(documentReference, field, map);
                 }
                 else {
