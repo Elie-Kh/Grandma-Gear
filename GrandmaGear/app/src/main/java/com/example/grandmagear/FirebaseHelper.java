@@ -103,6 +103,7 @@ public class FirebaseHelper {
                     for(int i = 0; i < ((ArrayList) newVar).size()-1; i++){
                         map.put(String.valueOf(i), ((ArrayList) newVar).get(i).toString());
                     }
+                    userDBO.setDevice_ids((ArrayList<String>) newVar);
                     transaction.update(documentReference, field, map);
                 }
                 else {
@@ -292,9 +293,6 @@ public class FirebaseHelper {
         });
     }
 
-    public interface Callback_Notifications {
-        void onCallback(ArrayList<FirebaseObjects.Notifications> notifications);
-    }
 
     public interface Callback_Device {
         void onCallback(String device);
@@ -325,6 +323,11 @@ public class FirebaseHelper {
                 });
         return returnable[0];
     }
+
+    public interface Callback_Notifications {
+        void onCallback(ArrayList<FirebaseObjects.Notifications> notifications);
+    }
+
 
     public void getNotifications_follower(final Callback_Notifications callback_notifications,
                                           final ArrayList<FirebaseObjects.Notifications> notifications,
@@ -407,6 +410,47 @@ public class FirebaseHelper {
                         }
                     }
                 });
+    }
+
+    public interface Callback_getUserFollowers {
+        void onCallback(ArrayList<String> followers);
+    }
+
+
+    public void getUser_followers(final Callback_getUserFollowers callback_getUserFollowers,
+                                          final ArrayList<String> followers,
+                                          final FirebaseObjects.UserDBO user){
+        //get notifications of all devices followed by the follower.
+        firebaseFirestore.collection(deviceDB).whereEqualTo(FirebaseObjects.ID, user.username)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                //Log.d("__GettingType", (String) Objects.requireNonNull(document.get("Email")));
+
+                                Object valsObj = document.getData();
+                                String vals = new Gson().toJson(valsObj);
+                                try {
+                                    JSONObject infoObj=new JSONObject(vals).getJSONObject(FirebaseObjects.Devices_Followed);
+                                    Iterator<String> iterator = infoObj.keys();
+                                    while (iterator.hasNext()) {
+                                        String key = iterator.next();
+                                        JSONObject objArray=infoObj.getJSONObject(key);
+                                        String temp = objArray.getString(FirebaseObjects.Devices_Followed);
+                                        followers.add(temp);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                callback_getUserFollowers.onCallback(followers);
+                            }
+                        }
+                    }
+
+                });
+
     }
 
 }
