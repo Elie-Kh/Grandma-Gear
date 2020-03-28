@@ -26,13 +26,30 @@ public class PatientsTabFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter mAdapter;
     protected ArrayList<String> mPatientsList = new ArrayList<String>();
+    protected FirebaseHelper firebaseHelper = new FirebaseHelper();
+    protected FirebaseObjects.UserDBO thisUser;
     private SharedPreferencesHelper mSharedPreferencesHelper;
+    private SharedPreferencesHelper mSharedPreferencesHelper_login;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.patient_tab_fragment, container, false);
+        mSharedPreferencesHelper_login = new SharedPreferencesHelper(getActivity(), "Login");
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+            @Override
+            public void onCallback(FirebaseObjects.UserDBO user) {
+                thisUser = user;
+            }
+        }, mSharedPreferencesHelper_login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_login.getType()));
+        firebaseHelper.getUser_followers(new FirebaseHelper.Callback_getUserFollowers() {
+            @Override
+            public void onCallback(ArrayList<String> followers) {
+                mPatientsList = followers;
+            }
+        }, mPatientsList, thisUser);
         Log.d(TAG, "Inflated");
         mRecyclerView = view.findViewById(R.id.device_recycler);
         mAdapter = new RecyclerViewAdapter(mPatientsList);
