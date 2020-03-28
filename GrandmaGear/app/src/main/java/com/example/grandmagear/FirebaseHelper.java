@@ -100,12 +100,12 @@ public class FirebaseHelper {
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 if(newVar instanceof ArrayList<?>){
-                    Map<String, String> map = new HashMap<>();
-                    for(int i = 0; i < ((ArrayList) newVar).size(); i++){
-                        map.put(String.valueOf(i), ((ArrayList) newVar).get(i).toString());
-                    }
+                    //Map<String, String> map = new HashMap<>();
+//                    for(int i = 0; i < ((ArrayList) newVar).size(); i++){
+//                        map.put(String.valueOf(i), ((ArrayList) newVar).get(i).toString());
+//                    }
                     userDBO.setDevice_ids((ArrayList<String>) newVar);
-                    transaction.update(documentReference, field, map);
+                    transaction.update(documentReference, field, userDBO.getDevice_ids());
                 }
                 else {
                     transaction.update(documentReference, field, newVar);
@@ -447,10 +447,12 @@ public class FirebaseHelper {
 //                                } catch (JSONException e) {
 //                                    e.printStackTrace();
 //                                }
-                                HashMap<String, String> temp =
-                                        (HashMap<String, String>) document.get(FirebaseObjects.Devices_Followed);
-                                Collection<String> values = temp.values();
-                                ArrayList<String> vals = new ArrayList<String>(values);
+//                                HashMap<String, String> temp =
+//                                        (HashMap<String, String>) document.get(FirebaseObjects.Devices_Followed);
+//                                Collection<String> values = temp.values();
+
+                                ArrayList<String> vals = new ArrayList<String>
+                                        ((ArrayList<String>)document.get(FirebaseObjects.Devices_Followed));
                                 callback_getUserFollowers.onCallback(vals);
                             }
                         }
