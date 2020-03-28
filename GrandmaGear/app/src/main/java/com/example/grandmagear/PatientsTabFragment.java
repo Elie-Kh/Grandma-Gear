@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class PatientsTabFragment extends Fragment {
 
     private static final String TAG = "PatientsTabFrag__";
-    private RecyclerView mRecyclerView;
+    protected RecyclerView mRecyclerView;
     protected RecyclerViewAdapter mAdapter;
     protected ArrayList<String> mPatientsList = new ArrayList<String>();
     protected FirebaseHelper firebaseHelper = new FirebaseHelper();
@@ -55,7 +55,6 @@ public class PatientsTabFragment extends Fragment {
                                                mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
                                                        DividerItemDecoration.VERTICAL));
                                                ((UserActivity)getActivity()).updateUser(thisUser);
-
                                            }
                                        }, mPatientsList, user);
                                    }
