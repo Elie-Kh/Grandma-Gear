@@ -83,11 +83,15 @@ public class AddPatientFragment extends DialogFragment {
 //                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
 //                        );
 //                    }
-                    //((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    user.setDevice_ids(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
                     firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
                         @Override
                         public void onCallback(FirebaseObjects.UserDBO users) {
                             user = users;
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
+                                    users.device_ids;
+                            ((UserActivity)getActivity()).mTabsAdapter.notifyDataSetChanged();
                            Log.d(TAG, "Added Patient");
                             getDialog().dismiss();
                         }
