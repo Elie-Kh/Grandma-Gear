@@ -21,6 +21,12 @@ public class SharedPreferencesHelper {
         editor.apply();
     }
 
+    public void saveType(Boolean type){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("type", type.toString());
+        editor.apply();
+    }
+
     public void savePassword(String password){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString("password", password);
@@ -82,6 +88,10 @@ public class SharedPreferencesHelper {
 
     public String getEmail(){
         return mSharedPreferences.getString("email",null);
+    }
+
+    public String getType(){
+        return mSharedPreferences.getString("type",null);
     }
 
     public String getPassword(){

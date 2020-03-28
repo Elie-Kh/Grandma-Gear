@@ -1,5 +1,6 @@
 package com.example.grandmagear;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
+import java.util.ConcurrentModificationException;
+
 public class AddPatientFragment extends DialogFragment {
 
     private static final String TAG = "AddPatient__";
@@ -24,6 +28,12 @@ public class AddPatientFragment extends DialogFragment {
     protected Button mAdd;
     protected Button mCancel;
     protected String patientDevice;
+    protected FirebaseObjects.UserDBO user;
+    protected FirebaseHelper firebaseHelper;
+
+    public AddPatientFragment(FirebaseObjects.UserDBO userDBO) {
+        this.user = userDBO;
+    }
 
     @Nullable
     @Override
@@ -38,6 +48,7 @@ public class AddPatientFragment extends DialogFragment {
         mDeviceId = view.findViewById(R.id.device_id_adding_fragment);
         mAdd = view.findViewById(R.id.add_device_adding_fragment);
         mCancel = view.findViewById(R.id.cancel_device_adding_fragment);
+        firebaseHelper = new FirebaseHelper();
 
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,19 +56,43 @@ public class AddPatientFragment extends DialogFragment {
                 patientDevice = mDeviceId.getText().toString();
                 Log.d(TAG, "Created Patient");
                 if(!patientDevice.trim().isEmpty()) {
-                    FirebaseObjects.DevicesDBO device;
-                    ((UserActivity)getActivity()).firebaseFirestore
-                            .collection(FirebaseHelper.deviceDB)
-                            .whereEqualTo(FirebaseObjects.ID,patientDevice)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    final FirebaseObjects.DevicesDBO device = new FirebaseObjects.DevicesDBO(patientDevice);
+//                    ((UserActivity)getActivity()).firebaseFirestore
+//                            .collection(FirebaseHelper.deviceDB)
+//                            .whereEqualTo(FirebaseObjects.ID,patientDevice)
+//                            .get()
+//                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                    if(task.isSuccessful()){
+//                                        //firebaseHelper.addDevice(device);
+//                                        Log.d("__ADDPATIENT__", user.email);
+//                                        firebaseHelper.addDeviceFollowed(user, patientDevice);
+//                                    }else{
+//
+//                                    }
+//                                }
+//                            });
 
-                                }
-                            });
+
+                    /**TEMPORARY FIX FOR ADDING TWICE IN DB.
+                     * **/
+                    if(((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size() != 0){
+                        ((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.remove(
+                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
+                        );
+                    }
+                    ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
+                        @Override
+                        public void onCallback() {
+
+                           // ((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList = ((UserActivity)getActivity()).thisUser.getDevice_ids();
+                            Log.d(TAG, "Added Patient");
+                        }
+                    }, ((UserActivity)getActivity()).thisUser, patientDevice);
+
                     ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
-                    Log.d(TAG, "Added Patient");
                 }
                 //((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
                 /*TODO: Check if Device in Database.
