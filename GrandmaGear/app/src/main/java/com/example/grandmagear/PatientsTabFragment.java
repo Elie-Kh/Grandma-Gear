@@ -23,30 +23,77 @@ import java.util.ArrayList;
 public class PatientsTabFragment extends Fragment {
 
     private static final String TAG = "PatientsTabFrag__";
-    private RecyclerView mRecyclerView;
-    private RecyclerViewAdapter mAdapter;
-    private ArrayList<String> mPatientsList = new ArrayList<String>();
+    protected RecyclerView mRecyclerView;
+    protected RecyclerViewAdapter mAdapter;
+    protected ArrayList<String> mPatientsList = new ArrayList<String>();
+    protected FirebaseHelper firebaseHelper = new FirebaseHelper();
+    protected FirebaseObjects.UserDBO thisUser;
     private SharedPreferencesHelper mSharedPreferencesHelper;
+    private SharedPreferencesHelper mSharedPreferencesHelper_login;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.patient_tab_fragment, container, false);
-        Log.d(TAG, "Inflated");
-        mRecyclerView = view.findViewById(R.id.device_recycler);
-        mAdapter = new RecyclerViewAdapter(mPatientsList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                DividerItemDecoration.VERTICAL));
+        final View view = inflater.inflate(R.layout.patient_tab_fragment, container, false);
+        mSharedPreferencesHelper_login = new SharedPreferencesHelper(getActivity(), "Login");
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(final FirebaseObjects.UserDBO user) {
+                                       //thisUser = user;
+                                       firebaseHelper.getUser_followers(new FirebaseHelper.Callback_getUserFollowers() {
+                                           @Override
+                                           public void onCallback(ArrayList<String> followers) {
+                                               thisUser = user;
+                                               thisUser.setDevice_ids(followers);
+                                               mPatientsList = followers;
+                                               Log.d(TAG, "Inflated");
+                                               mRecyclerView = view.findViewById(R.id.device_recycler);
+                                               mAdapter = new RecyclerViewAdapter(mPatientsList);
+                                               mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                               mRecyclerView.setAdapter(mAdapter);
+                                               mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+                                                       DividerItemDecoration.VERTICAL));
+                                               ((UserActivity)getActivity()).updateUser(thisUser);
+                                           }
+                                       }, mPatientsList, user);
+                                   }
+                               }, mSharedPreferencesHelper_login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_login.getType()));
+
         return view;
     }
+
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+//                                   @Override
+//                                   public void onCallback(final FirebaseObjects.UserDBO user) {
+//                                       //thisUser = user;
+//                                       firebaseHelper.getUser_followers(new FirebaseHelper.Callback_getUserFollowers() {
+//                                           @Override
+//                                           public void onCallback(ArrayList<String> followers) {
+//                                               thisUser = user;
+//                                               thisUser.setDevice_ids(followers);
+//                                               mPatientsList = followers;
+//                                               ((UserActivity)getActivity()).updateUser(thisUser);
+//
+//                                           }
+//                                       }, mPatientsList, user);
+//                                   }
+//                               }, mSharedPreferencesHelper_login.getEmail(),
+//                Boolean.parseBoolean(mSharedPreferencesHelper_login.getType()));
+//    }
 
     public void addPatient(String patientDevice){
         mPatientsList.add(patientDevice);
         mSharedPreferencesHelper.savePatientsList(mPatientsList);
 
+    }
+
+    public ArrayList<String> getmPatientsList(){
+        return mPatientsList;
     }
 
     @Override

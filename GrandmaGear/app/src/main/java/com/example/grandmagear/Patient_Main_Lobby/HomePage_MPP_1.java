@@ -40,9 +40,6 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
         setUpUI();
 
-
-
-
     }
 
 

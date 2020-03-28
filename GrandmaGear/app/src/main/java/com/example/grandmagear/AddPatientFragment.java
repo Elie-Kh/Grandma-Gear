@@ -1,5 +1,6 @@
 package com.example.grandmagear;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,15 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
+
+import java.util.ConcurrentModificationException;
+import java.util.Objects;
 
 public class AddPatientFragment extends DialogFragment {
 
@@ -24,6 +31,12 @@ public class AddPatientFragment extends DialogFragment {
     protected Button mAdd;
     protected Button mCancel;
     protected String patientDevice;
+    protected FirebaseObjects.UserDBO user;
+    protected FirebaseHelper firebaseHelper;
+
+    public AddPatientFragment(FirebaseObjects.UserDBO userDBO) {
+        this.user = userDBO;
+    }
 
     @Nullable
     @Override
@@ -38,6 +51,7 @@ public class AddPatientFragment extends DialogFragment {
         mDeviceId = view.findViewById(R.id.device_id_adding_fragment);
         mAdd = view.findViewById(R.id.add_device_adding_fragment);
         mCancel = view.findViewById(R.id.cancel_device_adding_fragment);
+        firebaseHelper = new FirebaseHelper();
 
         mAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,19 +59,51 @@ public class AddPatientFragment extends DialogFragment {
                 patientDevice = mDeviceId.getText().toString();
                 Log.d(TAG, "Created Patient");
                 if(!patientDevice.trim().isEmpty()) {
-                    FirebaseObjects.DevicesDBO device;
-                    ((UserActivity)getActivity()).firebaseFirestore
-                            .collection(FirebaseHelper.deviceDB)
-                            .whereEqualTo(FirebaseObjects.ID,patientDevice)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    final FirebaseObjects.DevicesDBO device = new FirebaseObjects.DevicesDBO(patientDevice);
+//                    ((UserActivity)getActivity()).firebaseFirestore
+//                            .collection(FirebaseHelper.deviceDB)
+//                            .whereEqualTo(FirebaseObjects.ID,patientDevice)
+//                            .get()
+//                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                    if(task.isSuccessful()){
+//                                        //firebaseHelper.addDevice(device);
+//                                        Log.d("__ADDPATIENT__", user.email);
+//                                        firebaseHelper.addDeviceFollowed(user, patientDevice);
+//                                    }else{
+//
+//                                    }
+//                                }
+//                            });
 
-                                }
-                            });
-                    ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
-                    Log.d(TAG, "Added Patient");
+
+                    /**TEMPORARY FIX FOR ADDING TWICE IN DB.
+                     * **/
+//                    if(((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size() != 0){
+//                        ((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.remove(
+//                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
+//                        );
+//                    }
+                    ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    user.setDevice_ids(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+                    firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
+                        @Override
+                        public void onCallback(FirebaseObjects.UserDBO users) {
+                            user = users;
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
+                                    users.device_ids;
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
+                                    DividerItemDecoration.VERTICAL));
+                           Log.d(TAG, "Added Patient");
+                            getDialog().dismiss();
+                        }
+                    }, user, patientDevice);
+                    //((UserActivity)getActivity()).thisUser.device_ids.add(patientDevice);
+                    //((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
                 }
                 //((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
                 /*TODO: Check if Device in Database.
@@ -69,7 +115,6 @@ public class AddPatientFragment extends DialogFragment {
                 *   ((UserActivity) getActivity()).mPatientsTab.mPatientsList.add(patientDevice);
                 * }
                 */
-                getDialog().dismiss();
             }
         });
 
