@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
 import java.util.ConcurrentModificationException;
+import java.util.Objects;
 
 public class AddPatientFragment extends DialogFragment {
 
@@ -77,22 +78,22 @@ public class AddPatientFragment extends DialogFragment {
 
                     /**TEMPORARY FIX FOR ADDING TWICE IN DB.
                      * **/
-                    if(((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size() != 0){
-                        ((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.remove(
-                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
-                        );
-                    }
-                    ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+//                    if(((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size() != 0){
+//                        ((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.remove(
+//                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
+//                        );
+//                    }
+                    //((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
                     firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
                         @Override
-                        public void onCallback() {
-
-                           // ((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList = ((UserActivity)getActivity()).thisUser.getDevice_ids();
-                            Log.d(TAG, "Added Patient");
+                        public void onCallback(FirebaseObjects.UserDBO users) {
+                            user = users;
+                           Log.d(TAG, "Added Patient");
+                            getDialog().dismiss();
                         }
-                    }, ((UserActivity)getActivity()).thisUser, patientDevice);
-
-                    ((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
+                    }, user, patientDevice);
+                    //((UserActivity)getActivity()).thisUser.device_ids.add(patientDevice);
+                    //((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
                 }
                 //((UserActivity)getActivity()).mViewPager.findViewWithTag("recyclerView");
                 /*TODO: Check if Device in Database.
@@ -104,7 +105,6 @@ public class AddPatientFragment extends DialogFragment {
                 *   ((UserActivity) getActivity()).mPatientsTab.mPatientsList.add(patientDevice);
                 * }
                 */
-                getDialog().dismiss();
             }
         });
 
