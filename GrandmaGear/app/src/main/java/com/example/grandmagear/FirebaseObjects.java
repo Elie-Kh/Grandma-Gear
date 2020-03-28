@@ -55,24 +55,26 @@ public class FirebaseObjects {
             return email;
         }
 
-        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type) {
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, Boolean gps_follow) {
             //this.username = username;
             this.email = email;
             this.firstName = firstName;
             this.lastName = lastName;
             this.password = password;
             this.acc_type = acc_type;
+            this.gps_follow = gps_follow;
             this.device_ids = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
         }
 
-        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, int age, int weight, int height) {
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, Boolean gps_follow, int age, int weight, int height) {
             //this.username = username;
             this.email = email;
             this.firstName = firstName;
             this.lastName = lastName;
             this.password = password;
             this.acc_type = acc_type;
+            this.gps_follow = gps_follow;
             this.age = age;
             this.weight = weight;
             this.height = height;

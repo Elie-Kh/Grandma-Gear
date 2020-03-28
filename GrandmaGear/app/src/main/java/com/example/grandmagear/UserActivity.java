@@ -89,7 +89,7 @@ public class UserActivity extends AppCompatActivity {
                     }
                 }, mSharedPreferencesHelper_Login.getEmail(),
                         Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
-                thisUser.setDevice_ids(mPatientsTabFragment.getmPatientsList());
+                //thisUser.setDevice_ids(mPatientsTabFragment.getmPatientsList());
                 AddPatientFragment patientFrag = new AddPatientFragment(thisUser);
                 patientFrag.show(getSupportFragmentManager(), "AddPatientFragment");
             }
@@ -159,6 +159,10 @@ public class UserActivity extends AppCompatActivity {
         }// If we got here, the user's action was not recognized.
         // Invoke the superclass to handle it.
         return super.onOptionsItemSelected(item);
+    }
+
+    public void updateUser(FirebaseObjects.UserDBO userDBO){
+        thisUser = userDBO;
     }
 
 
