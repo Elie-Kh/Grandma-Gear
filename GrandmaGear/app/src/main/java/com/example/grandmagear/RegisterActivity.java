@@ -189,12 +189,12 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
                             //TODO: Remove the ";" and the comment delimiter, and create the user.
                             if(acc_type) {
-                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type);
+                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type, false);
                                 FirebaseHelper firebaseHelper = new FirebaseHelper();
                                 firebaseHelper.AddUser(newUser);
 
                             }else{
-                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type, Integer.parseInt(age),
+                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type, false, Integer.parseInt(age),
                                         Integer.parseInt(weight), Integer.parseInt(height));
                                 firebaseHelper.AddUser(newUser);
                                 final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
