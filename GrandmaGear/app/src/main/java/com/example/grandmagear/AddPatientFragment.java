@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -83,11 +85,19 @@ public class AddPatientFragment extends DialogFragment {
 //                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
 //                        );
 //                    }
-                    //((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    user.setDevice_ids(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
                     firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
                         @Override
                         public void onCallback(FirebaseObjects.UserDBO users) {
                             user = users;
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
+                                    users.device_ids;
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
+                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
+                                    DividerItemDecoration.VERTICAL));
                            Log.d(TAG, "Added Patient");
                             getDialog().dismiss();
                         }
