@@ -8,6 +8,7 @@ import androidx.preference.SwitchPreference;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.Preference;
 import android.util.Log;
 import android.view.Menu;
@@ -30,9 +31,11 @@ import static com.example.grandmagear.Patient_Main_Lobby.PatientSettingsActivity
 
 public class HomePage_MPP_1 extends AppCompatActivity {
     private static final String TAG = "HomePage_MPP_1";
+    private Handler mainHandler = new Handler();
 
-    MenuItem Settings;
-    Switch location;
+
+    MenuItem Setting;
+    Switch locationSwitch;
     TextView FullName;
     TextView Age;
     TextView Weight;
@@ -55,15 +58,8 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         setContentView(R.layout.activity_home_page__mpp_1);
 
 
-        setUpUI();
-        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+
+
 
 
 
@@ -71,8 +67,10 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
-            locationStatus(location);
+            setUpUI();
+            resumeSharedLocation();
+            resumeLocation(locationSwitch);
+            locationStatus(locationSwitch);
     }
 
 
@@ -87,7 +85,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Heart = findViewById(R.id.imageView_Heart_MPP_1);
         Earth = findViewById(R.id.imageView_Earth_MPP_1);
         Battery = findViewById(R.id.imageView_BatteryLevel_MPP_1);
-        location = findViewById(R.id.locationSwitch);
+        locationSwitch = findViewById(R.id.locationSwitch);
 
         //TODO fetch the boolean location data from the database
         //location =
@@ -96,9 +94,24 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.patient_action_bar,menu);
-        Settings = findViewById(R.id.settings);
+        Setting = findViewById(R.id.settings);
+
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(FirebaseObjects.UserDBO user) {
+                                       thisUser = user;
+
+                                       if (thisUser.getAcc_type()) {
+                                           menu.getItem(0).setVisible(false);
+                                       } else {
+                                           menu.getItem(0).setVisible(true);
+                                       }
+                                   }
+                               }, mSharedPreferencesHelper_Login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
         return super.onCreateOptionsMenu(menu);
 
 
@@ -125,58 +138,96 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     }
 
 
+    public void resumeSettings(){
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(FirebaseObjects.UserDBO user) {
+                                       thisUser = user;
+
+                                       if (thisUser.getAcc_type()) {
+                                           disableMenu();
+                                       } else {
+                                           displayMenu();
+                                       }
+                                   }
+                               }, mSharedPreferencesHelper_Login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+
+    }
+    public void resumeSharedLocation(){
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(FirebaseObjects.UserDBO user) {
+                                       thisUser = user;
+
+                                       if (thisUser.getAcc_type()) {
+                                           disableShareLocation();
+                                       } else {
+                                           displayShareLocation();
+                                       }
+                                   }
+                               }, mSharedPreferencesHelper_Login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+
+    }
+
+    public void resumeLocation(final Switch ls){
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(FirebaseObjects.UserDBO user) {
+                                       thisUser = user;
+                                       ls.setChecked(thisUser.getGps_follow());
+                                       if (thisUser.getGps_follow()) {
+                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
+                                           displayLocation();
+                                       } else {
+                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
+                                           disableLocation();
+                                       }
+                                   }
+                               }, mSharedPreferencesHelper_Login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+
+    }
+
 
     public void locationStatus (Switch b){
+
+
         b.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
+                    displayLocation();
                 } else {
                     firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
+                    disableLocation();
                 }
             }
         });
     }
 
-
-    public void startThread (View view){
-       locationThread thread =new locationThread(10);
-       thread.start();
+    public void displayLocation(){
+        Earth.setVisibility(View.VISIBLE);
     }
-    public void stopThread (View view){
-
+    public void disableLocation(){
+        Earth.setVisibility(View.INVISIBLE);
     }
-
-
-    class locationThread extends Thread {
-
-        int seconds;
-        locationThread(int seconds){
-            this.seconds
-        }
-
-        @Override
-        public void run() {
-            for (int i = 0; i < seconds; i++){
-                Log.d(TAG, "startThread:" + i);
-                try {
-                    Thread.sleep (1000);
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-        }
+    public void displayMenu(){
+        Setting.setVisible(true);
+    }
+    public void disableMenu(){
+        Setting.setVisible(false);
+    }
+    public void displayShareLocation(){
+        locationSwitch.setVisibility(View.VISIBLE);
+    }
+    public void disableShareLocation(){
+        locationSwitch.setVisibility(View.INVISIBLE);
     }
 
-    class locationRunnable implements Runnable {
-        int seconds;
-
-        locationRunnable (int seconds) {
-            this.seconds = seconds;
-        }
-
-
-
-    }
 
 }
