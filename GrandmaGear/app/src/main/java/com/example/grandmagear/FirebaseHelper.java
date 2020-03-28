@@ -420,7 +420,7 @@ public class FirebaseHelper {
                                           final ArrayList<String> followers,
                                           final FirebaseObjects.UserDBO user){
         //get notifications of all devices followed by the follower.
-        firebaseFirestore.collection(deviceDB).whereEqualTo(FirebaseObjects.ID, user.username)
+        firebaseFirestore.collection(userDB).whereEqualTo(FirebaseObjects.Username, user.username)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
