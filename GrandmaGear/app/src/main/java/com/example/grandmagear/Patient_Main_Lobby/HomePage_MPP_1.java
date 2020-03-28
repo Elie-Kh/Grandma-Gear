@@ -57,13 +57,10 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page__mpp_1);
 
-
-
-
-
-
-
     }
+
+
+
     @Override
     public void onResume() {
         super.onResume();

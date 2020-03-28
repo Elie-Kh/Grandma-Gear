@@ -39,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected String userID;
     protected boolean acc_type = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
