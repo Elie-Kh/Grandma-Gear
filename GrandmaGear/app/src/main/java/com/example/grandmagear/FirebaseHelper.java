@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,7 +32,23 @@ import java.util.Objects;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
+/** Functions implemented in this helper class:
+ * 1- Add User -- Adds user to Firestore DB
+ * 2- Edit User -- Edit a field of a user in Firestore DB
+ * 3- Add Device Followed -- Adds a new device to the array of devices in Firestore TODO: FINISH THIS
+ * 4- Add Notification -- Adds notification TODO: FINISH THIS
+ * 5- Add Device -- adds device to Firestore DB
+ * 6- Edit Device -- Edit a field of a device in Firestore DB
+ * 7- Edit Location -- Edit the longitude and latitude of a device in Firestore DB
+ * 8- get Type -- Gets the type of a user (Patient or Client)
+ * 9- Get Device -- Gets device information from Firestore DB
+ * 10- Get Notifications Follower -- Gets notifications of all followed devices
+ * 11- Get User -- Gets user info from the Firestore DB
+ * 12- ??
+ * **/
+
 public class FirebaseHelper {
+    protected static final String TAG = "_FirebaseHelper";
     protected static final String userDB = "userDB";
     protected static final String deviceDB = "deviceDB";
     protected static final String eventDB = "eventDB";
@@ -76,13 +93,23 @@ public class FirebaseHelper {
     }
 
     public void editUser(final FirebaseObjects.UserDBO userDBO, final String field, final Object newVar){
-        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(userDBO.username);
+        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(firebaseAuth.getCurrentUser().getUid());
 
         firebaseFirestore.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                transaction.update(documentReference, field, newVar);
+                if(newVar instanceof ArrayList<?>){
+                    //Map<String, String> map = new HashMap<>();
+//                    for(int i = 0; i < ((ArrayList) newVar).size(); i++){
+//                        map.put(String.valueOf(i), ((ArrayList) newVar).get(i).toString());
+//                    }
+                    userDBO.setDevice_ids((ArrayList<String>) newVar);
+                    transaction.update(documentReference, field, userDBO.getDevice_ids());
+                }
+                else {
+                    transaction.update(documentReference, field, newVar);
+                }
 
                 return null;
             }
@@ -99,10 +126,25 @@ public class FirebaseHelper {
             }
         });
     }
+    public interface Callback_DeviceFollowed {
+        void onCallback(boolean checker);
+    }
 
-    public void addDeviceFollowed(final FirebaseObjects.UserDBO userDBO, String deviceID){
-        ArrayList<String> devices = userDBO.getDevice_ids();
-        devices.add(deviceID);
+    public void addDeviceFollowed(final FirebaseObjects.UserDBO userDBO, final String deviceID){
+
+        firebaseFirestore.collection(deviceDB).whereEqualTo(FirebaseObjects.Username, userDBO.username)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    ArrayList<String> devices = new ArrayList<String>();
+                    devices = userDBO.getDevice_ids();
+                    devices.add(deviceID);
+                    userDBO.setDevice_ids(devices);
+                    editUser(userDBO, FirebaseObjects.Devices_Followed, devices);
+                }
+            }
+        });
     }
 
     public void addNotification(final FirebaseObjects.UserDBO userDBO,
@@ -114,16 +156,17 @@ public class FirebaseHelper {
 
     public void addDevice(final FirebaseObjects.DevicesDBO device){
 
-        device.deviceID = firebaseAuth.getUid();
+        //device.deviceID = firebaseAuth.getUid();
         final DocumentReference documentReference = firebaseFirestore.collection(deviceDB).document(device.deviceID);
         Map<String,Object> devices = new HashMap<>();
-        devices.put(FirebaseObjects.ID, device.deviceID);
+        devices.put(FirebaseObjects.ID, firebaseAuth.getUid());
         devices.put(FirebaseObjects.Longitude, device.lonGPS);
         devices.put(FirebaseObjects.Latitude, device.latGPS);
         devices.put(FirebaseObjects.Heartrate, device.bpm);
         devices.put(FirebaseObjects.PhoneBattery, device.phoneBattery);
         devices.put(FirebaseObjects.DeviceBattery, device.deviceBattery);
         devices.put(FirebaseObjects.Notifications, device.notifications);
+
         documentReference.set(devices).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -188,9 +231,34 @@ public class FirebaseHelper {
         });
     }
 
+    public interface Callback_AddPatient {
+        void onCallback(FirebaseObjects.UserDBO user);
+    }
+
     public interface Callback_Type {
         void onCallback(boolean checker);
     }
+
+    public void addingPatient(final Callback_AddPatient callback,final FirebaseObjects.UserDBO user,
+                           final String patientDevice){
+        firebaseFirestore
+                .collection(FirebaseHelper.deviceDB)
+                .whereEqualTo(FirebaseObjects.ID,patientDevice)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            //firebaseHelper.addDevice(device);
+                            Log.d("__ADDPATIENT__", user.email);
+                            addDeviceFollowed(user, patientDevice);
+                            callback.onCallback(user);
+                        }else{
+
+                        }
+                    }
+                });
+}
 
     public void getType(final Callback_Type callback, final String email){
         Log.d("__GettingType", email);
@@ -226,9 +294,6 @@ public class FirebaseHelper {
         });
     }
 
-    public interface Callback_Notifications {
-        void onCallback(ArrayList<FirebaseObjects.Notifications> notifications);
-    }
 
     public interface Callback_Device {
         void onCallback(String device);
@@ -259,6 +324,11 @@ public class FirebaseHelper {
                 });
         return returnable[0];
     }
+
+    public interface Callback_Notifications {
+        void onCallback(ArrayList<FirebaseObjects.Notifications> notifications);
+    }
+
 
     public void getNotifications_follower(final Callback_Notifications callback_notifications,
                                           final ArrayList<FirebaseObjects.Notifications> notifications,
@@ -297,6 +367,100 @@ public class FirebaseHelper {
                 }
 
         });
+
     }
+
+    public interface Callback_getUser{
+        void onCallback(FirebaseObjects.UserDBO user);
+    }
+
+    public void getUser(final Callback_getUser callback, String email, final boolean type){
+        final FirebaseObjects.UserDBO[] returnable = {null};
+        firebaseFirestore
+                .collection(FirebaseHelper.userDB)
+                .whereEqualTo(FirebaseObjects.Email, email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Log.d("__GettingType", (String) Objects.requireNonNull(document.get("email")));
+                                if(type) {
+                                    returnable[0] = new FirebaseObjects.UserDBO(
+                                            (String) document.get(FirebaseObjects.Email),
+                                            (String) document.get(FirebaseObjects.First_Name),
+                                            (String) document.get(FirebaseObjects.Last_Name),
+                                            (String) document.get(FirebaseObjects.Password),
+                                            (Boolean) document.get(FirebaseObjects.Account_Type),
+                                            (Boolean) document.get(FirebaseObjects.GPS_Follow));
+                                } else {
+                                    Log.d("__TESTERS__", (String) Objects.requireNonNull(document.get(FirebaseObjects.Email)));
+                                    returnable[0] = new FirebaseObjects.UserDBO(
+                                            (String) document.get(FirebaseObjects.Email),
+                                            (String) document.get(FirebaseObjects.First_Name),
+                                            (String) document.get(FirebaseObjects.Last_Name),
+                                            (String) document.get(FirebaseObjects.Password),
+                                            (Boolean) document.get(FirebaseObjects.Account_Type),
+                                            (Boolean) document.get(FirebaseObjects.GPS_Follow)
+//                                            (Integer) document.get(FirebaseObjects.Age),
+//                                            (Integer) document.get(FirebaseObjects.Weight),
+//                                            (Integer) document.get(FirebaseObjects.Height)
+                                            );
+                                }
+                                callback.onCallback(returnable[0]);
+                            }
+                        }
+                    }
+                });
+    }
+
+    public interface Callback_getUserFollowers {
+        void onCallback(ArrayList<String> followers);
+    }
+
+
+    public void getUser_followers(final Callback_getUserFollowers callback_getUserFollowers,
+                                          final ArrayList<String> followers,
+                                          final FirebaseObjects.UserDBO user){
+        //get notifications of all devices followed by the follower.
+        firebaseFirestore.collection(userDB).whereEqualTo(FirebaseObjects.Email, user.email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                //Log.d("__GettingType", (String) Objects.requireNonNull(document.get("Email")));
+
+//                                Object valsObj = document.getData();
+//                                String vals = new Gson().toJson(valsObj);
+//                                try {
+//                                    JSONObject infoObj=new JSONObject(vals).getJSONObject(FirebaseObjects.Devices_Followed);
+//                                    Iterator<String> iterator = infoObj.keys();
+//                                    while (iterator.hasNext()) {
+//                                        String key = iterator.next();
+//                                        JSONObject objArray=infoObj.getJSONObject(key);
+//                                        String temp = objArray.getString(FirebaseObjects.Devices_Followed);
+//                                        followers.add(temp);
+//                                    }
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                HashMap<String, String> temp =
+//                                        (HashMap<String, String>) document.get(FirebaseObjects.Devices_Followed);
+//                                Collection<String> values = temp.values();
+
+                                ArrayList<String> vals = new ArrayList<String>
+                                        ((ArrayList<String>)document.get(FirebaseObjects.Devices_Followed));
+                                callback_getUserFollowers.onCallback(vals);
+                            }
+                        }
+                    }
+
+                });
+
+    }
+
 
 }
