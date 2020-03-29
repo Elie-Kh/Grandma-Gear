@@ -223,8 +223,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
             public void onCallback(FirebaseObjects.DevicesDBO device) {
                 tempDevice = device;
                 BPM.setText(String.valueOf(tempDevice.getBpm()));
-                phoneBattery.setText(String.valueOf(tempDevice.getPhoneBattery()));
-                deviceBattery.setText(String.valueOf(tempDevice.getDeviceBattery()));
+                //TODO find where it got interchanged
+                deviceBattery.setText(String.valueOf(tempDevice.getPhoneBattery()));
+                phoneBattery.setText(String.valueOf(tempDevice.getDeviceBattery()));
             }
         }, firebaseHelper.getCurrentUserID());
 
