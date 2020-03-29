@@ -66,6 +66,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         super.onResume();
             setUpUI();
             resumeSharedLocation();
+            uploadWearerInfo();
             resumeLocation(locationSwitch);
             locationStatus(locationSwitch);
     }
@@ -135,18 +136,17 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     }
 
 
-    public void resumeSettings(){
+    public void uploadWearerInfo(){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
         firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
                                    @Override
                                    public void onCallback(FirebaseObjects.UserDBO user) {
                                        thisUser = user;
 
-                                       if (thisUser.getAcc_type()) {
-                                           disableMenu();
-                                       } else {
-                                           displayMenu();
-                                       }
+                                       FullName.setText(thisUser.getFirstName() + " " + thisUser.getLastName());
+                                       Age.setText(String.valueOf(thisUser.getAge()));
+                                       Weight.setText(String.valueOf(thisUser.getWeight()));
+                                       Height.setText(String.valueOf(thisUser.getHeight()));
                                    }
                                }, mSharedPreferencesHelper_Login.getEmail(),
                 Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
@@ -206,6 +206,8 @@ public class HomePage_MPP_1 extends AppCompatActivity {
             }
         });
     }
+
+
 
     public void displayLocation(){
         Earth.setVisibility(View.VISIBLE);
