@@ -177,7 +177,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_1"
         android:layout_marginStart="10dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginBottom="49dp"
         android:layout_toEndOf="@+id/textView_BraceletBatteryLevel" />
 
     <TextView

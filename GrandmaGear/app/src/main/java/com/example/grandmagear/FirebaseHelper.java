@@ -310,7 +310,7 @@ public class FirebaseHelper {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("deviceID")));
+//                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("deviceID")));
 
                                 returnable[0] = new FirebaseObjects.DevicesDBO(
                                         (String)document.get(FirebaseObjects.ID),
