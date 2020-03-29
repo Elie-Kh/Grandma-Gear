@@ -32,18 +32,18 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textViewFullName_Displayed_MPP_1"
         android:layout_alignBottom="@+id/textView_FullName"
-        android:layout_marginStart="76dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginBottom="-31dp"
         android:text="@string/MPP_1_textView_Height" />
 
     <TextView
         android:id="@+id/textView_Weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_Height"
-        android:layout_alignStart="@+id/textView_Height"
-        android:layout_marginStart="0dp"
+        android:layout_below="@+id/textView_FullName"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/textView_Age"
         android:text="@string/MPP_1_textView_Weight" />
 
     <ImageView
@@ -124,7 +124,7 @@
         android:layout_height="100dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="36dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="34dp"
         android:src="@drawable/sooken" />
 
@@ -140,7 +140,7 @@
         android:textSize="136sp" />
 
     <TextView
-        android:id="@+id/textView_BPM"
+        android:id="@+id/textView_BPM_Displayed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView_2dots"
@@ -154,7 +154,7 @@
         android:id="@+id/textView_BPM_Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView_BPM"
+        android:layout_above="@+id/textView_BPM_Displayed"
         android:layout_marginStart="58dp"
         android:layout_marginBottom="-35dp"
         android:layout_toEndOf="@+id/textView_2dots"
@@ -172,6 +172,15 @@
         android:text="@string/MPP_1_textView_BraceletBatteryLevel" />
 
     <TextView
+        android:id="@+id/textView_BraceletBatteryLevel_Displayed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_1"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="49dp"
+        android:layout_toEndOf="@+id/textView_BraceletBatteryLevel" />
+
+    <TextView
         android:id="@+id/textView_PhoneBatteryLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -180,6 +189,15 @@
         android:layout_marginStart="-2dp"
         android:layout_marginBottom="20dp"
         android:text="@string/MPP_1_textView_PhoneBatteryLevel" />
+
+    <TextView
+        android:id="@+id/textView_PhoneBatteryLevel_Displayed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_1"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toEndOf="@+id/textView_PhoneBatteryLevel" />
 
     <Button
         android:id="@+id/buttonPanic"
@@ -200,5 +218,15 @@
         android:layout_marginEnd="50dp"
         android:layout_marginBottom="50dp"
         android:text="@string/MPP_1_ReportsButton" />
+
+    <Switch
+        android:id="@+id/locationSwitch"
+        android:layout_width="159dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView_Height"
+        android:layout_marginStart="104dp"
+        android:layout_marginBottom="50dp"
+        android:layout_toEndOf="@+id/imageView_ProfilePicture_MPP_1"
+        android:text="@string/MPP_S_Share_Location" />
 
 </RelativeLayout>

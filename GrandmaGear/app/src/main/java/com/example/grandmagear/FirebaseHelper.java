@@ -296,10 +296,10 @@ public class FirebaseHelper {
 
 
     public interface Callback_Device {
-        void onCallback(String device);
+        void onCallback(FirebaseObjects.DevicesDBO device);
     }
 
-    public FirebaseObjects.DevicesDBO getDevice(String deviceID) {
+    public void getDevice(final Callback_Device callback, String deviceID) {
         final FirebaseObjects.DevicesDBO[] returnable = {null};
         firebaseFirestore
                 .collection(FirebaseHelper.deviceDB)
@@ -310,19 +310,19 @@ public class FirebaseHelper {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("deviceID")));
+//                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("deviceID")));
 
                                 returnable[0] = new FirebaseObjects.DevicesDBO(
                                         (String)document.get(FirebaseObjects.ID),
-                                        (Integer)document.get(FirebaseObjects.Heartrate),
-                                        (Integer)document.get(FirebaseObjects.PhoneBattery),
-                                        (Integer)document.get(FirebaseObjects.DeviceBattery));
+                                        (Integer) Math.round((Long) document.get(FirebaseObjects.Heartrate)),
+                                        (Integer) Math.round((Long) document.get(FirebaseObjects.PhoneBattery)),
+                                        (Integer) Math.round((Long) document.get(FirebaseObjects.DeviceBattery)));
+                                callback.onCallback(returnable[0]);
                                 // callback_notifications.onCallback(notifications);
                             }
                         }
                     }
                 });
-        return returnable[0];
     }
 
     public interface Callback_Notifications {
@@ -402,10 +402,10 @@ public class FirebaseHelper {
                                             (String) document.get(FirebaseObjects.Last_Name),
                                             (String) document.get(FirebaseObjects.Password),
                                             (Boolean) document.get(FirebaseObjects.Account_Type),
-                                            (Boolean) document.get(FirebaseObjects.GPS_Follow)
-//                                            (Integer) document.get(FirebaseObjects.Age),
-//                                            (Integer) document.get(FirebaseObjects.Weight),
-//                                            (Integer) document.get(FirebaseObjects.Height)
+                                            (Boolean) document.get(FirebaseObjects.GPS_Follow),
+                                            (Integer) Math.round((Long) document.get(FirebaseObjects.Age)),
+                                            (Integer) Math.round((Long) document.get(FirebaseObjects.Weight)),
+                                            (Integer) Math.round((Long) document.get(FirebaseObjects.Height))
                                             );
                                 }
                                 callback.onCallback(returnable[0]);
@@ -462,5 +462,8 @@ public class FirebaseHelper {
 
     }
 
+    public String getCurrentUserID(){
+        return firebaseAuth.getCurrentUser().getUid();
+    }
 
 }
