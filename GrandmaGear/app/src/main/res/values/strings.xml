@@ -92,9 +92,11 @@
 
     //Patient Settings
     <string name="MPP_S_Category_General">General</string>
-    <string name="MPP_S_Location">Location</string>
+    <string name="MPP_S_Location">Current Location</string>
     <string name="MPP_S_Category_Advance">Advance</string>
-    <string name="MPP_S_Location_Summary">Enable your Followers to see your location</string>
+    <string name="MPP_S_Location_Summary">See your current location on Google Maps</string>
+    <string name="MPP_S_Share_Location">Share Location</string>
+    <string name="MPP_S_Share_Location_Summary">Enable your Followers to see your location</string>
     <string name="action_settings">Settings</string>
     <string name="title_settings">Settings</string>
     <string name="edit_Profile">Edit Profile</string>
@@ -141,6 +143,8 @@
     <string name="key_notifications_panic_ringtone">key_notifications_panic_ringtone</string>
     <string name="key_vibrate">key_vibrate</string>
     <string name="key_send_feedback">key_send_feedback</string>
+    <string name="key_location">key_give_location</string>
+
 
 
 

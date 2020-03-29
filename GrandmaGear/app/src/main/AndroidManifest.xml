@@ -50,6 +50,7 @@
 
         <activity
             android:name=".Patient_Main_Lobby.MapsLocationActivity"
+            android:parentActivityName=".Patient_Main_Lobby.HomePage_MPP_1"
             android:label="@string/title_activity_maps_location"></activity>
         <activity
             android:name=".Patient_Main_Lobby.PatientSettingsActivity"

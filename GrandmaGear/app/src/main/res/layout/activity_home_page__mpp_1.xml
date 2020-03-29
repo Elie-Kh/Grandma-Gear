@@ -140,7 +140,7 @@
         android:textSize="136sp" />
 
     <TextView
-        android:id="@+id/textView_BPM"
+        android:id="@+id/textView_BPM_Displayed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView_2dots"
@@ -154,7 +154,7 @@
         android:id="@+id/textView_BPM_Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView_BPM"
+        android:layout_above="@+id/textView_BPM_Displayed"
         android:layout_marginStart="47dp"
         android:layout_marginBottom="-40dp"
         android:layout_toEndOf="@+id/textView_2dots"
