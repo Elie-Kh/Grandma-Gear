@@ -402,10 +402,10 @@ public class FirebaseHelper {
                                             (String) document.get(FirebaseObjects.Last_Name),
                                             (String) document.get(FirebaseObjects.Password),
                                             (Boolean) document.get(FirebaseObjects.Account_Type),
-                                            (Boolean) document.get(FirebaseObjects.GPS_Follow)
-//                                            (Integer) document.get(FirebaseObjects.Age),
-//                                            (Integer) document.get(FirebaseObjects.Weight),
-//                                            (Integer) document.get(FirebaseObjects.Height)
+                                            (Boolean) document.get(FirebaseObjects.GPS_Follow),
+                                            (Integer) Math.round((Long) document.get(FirebaseObjects.Age)),
+                                            (Integer) Math.round((Long) document.get(FirebaseObjects.Weight)),
+                                            (Integer) Math.round((Long) document.get(FirebaseObjects.Height))
                                             );
                                 }
                                 callback.onCallback(returnable[0]);

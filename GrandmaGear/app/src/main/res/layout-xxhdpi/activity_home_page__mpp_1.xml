@@ -32,18 +32,18 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textViewFullName_Displayed_MPP_1"
         android:layout_alignBottom="@+id/textView_FullName"
-        android:layout_marginStart="76dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginBottom="-31dp"
         android:text="@string/MPP_1_textView_Height" />
 
     <TextView
         android:id="@+id/textView_Weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_Height"
-        android:layout_alignStart="@+id/textView_Height"
-        android:layout_marginStart="0dp"
+        android:layout_below="@+id/textView_FullName"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/textView_Age"
         android:text="@string/MPP_1_textView_Weight" />
 
     <ImageView
@@ -124,7 +124,7 @@
         android:layout_height="100dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="36dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="34dp"
         android:src="@drawable/sooken" />
 
@@ -206,8 +206,8 @@
         android:layout_width="159dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView_Height"
-        android:layout_marginStart="98dp"
-        android:layout_marginBottom="21dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginBottom="50dp"
         android:layout_toEndOf="@+id/imageView_ProfilePicture_MPP_1"
         android:text="@string/MPP_S_Share_Location" />
 
