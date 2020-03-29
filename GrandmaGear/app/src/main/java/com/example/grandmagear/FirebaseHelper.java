@@ -462,5 +462,8 @@ public class FirebaseHelper {
 
     }
 
+    public String getCurrentUserID(){
+        return firebaseAuth.getCurrentUser().getUid();
+    }
 
 }

@@ -218,7 +218,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
 
         //TODO optimize the fetching method for universal input
-        tempDevice = firebaseHelper.getDevice("bnCWbJ1go2Z8l8b4xpnPEvfszHw2");
+        tempDevice = firebaseHelper.getDevice(firebaseHelper.getCurrentUserID());
         BPM.setText(String.valueOf(tempDevice.getBpm()));
         phoneBattery.setText(String.valueOf(tempDevice.getPhoneBattery()));
         deviceBattery.setText(String.valueOf(tempDevice.getDeviceBattery()));
