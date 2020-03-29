@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected FirebaseHelper firebaseHelper;
     protected SharedPreferencesHelper mSharedPreferencesHelper;
     protected String userID;
+    protected boolean save = true;
     protected boolean acc_type = false;
 
 
@@ -125,92 +126,110 @@ public class RegisterActivity extends AppCompatActivity {
                 final String weight = mWeight.getText().toString();
                 final String height = mHeight.getText().toString();
                 final String deviceID = mDevice.getText().toString();
+                save = true;
 
                 if(TextUtils.isEmpty(firstName) || firstName.trim().isEmpty()){
                     mFirstName.setError("First Name is required");
+                    save = false;
                 }
 
                 if(TextUtils.isEmpty(lastName) || lastName.trim().isEmpty()){
                     mLastName.setError("Last Name is required");
+                    save = false;
                 }
 
                 if(TextUtils.isEmpty(email)){
                     mEmail.setError("Email is required.");
+                    save = false;
                     return;
                 }
 
                 if(!isValidEmail(email)){
                     mEmail.setError("Email is not valid");
+                    save = false;
                 }
 
                 if(!acc_type) {
                     if (TextUtils.isEmpty(age) && mAge.getText().toString().equals("")) {
                         mAge.setError("Age is required");
+                        save = false;
                     }else if (Integer.parseInt(age) < 12){
                             mAge.setError("You are to young to use this app");
+                        save = false;
                         }
 
                     if (TextUtils.isEmpty(weight) && mWeight.getText().toString().equals("")) {
                         mWeight.setError("Weight is required");
+                        save = false;
                     }else if(Integer.parseInt(weight) < 80){
                         mWeight.setError("Minimum is 80 lbs");
+                        save = false;
                     }
 
                     if (TextUtils.isEmpty(height) && mHeight.getText().toString().equals("")) {
                         mHeight.setError("Height is required");
+                        save = false;
                     }else if(Integer.parseInt(height) < 120){
                         mHeight.setError("Minimum height is 120cm");
+                        save = false;
                     }
                 }
 
                 if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
                     mDevice.setError("Device ID required");
+                    save = false;
+                }else if(deviceID.length() < 5){
+                    mDevice.setError("ID must be 5 numbers");
+                    save = false;
                 }
 
                 if(TextUtils.isEmpty(password)){
                     mPassword.setError("Password is required.");
+                    save = false;
                     return;
                 }
 
                 if(password.length() < 6){
                     mPassword.setError("Password must be >= 6 characters.");
+                    save = false;
                     return;
                 }
 
+                if(save) {
+                    mRegisterProgressBar.setVisibility(View.VISIBLE);
 
-                mRegisterProgressBar.setVisibility(View.VISIBLE);
+                    /*Register the user in Firebase*/
 
-                /*Register the user in Firebase*/
+                    firebaseAuth
+                            .createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(RegisterActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
+                                //TODO: Remove the ";" and the comment delimiter, and create the user.
+                                if (acc_type) {
+                                    final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false);
+                                    FirebaseHelper firebaseHelper = new FirebaseHelper();
+                                    firebaseHelper.AddUser(newUser);
 
-                firebaseAuth
-                        .createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(RegisterActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
-                            //TODO: Remove the ";" and the comment delimiter, and create the user.
-                            if(acc_type) {
-                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type, false);
-                                FirebaseHelper firebaseHelper = new FirebaseHelper();
-                                firebaseHelper.AddUser(newUser);
-
-                            }else{
-                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName,lastName, password, acc_type, false, Integer.parseInt(age),
-                                        Integer.parseInt(weight), Integer.parseInt(height));
-                                firebaseHelper.AddUser(newUser);
-                                final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
-                                firebaseHelper.addDevice(newDevice);
+                                } else {
+                                    final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false, Integer.parseInt(age),
+                                            Integer.parseInt(weight), Integer.parseInt(height));
+                                    firebaseHelper.AddUser(newUser);
+                                    final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
+                                    firebaseHelper.addDevice(newDevice);
+                                }
+                                mSharedPreferencesHelper.saveEmail(email);
+                                mSharedPreferencesHelper.savePassword(password);
+                                mSharedPreferencesHelper.saveType(acc_type);
+                                startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "A user with this email already exists!", Toast.LENGTH_SHORT).show();
+                                mRegisterProgressBar.setVisibility(View.GONE);
                             }
-                            mSharedPreferencesHelper.saveEmail(email);
-                            mSharedPreferencesHelper.savePassword(password);
-                            mSharedPreferencesHelper.saveType(acc_type);
-                            startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
-                        }else{
-                            Toast.makeText(RegisterActivity.this, "A user with this email already exists!", Toast.LENGTH_SHORT).show();
-                            mRegisterProgressBar.setVisibility(View.GONE);
                         }
-                    }
-                });
+                    });
+                }
             }
         });
     }
