@@ -218,10 +218,16 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
 
         //TODO optimize the fetching method for universal input
-        tempDevice = firebaseHelper.getDevice(firebaseHelper.getCurrentUserID());
-        BPM.setText(String.valueOf(tempDevice.getBpm()));
-        phoneBattery.setText(String.valueOf(tempDevice.getPhoneBattery()));
-        deviceBattery.setText(String.valueOf(tempDevice.getDeviceBattery()));
+        firebaseHelper.getDevice(new FirebaseHelper.Callback_Device() {
+            @Override
+            public void onCallback(FirebaseObjects.DevicesDBO device) {
+                tempDevice = device;
+                BPM.setText(String.valueOf(tempDevice.getBpm()));
+                phoneBattery.setText(String.valueOf(tempDevice.getPhoneBattery()));
+                deviceBattery.setText(String.valueOf(tempDevice.getDeviceBattery()));
+            }
+        }, firebaseHelper.getCurrentUserID());
+
 
 
 
