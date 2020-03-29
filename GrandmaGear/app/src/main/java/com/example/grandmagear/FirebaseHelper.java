@@ -314,9 +314,9 @@ public class FirebaseHelper {
 
                                 returnable[0] = new FirebaseObjects.DevicesDBO(
                                         (String)document.get(FirebaseObjects.ID),
-                                        (Integer)document.get(FirebaseObjects.Heartrate),
-                                        (Integer)document.get(FirebaseObjects.PhoneBattery),
-                                        (Integer)document.get(FirebaseObjects.DeviceBattery));
+                                        (Integer) Math.round((Long) document.get(FirebaseObjects.Heartrate)),
+                                        (Integer) Math.round((Long) document.get(FirebaseObjects.PhoneBattery)),
+                                        (Integer) Math.round((Long) document.get(FirebaseObjects.DeviceBattery)));
                                 // callback_notifications.onCallback(notifications);
                             }
                         }

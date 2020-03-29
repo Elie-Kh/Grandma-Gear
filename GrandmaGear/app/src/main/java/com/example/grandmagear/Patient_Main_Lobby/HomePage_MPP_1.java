@@ -40,6 +40,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     TextView Age;
     TextView Weight;
     TextView Height;
+    TextView BPM;
+    TextView phoneBattery;
+    TextView deviceBattery;
 
     ImageView ProfilePicture;
     ImageView Heart;
@@ -49,6 +52,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     FirebaseHelper firebaseHelper = new FirebaseHelper();
     SharedPreferencesHelper mSharedPreferencesHelper_Login;
     protected FirebaseObjects.UserDBO thisUser;
+    protected FirebaseObjects.DevicesDBO tempDevice;
 
 
 
@@ -67,6 +71,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
             setUpUI();
             resumeSharedLocation();
             uploadWearerInfo();
+            uploadDeviceInfo();
             resumeLocation(locationSwitch);
             locationStatus(locationSwitch);
     }
@@ -78,6 +83,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Age = findViewById(R.id.textView_Age_Displayed_MPP_1);
         Weight = findViewById(R.id.textView_Weight_Displayed_MPP_1);
         Height = findViewById(R.id.textView_Height_Displayed_MPP_1);
+        BPM = findViewById(R.id.textView_BPM_Displayed);
+        phoneBattery = findViewById(R.id.textView_PhoneBatteryLevel_Displayed);
+        deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed);
 
         ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_1);
         Heart = findViewById(R.id.imageView_Heart_MPP_1);
@@ -85,8 +93,6 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Battery = findViewById(R.id.imageView_BatteryLevel_MPP_1);
         locationSwitch = findViewById(R.id.locationSwitch);
 
-        //TODO fetch the boolean location data from the database
-        //location =
 
     }
 
@@ -130,9 +136,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         startActivity(intent);
     }
     public void goToLocation(View view){
-        Intent intent = new Intent(this, MapsLocationActivity.class);
-        intent.putExtra(getString(R.string.PC_ID), "0");
-        startActivity(intent);
+       // Intent intent = new Intent(this, MapsLocationActivity.class);
+        //intent.putExtra(getString(R.string.PC_ID), "0");
+        //startActivity(intent);
     }
 
 
@@ -207,7 +213,22 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         });
     }
 
+    public void uploadDeviceInfo(){
 
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
+
+        //TODO optimize the fetching method for universal input
+        tempDevice = firebaseHelper.getDevice(firebaseHelper.f);
+        BPM.setText(String.valueOf(tempDevice.getBpm()));
+        phoneBattery.setText(String.valueOf(tempDevice.getPhoneBattery()));
+        deviceBattery.setText(String.valueOf(tempDevice.getDeviceBattery()));
+
+
+
+
+
+
+    }
 
     public void displayLocation(){
         Earth.setVisibility(View.VISIBLE);
@@ -215,12 +236,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     public void disableLocation(){
         Earth.setVisibility(View.INVISIBLE);
     }
-    public void displayMenu(){
-        Setting.setVisible(true);
-    }
-    public void disableMenu(){
-        Setting.setVisible(false);
-    }
+
     public void displayShareLocation(){
         locationSwitch.setVisibility(View.VISIBLE);
     }

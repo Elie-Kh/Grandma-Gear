@@ -140,7 +140,7 @@
         android:textSize="136sp" />
 
     <TextView
-        android:id="@+id/textView_BPM"
+        android:id="@+id/textView_BPM_Displayed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView_2dots"
@@ -154,7 +154,7 @@
         android:id="@+id/textView_BPM_Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView_BPM"
+        android:layout_above="@+id/textView_BPM_Displayed"
         android:layout_marginStart="58dp"
         android:layout_marginBottom="-35dp"
         android:layout_toEndOf="@+id/textView_2dots"
@@ -172,6 +172,15 @@
         android:text="@string/MPP_1_textView_BraceletBatteryLevel" />
 
     <TextView
+        android:id="@+id/textView_BraceletBatteryLevel_Displayed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_1"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="52dp"
+        android:layout_toEndOf="@+id/textView_BraceletBatteryLevel" />
+
+    <TextView
         android:id="@+id/textView_PhoneBatteryLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -180,6 +189,15 @@
         android:layout_marginStart="-2dp"
         android:layout_marginBottom="20dp"
         android:text="@string/MPP_1_textView_PhoneBatteryLevel" />
+
+    <TextView
+        android:id="@+id/textView_PhoneBatteryLevel_Displayed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_1"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_toEndOf="@+id/textView_PhoneBatteryLevel" />
 
     <Button
         android:id="@+id/buttonPanic"
