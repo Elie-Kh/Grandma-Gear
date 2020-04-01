@@ -1,5 +1,6 @@
 package com.example.grandmagear;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -118,4 +119,14 @@ public class SharedPreferencesHelper {
             return IDs;
         }
     }
+
+    public void saveHC05(String HC05){
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString("HC05", HC05);
+        editor.apply();
+    }
+
+    public String getHC05(){
+        return mSharedPreferences.getString("HC05", null);
+    };
 }
