@@ -16,14 +16,18 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.SwitchPreference;
 
 import com.example.grandmagear.R;
 
 
 public class PatientSettingsActivity extends AppCompactPreferenceActivity {
     private static final String TAG = PatientSettingsActivity.class.getSimpleName();
+    public static boolean location;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +35,18 @@ public class PatientSettingsActivity extends AppCompactPreferenceActivity {
         //TODO Set/Fix the Action Bar
         //toolbarSetUp();
 
+
         // load settings fragment
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
     }
 
+
+
+
+
     public static class MainPreferenceFragment extends PreferenceFragment {
+        public static SwitchPreference testPref;
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -65,6 +76,12 @@ public class PatientSettingsActivity extends AppCompactPreferenceActivity {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private static void getSwitchPreferenceValue(SwitchPreference preference) {
+
+        location = preference.getDisableDependentsState();
+
     }
 
     private static void bindPreferenceSummaryToValue(Preference preference) {

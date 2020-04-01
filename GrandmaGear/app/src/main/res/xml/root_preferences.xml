@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="General">
 
 
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/MPP_S_Location"
-            android:summary="@string/MPP_S_Location_Summary"
-            android:title="@string/MPP_S_Location" />
-
-
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/MPP_S_Category_Advance">
+    <PreferenceCategory android:title="@string/MPP_S_Category_General">
 
 
 

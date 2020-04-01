@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.Objects;
 
@@ -93,6 +94,7 @@ public class AddPatientFragment extends DialogFragment {
                             user = users;
                             ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
                                     users.device_ids;
+                            Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
                             ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
                             ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);

@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class PatientsTabFragment extends Fragment {
 
@@ -47,6 +49,7 @@ public class PatientsTabFragment extends Fragment {
                                                thisUser = user;
                                                thisUser.setDevice_ids(followers);
                                                mPatientsList = followers;
+                                               Collections.sort(mPatientsList);
                                                Log.d(TAG, "Inflated");
                                                mRecyclerView = view.findViewById(R.id.device_recycler);
                                                mAdapter = new RecyclerViewAdapter(mPatientsList);

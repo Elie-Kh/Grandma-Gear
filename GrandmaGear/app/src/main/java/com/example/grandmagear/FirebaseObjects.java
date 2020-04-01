@@ -82,6 +82,30 @@ public class FirebaseObjects {
             this.events = new ArrayList<EventsDBO>();
         }
 
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public Boolean getAcc_type() {
+            return acc_type;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
         public Boolean getGps_follow() {
             return gps_follow;
         }
