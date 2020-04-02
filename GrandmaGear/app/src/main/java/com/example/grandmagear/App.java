@@ -1,13 +1,17 @@
 package com.example.grandmagear;
 
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import androidx.core.app.NotificationCompat;
+
 public class App extends Application {
     public static final String BPM_CHANNEL = "bpm";
     public static final String FALL_CHANNEL = "fall";
+    public static final String BATTERY_CHANNEL = "battery";
 
     @Override
     public void onCreate() {
@@ -28,9 +32,14 @@ public class App extends Application {
                     NotificationManager.IMPORTANCE_LOW);
             fall.setDescription("channel fall");
 
+            NotificationChannel battery = new NotificationChannel(BATTERY_CHANNEL,
+                    "BATTERY",
+                    NotificationManager.IMPORTANCE_LOW);
+
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(bpm);
             manager.createNotificationChannel(fall);
+            manager.createNotificationChannel(battery);
         }
     }
 }

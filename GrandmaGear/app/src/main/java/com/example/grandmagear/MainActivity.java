@@ -9,8 +9,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManagerCompat notificationManagerCompat;
     protected ArrayList<String> title = new ArrayList<String>();
     protected ArrayList<String> text = new ArrayList<String>();
+    protected MediaSessionCompat mediaSessionCompat;
 
 
 
@@ -44,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
             disclaimerFragment.show(getSupportFragmentManager(), "DisclaimerFragment");
         }
         initializePage();
+        mediaSessionCompat = new MediaSessionCompat(this, "tag");
         sendOnBpm();
         sendOnFall();
+        sendOnBattery();
 
     }
 
@@ -73,11 +79,15 @@ public class MainActivity extends AppCompatActivity {
     public void sendOnBpm(){
         Intent intent = new Intent(this, UserActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.sooken);
         Notification notification = new NotificationCompat.Builder(this, App.BPM_CHANNEL)
                 .setSmallIcon(R.drawable.ic_warning)
                 .setContentTitle("BPM Alert")
                 .setContentText("Low bpm")
-                .setColor(Color.RED)
+                .setLargeIcon(largeIcon)
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigPicture(largeIcon)
+                        .bigLargeIcon(null))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setContentIntent(pendingIntent)
@@ -96,12 +106,15 @@ public class MainActivity extends AppCompatActivity {
     public void sendOnFall(){
         Intent intent = new Intent(this, UserActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.sooken);
         Notification notification = new NotificationCompat.Builder(this, App.FALL_CHANNEL)
                 .setSmallIcon(R.drawable.ic_warning)
                 .setContentTitle("FALL Alert")
                 .setContentText("Grandma fell")
-                .setColor(Color.RED)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setLargeIcon(largeIcon)
+                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                    .setMediaSession(mediaSessionCompat.getSessionToken()))
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
@@ -110,6 +123,35 @@ public class MainActivity extends AppCompatActivity {
 
         title.add("FALL Alert");
         text.add("Grandma fell");
+
+        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Title");
+        mSharedPreferences.saveNotificationTitle(title);
+        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Text");
+        mSharedPreferences.saveNotificationText(text);
+    }
+
+    public void sendOnBattery(){
+        Intent intent = new Intent(this, UserActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.sooken);
+        Notification notification = new NotificationCompat.Builder(this, App.BATTERY_CHANNEL)
+                .setSmallIcon(R.drawable.ic_warning)
+                .setContentTitle("BATTERY Alert")
+                .setContentText("Low Battery")
+                .setLargeIcon(largeIcon)
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigPicture(largeIcon)
+                        .bigLargeIcon(null))
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+        notificationManagerCompat.notify(3, notification);
+
+        title.add("BATTERY Alert");
+        text.add("Low Battery");
 
         mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Title");
         mSharedPreferences.saveNotificationTitle(title);
