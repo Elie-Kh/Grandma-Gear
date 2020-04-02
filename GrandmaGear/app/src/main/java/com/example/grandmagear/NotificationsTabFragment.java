@@ -1,6 +1,7 @@
 package com.example.grandmagear;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class NotificationsTabFragment extends Fragment {
 
+    public static final String TAG = "_NotificationFragment";
     private RecyclerView mRecyclerView;
     private NotificationsRecyclerView mAdapter;
     private ArrayList<String> mNotificationTitle = new ArrayList<String>();
