@@ -25,10 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected Button mPatientButton;
     protected ImageView mLogo;
     private SharedPreferencesHelper mSharedPreferences;
-    private NotificationManagerCompat notificationManagerCompat;
-    protected ArrayList<String> title = new ArrayList<String>();
-    protected ArrayList<String> text = new ArrayList<String>();
-    protected MediaSessionCompat mediaSessionCompat;
+    protected NotificationHelper notificationHelper;
 
 
 
@@ -36,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        notificationManagerCompat = NotificationManagerCompat.from(this);
         mSharedPreferences = new SharedPreferencesHelper(MainActivity.this,
                 "DisclaimerPreferences");
 
@@ -48,10 +44,11 @@ public class MainActivity extends AppCompatActivity {
             disclaimerFragment.show(getSupportFragmentManager(), "DisclaimerFragment");
         }
         initializePage();
-        mediaSessionCompat = new MediaSessionCompat(this, "tag");
-        sendOnBpm();
-        sendOnFall();
-        sendOnBattery();
+        notificationHelper = new NotificationHelper(this);
+        notificationHelper.sendOnBpm("BPM Alert", "Low BPM");
+        notificationHelper.sendOnFall("FALL Alert", "Grandma Fell");
+        notificationHelper.sendOnBattery("BATTERY Alert", "Low Battery");
+
 
     }
 
@@ -74,88 +71,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    public void sendOnBpm(){
-        Intent intent = new Intent(this, UserActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.sooken);
-        Notification notification = new NotificationCompat.Builder(this, App.BPM_CHANNEL)
-                .setSmallIcon(R.drawable.ic_warning)
-                .setContentTitle("BPM Alert")
-                .setContentText("Low bpm")
-                .setLargeIcon(largeIcon)
-                .setStyle(new NotificationCompat.BigPictureStyle()
-                        .bigPicture(largeIcon)
-                        .bigLargeIcon(null))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build();
-        notificationManagerCompat.notify(1, notification);
-        title.add("BPM Alert");
-        text.add("Low bpm");
-
-        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Title");
-        mSharedPreferences.saveNotificationTitle(title);
-        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Text");
-        mSharedPreferences.saveNotificationText(text);
-    }
-
-    public void sendOnFall(){
-        Intent intent = new Intent(this, UserActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.sooken);
-        Notification notification = new NotificationCompat.Builder(this, App.FALL_CHANNEL)
-                .setSmallIcon(R.drawable.ic_warning)
-                .setContentTitle("FALL Alert")
-                .setContentText("Grandma fell")
-                .setLargeIcon(largeIcon)
-                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                    .setMediaSession(mediaSessionCompat.getSessionToken()))
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build();
-        notificationManagerCompat.notify(2, notification);
-
-        title.add("FALL Alert");
-        text.add("Grandma fell");
-
-        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Title");
-        mSharedPreferences.saveNotificationTitle(title);
-        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Text");
-        mSharedPreferences.saveNotificationText(text);
-    }
-
-    public void sendOnBattery(){
-        Intent intent = new Intent(this, UserActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.sooken);
-        Notification notification = new NotificationCompat.Builder(this, App.BATTERY_CHANNEL)
-                .setSmallIcon(R.drawable.ic_warning)
-                .setContentTitle("BATTERY Alert")
-                .setContentText("Low Battery")
-                .setLargeIcon(largeIcon)
-                .setStyle(new NotificationCompat.BigPictureStyle()
-                        .bigPicture(largeIcon)
-                        .bigLargeIcon(null))
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build();
-        notificationManagerCompat.notify(3, notification);
-
-        title.add("BATTERY Alert");
-        text.add("Low Battery");
-
-        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Title");
-        mSharedPreferences.saveNotificationTitle(title);
-        mSharedPreferences = new SharedPreferencesHelper(MainActivity.this, "Notification Text");
-        mSharedPreferences.saveNotificationText(text);
     }
 }
