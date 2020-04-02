@@ -1,5 +1,6 @@
 package com.example.grandmagear;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,12 +20,15 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
     private ArrayList<String> notificationTitle;
     private ArrayList<String> notificationText;
     private ArrayList<Long> notificationTime;
+    private SharedPreferencesHelper sharedPreferencesHelper;
+    private Context context;
 
     public NotificationsRecyclerView(ArrayList<String> notificationTitle, ArrayList<String> notificationText,
-                                     ArrayList<Long> notificationTime){
+                                     ArrayList<Long> notificationTime, Context context){
         this.notificationTitle = notificationTitle;
         this.notificationText = notificationText;
         this.notificationTime = notificationTime;
+        this.context = context;
     }
 
     @NonNull
@@ -53,8 +57,14 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
 
     public void delete(int position){
         notificationTitle.remove(position);
+        sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Title");
+        sharedPreferencesHelper.saveNotificationTitle(notificationTitle);
         notificationText.remove(position);
+        sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Text");
+        sharedPreferencesHelper.saveNotificationText(notificationText);
         notificationTime.remove(position);
+        sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Time");
+        sharedPreferencesHelper.saveNotificationTime(notificationTime);
         notifyItemRemoved(position);
     }
 
