@@ -86,6 +86,20 @@ public class SharedPreferencesHelper {
         }
     }
 
+    public ArrayList<Long> getNotificationTime(){
+        ArrayList<Long> time = new ArrayList<Long>();
+        ArrayList<String> notificationTime = new ArrayList<String>(
+                mSharedPreferences.getStringSet("Notification Time", new HashSet<String>())
+        );
+        if(notificationTime.size() < 1){
+            return new ArrayList<>();
+        }else{
+            for(String nt : notificationTime)
+                time.add(Long.valueOf(nt));
+            return time;
+        }
+    }
+
     public String getEmail(){
         return mSharedPreferences.getString("email",null);
     }

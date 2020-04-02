@@ -31,7 +31,7 @@ public class NotificationsTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_tab_fragment, container, false);
         mRecyclerView = view.findViewById(R.id.notificationRecycler);
-        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime);
+        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime, getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
@@ -55,19 +55,19 @@ public class NotificationsTabFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String title1 = "Heart Attack";
+        /*String title1 = "Heart Attack";
         String title2 = "Fell Down";
         String title3 = "Fell again";
         String title4 = "Healed";
         String text1 = "Grandma had a heart attack";
         String text2 = "Grandma fell down";
         String text3 = "She fell again";
-        String text4 = "She healed";
+        String text4 = "She healed";*/
         long time1 = 1;
         long time2 = 2;
         long time3 = 3;
         long time4 = 4;
-        mNotificationTitle.add(title1);
+        /*mNotificationTitle.add(title1);
         mNotificationTitle.add(title2);
         mNotificationTitle.add(title3);
         mNotificationTitle.add(title4);
@@ -76,22 +76,28 @@ public class NotificationsTabFragment extends Fragment {
         mNotificationText.add(text2);
         mNotificationText.add(text3);
         mNotificationText.add(text4);
-        Collections.reverse(mNotificationText);
+        Collections.reverse(mNotificationText);*/
         mNotificationTime.add(time1);
         mNotificationTime.add(time2);
         mNotificationTime.add(time3);
-        mNotificationTime.add(time4);
-        Collections.reverse(mNotificationTime);
+        //mNotificationTime.add(time4);
+        //Collections.reverse(mNotificationTime);
 
 
         mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
-        mSharedPreferencesHelper.saveNotificationTitle(mNotificationTitle);
+        //mSharedPreferencesHelper.saveNotificationTitle(mNotificationTitle);
+        if(mSharedPreferencesHelper.getNotificationTitle() != null){
+            mNotificationTitle = mSharedPreferencesHelper.getNotificationTitle();
+        }
         mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Text");
-        mSharedPreferencesHelper.saveNotificationText(mNotificationText);
+        //mSharedPreferencesHelper.saveNotificationText(mNotificationText);
+        if(mSharedPreferencesHelper.getNotificationText() != null){
+            mNotificationText = mSharedPreferencesHelper.getNotificationText();
+        }
         mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Time");
         mSharedPreferencesHelper.saveNotificationTime(mNotificationTime);
-        /*if(mSharedPreferencesHelper.getNotification() != null){
-            mNotifications = mSharedPreferencesHelper.getNotification();
+        /*if(mSharedPreferencesHelper.getNotificationTime() != null){
+            mNotificationTime = mSharedPreferencesHelper.getNotificationTime();
         }*/
     }
 }
