@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected Button mPatientButton;
     protected ImageView mLogo;
     private SharedPreferencesHelper mSharedPreferences;
-    protected NotificationHelper notificationHelper;
+    //protected NotificationHelper notificationHelper;
 
 
 
@@ -44,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
             disclaimerFragment.show(getSupportFragmentManager(), "DisclaimerFragment");
         }
         initializePage();
-        notificationHelper = new NotificationHelper(this);
+        /*notificationHelper = new NotificationHelper(this);
         notificationHelper.sendOnBpm("BPM Alert", "Low BPM");
         notificationHelper.sendOnFall("FALL Alert", "Grandma Fell");
-        notificationHelper.sendOnBattery("BATTERY Alert", "Low Battery");
+        notificationHelper.sendOnBattery("BATTERY Alert", "Low Battery");*/
 
 
     }
