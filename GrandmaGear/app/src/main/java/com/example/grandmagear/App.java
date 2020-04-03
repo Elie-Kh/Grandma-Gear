@@ -29,7 +29,7 @@ public class App extends Application {
 
             NotificationChannel fall = new NotificationChannel(FALL_CHANNEL,
                     "FALL",
-                    NotificationManager.IMPORTANCE_LOW);
+                    NotificationManager.IMPORTANCE_HIGH);
             fall.setDescription("channel fall");
 
             NotificationChannel battery = new NotificationChannel(BATTERY_CHANNEL,

@@ -19,12 +19,12 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
 
     private ArrayList<String> notificationTitle;
     private ArrayList<String> notificationText;
-    private ArrayList<Long> notificationTime;
+    private ArrayList<String> notificationTime;
     private SharedPreferencesHelper sharedPreferencesHelper;
     private Context context;
 
     public NotificationsRecyclerView(ArrayList<String> notificationTitle, ArrayList<String> notificationText,
-                                     ArrayList<Long> notificationTime, Context context){
+                                     ArrayList<String> notificationTime, Context context){
         this.notificationTitle = notificationTitle;
         this.notificationText = notificationText;
         this.notificationTime = notificationTime;
@@ -44,10 +44,7 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mNotificationTitle.setText(notificationTitle.get(position));
         holder.mNotificationText.setText(notificationText.get(position));
-        for(Long l : notificationTime){
-            Log.d("Logger___", String.valueOf(l));
-        }
-        holder.mNotificationTime.setText(Long.toString(notificationTime.get(position)));
+        holder.mNotificationTime.setText(notificationTime.get(position));
     }
 
     @Override
