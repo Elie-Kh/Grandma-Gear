@@ -39,17 +39,6 @@ public class LogInActivity extends AppCompatActivity {
 
         mSharedPreferencesHelper = new SharedPreferencesHelper(LogInActivity.this, "Login");
         setupUI();
-
-        /*show back button*/
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    /*setup back click*/
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
     }
 
     public void setupUI(){
