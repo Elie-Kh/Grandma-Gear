@@ -29,13 +29,17 @@ public class NotificationHelper {
     private ArrayList<String> nText = new ArrayList<String>();
     private ArrayList<String> nTime = new ArrayList<String>();
     private Context context;
+    private FirebaseObjects.UserDBO userDBO;
+    private FirebaseHelper firebaseHelper;
 
-    public NotificationHelper(Context context){
+    public NotificationHelper(Context context, FirebaseObjects.UserDBO userDBO){
         this.notificationManagerCompat = NotificationManagerCompat.from(context);
         this.sharedPreferencesHelperTitle = new SharedPreferencesHelper(context, "Notification Title");
         this.sharedPreferencesHelperText = new SharedPreferencesHelper(context, "Notification Text");
         this.sharedPreferencesHelperTime = new SharedPreferencesHelper(context, "Notification Time");
         this.context = context;
+        this.userDBO = userDBO;
+        firebaseHelper = new FirebaseHelper();
     }
 
     public void sendOnBpm(String title, String text){
@@ -57,14 +61,16 @@ public class NotificationHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
         String currentDateAndTime = sdf.format(new Date());
 
+        FirebaseObjects.Notifications bpm = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
+        firebaseHelper.addNotification(userDBO, bpm);
 
-        nTitle.add(title);
+        /*nTitle.add(title);
         nText.add(text);
         nTime.add(currentDateAndTime);
 
         sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
         sharedPreferencesHelperText.saveNotificationText(nText);
-        sharedPreferencesHelperTime.saveNotificationTime(nTime);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
 
     }
 
@@ -87,14 +93,16 @@ public class NotificationHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
         String currentDateAndTime = sdf.format(new Date());
 
+        FirebaseObjects.Notifications fall = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
+        firebaseHelper.addNotification(userDBO, fall);
 
-        nTitle.add(title);
+        /*nTitle.add(title);
         nText.add(text);
         nTime.add(currentDateAndTime);
 
         sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
         sharedPreferencesHelperText.saveNotificationText(nText);
-        sharedPreferencesHelperTime.saveNotificationTime(nTime);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
 
     public void sendOnBattery(String title, String text){
@@ -117,13 +125,15 @@ public class NotificationHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
         String currentDateAndTime = sdf.format(new Date());
 
+        FirebaseObjects.Notifications battery = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
+        firebaseHelper.addNotification(userDBO, battery);
 
-        nTitle.add(title);
+        /*nTitle.add(title);
         nText.add(text);
         nTime.add(currentDateAndTime);
 
         sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
         sharedPreferencesHelperText.saveNotificationText(nText);
-        sharedPreferencesHelperTime.saveNotificationTime(nTime);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
 }

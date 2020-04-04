@@ -42,6 +42,7 @@ public class FirebaseObjects {
         protected int height = 0;
         protected ArrayList<String> device_ids;
         protected ArrayList<EventsDBO> events;
+        protected ArrayList<Notifications> notifications;
 
         /*the following constructor is strictly for testing purposes*/
 
@@ -65,6 +66,7 @@ public class FirebaseObjects {
             this.gps_follow = gps_follow;
             this.device_ids = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
+            this.notifications = new ArrayList<Notifications>();
         }
 
         public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, Boolean gps_follow, int age, int weight, int height) {
@@ -80,6 +82,7 @@ public class FirebaseObjects {
             this.height = height;
             this.device_ids = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
+            this.notifications = new ArrayList<Notifications>();
         }
 
         public String getFirstName() {
@@ -128,6 +131,14 @@ public class FirebaseObjects {
 
         public ArrayList<EventsDBO> getEvents() {
             return events;
+        }
+
+        public ArrayList<Notifications> getNotifications(){
+            return notifications;
+        }
+
+        public void setNotifications(ArrayList<Notifications> notifications){
+            this.notifications = notifications;
         }
     }
 
@@ -178,6 +189,10 @@ public class FirebaseObjects {
         public ArrayList<FirebaseObjects.Notifications> getNotifications() {
             return notifications;
         }
+
+        public void setNotifications(ArrayList<FirebaseObjects.Notifications> notifications){
+            this.notifications = notifications;
+        }
     }
 
     public static class EventsDBO{
@@ -201,22 +216,26 @@ public class FirebaseObjects {
 
     public static class Notifications{
 
-        protected String notificationType;
-        protected String notificationInfo;
-        protected int time;
+        protected String notificationTitle;
+        protected String notificationText;
+        protected String time;
 
-        public Notifications(String notificationType, String notificationInfo, int time) {
-            this.notificationType = notificationType;
-            this.notificationInfo = notificationInfo;
+        public Notifications(String notificationTitle, String notificationText, String time) {
+            this.notificationTitle = notificationTitle;
+            this.notificationText = notificationText;
             this.time = time;
         }
 
-        public String getNotificationType() {
-            return notificationType;
+        public String getNotificationTitle() {
+            return notificationTitle;
         }
 
-        public String getNotificationInfo() {
-            return notificationInfo;
+        public String getNotificationText() {
+            return notificationText;
+        }
+
+        public String getNotificationTime(){
+            return time;
         }
     }
 }

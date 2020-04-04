@@ -31,6 +31,7 @@ public class UserActivity extends AppCompatActivity {
     protected TabLayout tabLayout;
     protected FirebaseObjects.UserDBO thisUser;
     protected FirebaseHelper firebaseHelper;
+    protected NotificationHelper notificationHelper;
     SharedPreferencesHelper mSharedPreferencesHelper;
     SharedPreferencesHelper mSharedPreferencesHelper_Login;
     public static final int BEHAVIOR_SET_USER_VISIBLE_HINT = 1;
@@ -62,6 +63,10 @@ public class UserActivity extends AppCompatActivity {
                                    @Override
                                    public void onCallback(FirebaseObjects.UserDBO user) {
                                        thisUser = user;
+                                       /*notificationHelper = new NotificationHelper(UserActivity.this, thisUser);
+                                       notificationHelper.sendOnBpm("BPM Alert", "Low BPM");
+                                       notificationHelper.sendOnFall("FALL Alert", "Grandma Fell");
+                                       notificationHelper.sendOnBattery("BATTERY Alert", "Low Battery");*/
                                    }
                                }, mSharedPreferencesHelper_Login.getEmail(),
                 Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));

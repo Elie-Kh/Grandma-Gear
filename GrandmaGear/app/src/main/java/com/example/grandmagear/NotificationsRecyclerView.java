@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NotificationsRecyclerView extends RecyclerView.Adapter<NotificationsRecyclerView.ViewHolder> {
 
@@ -21,7 +22,11 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
     private ArrayList<String> notificationText;
     private ArrayList<String> notificationTime;
     private SharedPreferencesHelper sharedPreferencesHelper;
+    private SharedPreferencesHelper sharedPreferencesHelper_Login;
     private Context context;
+    private FirebaseHelper firebaseHelper;
+    private FirebaseObjects.UserDBO userDBO;
+    private ArrayList<HashMap<String, Object>> thisNotifications;
 
     public NotificationsRecyclerView(ArrayList<String> notificationTitle, ArrayList<String> notificationText,
                                      ArrayList<String> notificationTime, Context context){
@@ -29,6 +34,8 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
         this.notificationText = notificationText;
         this.notificationTime = notificationTime;
         this.context = context;
+        this.firebaseHelper = new FirebaseHelper();
+        this.sharedPreferencesHelper_Login = new SharedPreferencesHelper(context, "Login");
     }
 
     @NonNull
@@ -52,17 +59,32 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
         return (notificationTitle.size() + notificationText.size())/2;
     }
 
-    public void delete(int position){
+    public void delete(final int position){
         notificationTitle.remove(position);
-        sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Title");
-        sharedPreferencesHelper.saveNotificationTitle(notificationTitle);
+        //sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Title");
+        //sharedPreferencesHelper.saveNotificationTitle(notificationTitle);
         notificationText.remove(position);
-        sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Text");
-        sharedPreferencesHelper.saveNotificationText(notificationText);
+        //sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Text");
+        //sharedPreferencesHelper.saveNotificationText(notificationText);
         notificationTime.remove(position);
-        sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Time");
-        sharedPreferencesHelper.saveNotificationTime(notificationTime);
+        //sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Time");
+        //sharedPreferencesHelper.saveNotificationTime(notificationTime);
         notifyItemRemoved(position);
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+            @Override
+            public void onCallback(FirebaseObjects.UserDBO user) {
+                userDBO = user;
+                firebaseHelper.getNotifications_follower(new FirebaseHelper.Callback_Notifications() {
+                    @Override
+                    public void onCallback(ArrayList<HashMap<String, Object>> notifications) {
+                        thisNotifications = notifications;
+                        thisNotifications.remove(position);
+                        firebaseHelper.editUser(userDBO, FirebaseObjects.Notifications, thisNotifications);
+                    }
+                });
+            }
+        },sharedPreferencesHelper_Login.getEmail(),
+                Boolean.parseBoolean(sharedPreferencesHelper_Login.getType()));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
