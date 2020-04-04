@@ -78,26 +78,29 @@ public class LogInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            mSharedPreferencesHelper.saveEmail(email);
-                            mSharedPreferencesHelper.savePassword(password);
-                            Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
-                            final boolean[] emails = new boolean[1];
-                            firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
-                                @Override
-                                public void onCallback(boolean checker) {
-                                    emails[0] = checker;
-                                    mSharedPreferencesHelper.saveEmail(email);
-                                    mSharedPreferencesHelper.saveType(emails[0]);
-                                    if(emails[0]){
-                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                            if(firebaseAuth.getCurrentUser().isEmailVerified()){
+                                mSharedPreferencesHelper.saveEmail(email);
+                                mSharedPreferencesHelper.savePassword(password);
+                                Toast.makeText(LogInActivity.this, "Logged In Successfully.", Toast.LENGTH_SHORT).show();
+                                final boolean[] emails = new boolean[1];
+                                firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
+                                    @Override
+                                    public void onCallback(boolean checker) {
+                                        emails[0] = checker;
+                                        mSharedPreferencesHelper.saveEmail(email);
+                                        mSharedPreferencesHelper.saveType(emails[0]);
+                                        if(emails[0]){
+                                            startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                        }
+                                        else {
+                                            startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                        }
                                     }
-                                    else {
-                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
-                                    }
-                                }
-                            }, email);
-
-
+                                }, email);
+                            }else{
+                                Toast.makeText(LogInActivity.this, "Please Verify your email address.", Toast.LENGTH_SHORT).show();
+                                mLoginProgressBar.setVisibility(View.GONE);
+                            }
                         }else{
                             Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                             mLoginProgressBar.setVisibility(View.GONE);
@@ -150,7 +153,7 @@ public class LogInActivity extends AppCompatActivity {
         mEmail.setText("");
         mLoginProgressBar.setVisibility(View.GONE);
 
-        if(firebaseAuth.getCurrentUser() != null){
+        if(firebaseAuth.getCurrentUser() != null && firebaseAuth.getCurrentUser().isEmailVerified()){
             if(mSharedPreferencesHelper.getEmail() != null) {
                 final String email = mSharedPreferencesHelper.getEmail();
                 final String password = mSharedPreferencesHelper.getPassword();
@@ -193,7 +196,7 @@ public class LogInActivity extends AppCompatActivity {
         mPassword.setText("");
         mEmail.setText("");
         mLoginProgressBar.setVisibility(View.GONE);
-        if(firebaseAuth.getCurrentUser() != null){
+        if(firebaseAuth.getCurrentUser() != null && firebaseAuth.getCurrentUser().isEmailVerified()){
             if(mSharedPreferencesHelper.getEmail() != null) {
                 final String email = mSharedPreferencesHelper.getEmail();
                 final String password = mSharedPreferencesHelper.getPassword();

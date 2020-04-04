@@ -205,24 +205,32 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
-                                //TODO: Remove the ";" and the comment delimiter, and create the user.
-                                if (acc_type) {
-                                    final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false);
-                                    FirebaseHelper firebaseHelper = new FirebaseHelper();
-                                    firebaseHelper.AddUser(newUser);
+                                firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Toast.makeText(RegisterActivity.this, "Registered Successfully! Please check email for verification.",
+                                                    Toast.LENGTH_LONG).show();
+                                            //TODO: Remove the ";" and the comment delimiter, and create the user.
+                                            if (acc_type) {
+                                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false);
+                                                FirebaseHelper firebaseHelper = new FirebaseHelper();
+                                                firebaseHelper.AddUser(newUser);
 
-                                } else {
-                                    final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false, Integer.parseInt(age),
-                                            Integer.parseInt(weight), Integer.parseInt(height));
-                                    firebaseHelper.AddUser(newUser);
-                                    final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
-                                    firebaseHelper.addDevice(newDevice);
-                                }
-                                mSharedPreferencesHelper.saveEmail(email);
-                                mSharedPreferencesHelper.savePassword(password);
-                                mSharedPreferencesHelper.saveType(acc_type);
-                                startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
+                                            } else {
+                                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false, Integer.parseInt(age),
+                                                        Integer.parseInt(weight), Integer.parseInt(height));
+                                                firebaseHelper.AddUser(newUser);
+                                                final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
+                                                firebaseHelper.addDevice(newDevice);
+                                            }
+                                            mSharedPreferencesHelper.saveEmail(email);
+                                            mSharedPreferencesHelper.savePassword(password);
+                                            mSharedPreferencesHelper.saveType(acc_type);
+                                            startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
+                                        }
+                                    }
+                                });
                             } else {
                                 Toast.makeText(RegisterActivity.this, "A user with this email already exists!", Toast.LENGTH_SHORT).show();
                                 mRegisterProgressBar.setVisibility(View.GONE);
