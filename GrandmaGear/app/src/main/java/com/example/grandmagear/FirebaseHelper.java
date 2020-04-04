@@ -1,6 +1,5 @@
 package com.example.grandmagear;
 
-import android.app.Notification;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -12,25 +11,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
-import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /** Functions implemented in this helper class:
  * 1- Add User -- Adds user to Firestore DB
@@ -76,6 +66,7 @@ public class FirebaseHelper {
         user.put(FirebaseObjects.GPS_Follow, false);
         user.put(FirebaseObjects.Devices_Followed, newUser.device_ids);
         user.put(FirebaseObjects.Events, newUser.events);
+        user.put(FirebaseObjects.Notifications, newUser.notifications);
 
 
         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -148,10 +139,20 @@ public class FirebaseHelper {
     }
 
     public void addNotification(final FirebaseObjects.UserDBO userDBO,
-                                FirebaseObjects.Notifications notifications){
-        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(userDBO.username);
-        ArrayList<FirebaseObjects.EventsDBO> events = userDBO.getEvents();
-        events.add(new FirebaseObjects.EventsDBO(events.size()+1, notifications));
+                                final FirebaseObjects.Notifications notification){
+       firebaseFirestore.collection(userDB).whereEqualTo(FirebaseObjects.Username, firebaseAuth.getCurrentUser().getUid())
+               .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+           @Override
+           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+               if(task.isSuccessful()){
+                   ArrayList<FirebaseObjects.Notifications> notifications = new ArrayList<FirebaseObjects.Notifications>();
+                   notifications = userDBO.getNotifications();
+                   notifications.add(notification);
+                   userDBO.setNotifications(notifications);
+                   editUser(userDBO, FirebaseObjects.Notifications, notifications);
+               }
+           }
+       });
     }
 
     public void addDevice(final FirebaseObjects.DevicesDBO device){
@@ -326,48 +327,26 @@ public class FirebaseHelper {
     }
 
     public interface Callback_Notifications {
-        void onCallback(ArrayList<FirebaseObjects.Notifications> notifications);
+        void onCallback(ArrayList<HashMap<String, Object>> notifications);
     }
 
 
-    public void getNotifications_follower(final Callback_Notifications callback_notifications,
-                                          final ArrayList<FirebaseObjects.Notifications> notifications,
-                                          final FirebaseObjects.DevicesDBO device){
+    public void getNotifications_follower(final Callback_Notifications callback_notifications){
         //get notifications of all devices followed by the follower.
-        firebaseFirestore.collection(deviceDB).whereEqualTo(FirebaseObjects.ID, device.deviceID)
-        .get()
-        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Log.d(TAG, "inside get notif follow" + getCurrentUserID());
+        firebaseFirestore.collection(userDB).whereEqualTo(FirebaseObjects.Username, getCurrentUserID())
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document : task.getResult()){
-                        Log.d("__GettingType", (String) Objects.requireNonNull(document.get("Email")));
-
-                          Object valsObj = document.getData();
-                          String vals = new Gson().toJson(valsObj);
-                        try {
-                            JSONObject infoObj=new JSONObject(vals).getJSONObject(FirebaseObjects.Notifications);
-                            Iterator<String> iterator = infoObj.keys();
-                            while (iterator.hasNext()) {
-                                String key = iterator.next();
-                                JSONObject objArray=infoObj.getJSONObject(key);
-                                FirebaseObjects.Notifications notificationTemp
-                                        = new FirebaseObjects.Notifications(
-                                                objArray.getString("notificationsType"),
-                                                objArray.getString("notificationsInfo"),
-                                                objArray.getInt("time"));
-                                notifications.add(notificationTemp);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                        ArrayList<HashMap<String, Object>> notifications =
+                                (ArrayList<HashMap<String, Object>>) documentSnapshot.get(FirebaseObjects.Notifications);
                         callback_notifications.onCallback(notifications);
-                        }
                     }
                 }
-
+            }
         });
-
     }
 
     public interface Callback_getUser{
@@ -431,26 +410,6 @@ public class FirebaseHelper {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
                             for(QueryDocumentSnapshot document : task.getResult()){
-                                //Log.d("__GettingType", (String) Objects.requireNonNull(document.get("Email")));
-
-//                                Object valsObj = document.getData();
-//                                String vals = new Gson().toJson(valsObj);
-//                                try {
-//                                    JSONObject infoObj=new JSONObject(vals).getJSONObject(FirebaseObjects.Devices_Followed);
-//                                    Iterator<String> iterator = infoObj.keys();
-//                                    while (iterator.hasNext()) {
-//                                        String key = iterator.next();
-//                                        JSONObject objArray=infoObj.getJSONObject(key);
-//                                        String temp = objArray.getString(FirebaseObjects.Devices_Followed);
-//                                        followers.add(temp);
-//                                    }
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                HashMap<String, String> temp =
-//                                        (HashMap<String, String>) document.get(FirebaseObjects.Devices_Followed);
-//                                Collection<String> values = temp.values();
-
                                 ArrayList<String> vals = new ArrayList<String>
                                         ((ArrayList<String>)document.get(FirebaseObjects.Devices_Followed));
                                 callback_getUserFollowers.onCallback(vals);
