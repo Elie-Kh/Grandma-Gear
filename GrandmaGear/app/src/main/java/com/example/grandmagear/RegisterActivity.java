@@ -161,16 +161,23 @@ public class RegisterActivity extends AppCompatActivity {
                     if (TextUtils.isEmpty(weight) && mWeight.getText().toString().equals("")) {
                         mWeight.setError("Weight is required");
                         save = false;
-                    }else if(Integer.parseInt(weight) < 80){
-                        mWeight.setError("Minimum is 80 lbs");
+                    }else if(Integer.parseInt(weight) < 80 || Integer.parseInt(weight) > 400){
+                        mWeight.setError("Weight must be between 80 lbs and 400 lbs");
                         save = false;
                     }
 
                     if (TextUtils.isEmpty(height) && mHeight.getText().toString().equals("")) {
                         mHeight.setError("Height is required");
                         save = false;
-                    }else if(Integer.parseInt(height) < 120){
-                        mHeight.setError("Minimum height is 120cm");
+                    }else if(Integer.parseInt(height) < 120 || Integer.parseInt(height) > 250){
+                        mHeight.setError("Height must be between 120 cm and 250 cm");
+                        save = false;
+                    }
+                    if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
+                        mDevice.setError("Device ID required");
+                        save = false;
+                    }else if(deviceID.length() < 5){
+                        mDevice.setError("ID must be 5 digits");
                         save = false;
                     }
                     if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
@@ -181,8 +188,6 @@ public class RegisterActivity extends AppCompatActivity {
                         save = false;
                     }
                 }
-
-
 
                 if(TextUtils.isEmpty(password)){
                     mPassword.setError("Password is required.");

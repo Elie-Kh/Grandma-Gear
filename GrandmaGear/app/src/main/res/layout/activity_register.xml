@@ -131,8 +131,8 @@
 
     <EditText
         android:id="@+id/weight"
-        android:layout_width="166dp"
-        android:layout_height="41dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
@@ -189,11 +189,11 @@
 
     <Spinner
         android:id="@+id/registerSpinner"
-        android:layout_width="211dp"
-        android:layout_height="33dp"
-        android:layout_marginStart="162dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="161dp"
+        android:layout_marginEnd="128dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/firstName"
         app:layout_constraintEnd_toEndOf="parent"

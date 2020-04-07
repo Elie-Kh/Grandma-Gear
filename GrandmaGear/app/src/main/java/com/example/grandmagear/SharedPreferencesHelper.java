@@ -3,8 +3,14 @@ package com.example.grandmagear;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 public class SharedPreferencesHelper {
 
@@ -50,40 +56,49 @@ public class SharedPreferencesHelper {
 
     public void savePatientsList(ArrayList<String> IDs){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putStringSet("PatientIDs", new HashSet<String>(IDs));
+        Gson gson = new Gson();
+        String json = gson.toJson(IDs);
+        editor.putString("PatientIDs", json);
         editor.apply();
     }
 
     public void saveNotificationTitle(ArrayList<String> title){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putStringSet("Notification Title", new HashSet<String>(title));
+        Gson gson = new Gson();
+        String json = gson.toJson(title);
+        editor.putString("Notification Title", json);
         editor.apply();
     }
 
     public void saveNotificationText(ArrayList<String> text){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putStringSet("Notification Text", new HashSet<String>(text));
+        Gson gson = new Gson();
+        String json = gson.toJson(text);
+        editor.putString("Notification Text", json);
         editor.apply();
     }
 
-    public void saveNotificationTime(ArrayList<Long> time){
+    public void saveNotificationTime(ArrayList<String> time){
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        HashSet<String> temp = new HashSet<String>(time.size());
-        for(long longs : time){
-            temp.add(time.toString());
-        }
-        editor.putStringSet("Notification Time", new HashSet<String>(temp));
+        Gson gson = new Gson();
+        String json = gson.toJson(time);
+        editor.putString("Notification Time", json);
         editor.apply();
     }
 
     public ArrayList<String> getNotificationTitle(){
-        ArrayList<String> notificationTitle = new ArrayList<String>
-                (mSharedPreferences.getStringSet("Notification Title", new HashSet<String>()));
-        if(notificationTitle.size() < 1){
-            return new ArrayList<>();
-        }else{
-            return notificationTitle;
-        }
+        Gson gson = new Gson();
+        String response = mSharedPreferences.getString("Notification Title", "");
+        ArrayList<String> title = gson.fromJson(response, new TypeToken<List<String>>() {
+        }.getType());
+        return title;
+    }
+
+    public ArrayList<String> getNotificationTime(){
+       Gson gson = new Gson();
+       String response = mSharedPreferences.getString("Notification Time", "");
+       ArrayList<String> time = gson.fromJson(response, new TypeToken<List<String>>(){}.getType());
+       return time;
     }
 
     public String getEmail(){
@@ -99,23 +114,17 @@ public class SharedPreferencesHelper {
     }
 
     public ArrayList<String> getNotificationText(){
-        ArrayList<String> notificationText = new ArrayList<String>
-                (mSharedPreferences.getStringSet("Notification Text", new HashSet<String>()));
-        if(notificationText.size() < 1){
-            return new ArrayList<>();
-        }else{
-            return notificationText;
-        }
+        Gson gson = new Gson();
+        String response = mSharedPreferences.getString("Notification Text", "");
+        ArrayList<String> text = gson.fromJson(response, new TypeToken<List<String>>() {
+        }.getType());
+        return text;
     }
 
     public ArrayList<String> getIDs(){
-        ArrayList<String> IDs = new ArrayList<String>
-                (mSharedPreferences.getStringSet("PatientIDs",new HashSet<String>()));
-        if(IDs.size() < 1){
-            return new ArrayList<>();
-        }
-        else {
-            return IDs;
-        }
+        Gson gson = new Gson();
+        String response = mSharedPreferences.getString("PatientIDs", "");
+        ArrayList<String> IDs = gson.fromJson(response, new TypeToken<List<String>>(){}.getType());
+        return IDs;
     }
 }

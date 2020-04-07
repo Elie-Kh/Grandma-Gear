@@ -12,7 +12,7 @@
         android:clickable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:background="@drawable/sooken" />
 
     <TextView
         android:id="@+id/notificationTitle"

@@ -34,6 +34,7 @@ public class UserActivity extends AppCompatActivity {
     protected TabLayout tabLayout;
     protected FirebaseObjects.UserDBO thisUser;
     protected FirebaseHelper firebaseHelper;
+    protected NotificationHelper notificationHelper;
     SharedPreferencesHelper mSharedPreferencesHelper;
     SharedPreferencesHelper mSharedPreferencesHelper_Login;
     public static final int BEHAVIOR_SET_USER_VISIBLE_HINT = 1;
