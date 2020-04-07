@@ -173,15 +173,16 @@ public class RegisterActivity extends AppCompatActivity {
                         mHeight.setError("Minimum height is 120cm");
                         save = false;
                     }
+                    if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
+                        mDevice.setError("Device ID required");
+                        save = false;
+                    }else if(deviceID.length() < 5){
+                        mDevice.setError("ID must be 5 numbers");
+                        save = false;
+                    }
                 }
 
-                if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
-                    mDevice.setError("Device ID required");
-                    save = false;
-                }else if(deviceID.length() < 5){
-                    mDevice.setError("ID must be 5 numbers");
-                    save = false;
-                }
+
 
                 if(TextUtils.isEmpty(password)){
                     mPassword.setError("Password is required.");

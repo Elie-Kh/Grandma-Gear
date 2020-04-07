@@ -1,6 +1,5 @@
 package com.example.grandmagear;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,14 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
-
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.Objects;
 
 public class AddPatientFragment extends DialogFragment {
 
@@ -86,14 +77,15 @@ public class AddPatientFragment extends DialogFragment {
 //                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
 //                        );
 //                    }
-                    ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
-                    user.setDevice_ids(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+                    ((UserActivity)getActivity()).thisUser.setDevicesFollowed(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    user.setDevicesFollowed(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+
                     firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
                         @Override
                         public void onCallback(FirebaseObjects.UserDBO users) {
                             user = users;
                             ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
-                                    users.device_ids;
+                                    users.devicesFollowed;
                             Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
                             ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
                             ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -12,9 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 
@@ -58,13 +61,16 @@ public class UserActivity extends AppCompatActivity {
         Log.d("__THISTAG__", String.valueOf(Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType())));
         Log.d("__THISTAG__", mSharedPreferencesHelper_Login.getEmail());
 
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                    }
+                });
         mViewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tabLayout);
 
@@ -82,18 +88,23 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                    @Override
-                    public void onCallback(FirebaseObjects.UserDBO user) {
-                        thisUser = user;
-                    }
-                }, mSharedPreferencesHelper_Login.getEmail(),
-                        Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                            }
+                        });
                 //thisUser.setDevice_ids(mPatientsTabFragment.getmPatientsList());
                 AddPatientFragment patientFrag = new AddPatientFragment(thisUser);
                 patientFrag.show(getSupportFragmentManager(), "AddPatientFragment");
             }
         });
+
+        
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

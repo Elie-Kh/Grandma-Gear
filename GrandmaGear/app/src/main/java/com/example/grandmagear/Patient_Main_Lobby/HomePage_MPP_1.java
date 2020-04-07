@@ -2,15 +2,10 @@ package com.example.grandmagear.Patient_Main_Lobby;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,13 +16,11 @@ import android.widget.TextView;
 
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
-import com.example.grandmagear.LogInActivity;
 import com.example.grandmagear.R;
 import com.example.grandmagear.SharedPreferencesHelper;
-import com.example.grandmagear.UserActivity;
-import com.google.firebase.auth.FirebaseAuth;
-
-import static com.example.grandmagear.Patient_Main_Lobby.PatientSettingsActivity.location;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class HomePage_MPP_1 extends AppCompatActivity {
     private static final String TAG = "HomePage_MPP_1";
@@ -103,19 +96,21 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Setting = findViewById(R.id.settings);
 
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-
-                                       if (thisUser.getAcc_type()) {
-                                           menu.getItem(0).setVisible(false);
-                                       } else {
-                                           menu.getItem(0).setVisible(true);
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                        if (thisUser.getAccountType()) {
+                            menu.getItem(0).setVisible(false);
+                        } else {
+                            menu.getItem(0).setVisible(true);
+                        }
+                    }
+                });
         return super.onCreateOptionsMenu(menu);
 
 
@@ -144,55 +139,61 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     public void uploadWearerInfo(){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-
-                                       FullName.setText(thisUser.getFirstName() + " " + thisUser.getLastName());
-                                       Age.setText(String.valueOf(thisUser.getAge()));
-                                       Weight.setText(String.valueOf(thisUser.getWeight()));
-                                       Height.setText(String.valueOf(thisUser.getHeight()));
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                        FullName.setText(thisUser.getFirstName() + " " + thisUser.getLastName());
+                        Age.setText(String.valueOf(thisUser.getAge()));
+                        Weight.setText(String.valueOf(thisUser.getWeight()));
+                        Height.setText(String.valueOf(thisUser.getHeight()));
+                    }
+                });
 
     }
     public void resumeSharedLocation(){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-
-                                       if (thisUser.getAcc_type()) {
-                                           disableShareLocation();
-                                       } else {
-                                           displayShareLocation();
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
-
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                        if (thisUser.getAccountType()) {
+                            disableShareLocation();
+                        } else {
+                            displayShareLocation();
+                        }
+                    }
+                });
     }
 
     public void resumeLocation(final Switch ls){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-                                       ls.setChecked(thisUser.getGps_follow());
-                                       if (thisUser.getGps_follow()) {
-                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
-                                           displayLocation();
-                                       } else {
-                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
-                                           disableLocation();
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                        ls.setChecked(thisUser.getGpsFollow());
+                        if (thisUser.getGpsFollow()) {
+                            firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
+                            displayLocation();
+                        } else {
+                            firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
+                            disableLocation();
+                        }
+                    }
+                });
 
     }
 
