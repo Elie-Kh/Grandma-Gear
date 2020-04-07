@@ -1,24 +1,22 @@
 package com.example.grandmagear;
 
-import android.bluetooth.BluetoothClass;
-
 import java.util.ArrayList;
 
 public class FirebaseObjects {
 
     //variable names for user
-    public static final String Username = "Username";
-    public static final String Email = "Email";
-    public static final String First_Name = "First Name";
-    public static final String Last_Name = "Last Name";
-    public static final String Password = "Password";
-    public static final String Account_Type = "Account Type";
-    public static final String Age = "Age";
-    public static final String Height = "Height";
-    public static final String Weight = "Weight";
-    public static final String GPS_Follow = "GPS Follow";
-    public static final String Devices_Followed = "Devices Followed";
-    public static final String Events = "Events";
+    public static final String Username = "username";
+    public static final String Email = "email";
+    public static final String First_Name = "firstName";
+    public static final String Last_Name = "lastName";
+    public static final String Password = "password";
+    public static final String Account_Type = "accountType";
+    public static final String Age = "age";
+    public static final String Height = "height";
+    public static final String Weight = "weight";
+    public static final String GPS_Follow = "gpsFollow";
+    public static final String Devices_Followed = "devicesFollowed";
+    public static final String Events = "events";
 
     //variable names for device
     public static final String ID = "ID";
@@ -26,22 +24,34 @@ public class FirebaseObjects {
     public static final String Latitude = "Latitude";
     public static final String Heartrate = "Heartrate";
     public static final String Notifications = "Notifications";
-    public static final String DeviceBattery = "Device Battery";
-    public static final String PhoneBattery = "Phone Battery";
+    public static final String DeviceBattery = "DeviceBattery";
+    public static final String PhoneBattery = "PhoneBattery";
 
     public static class UserDBO{
-        protected String username;
-        protected String email;
-        protected String firstName;
-        protected String lastName;
-        protected String password;
-        protected Boolean acc_type;
-        protected Boolean gps_follow = false;
-        protected int age = 0;
-        protected int weight = 0;
-        protected int height = 0;
-        protected ArrayList<String> device_ids;
-        protected ArrayList<EventsDBO> events;
+        //@PropertyName("Username")
+        public String username;
+        //@PropertyName("Email")
+        public String email;
+        //@PropertyName("First Name")
+        public String firstName;
+        //@PropertyName("Last Name")
+        public String lastName;
+        //@PropertyName("Password")
+        public String password;
+        //@PropertyName("Account Type")
+        public Boolean accountType;
+        //@PropertyName("GPS Follow")
+        public Boolean gpsFollow = false;
+        //@PropertyName("Age")
+        public Integer age = 0;
+        //@PropertyName("Weight")
+        public Integer weight = 0;
+        //@PropertyName("Height")
+        public Integer height = 0;
+        //@PropertyName("Devices Followed")
+        public ArrayList<String> devicesFollowed;
+        //@PropertyName("Events")
+        public ArrayList<EventsDBO> events;
 
         /*the following constructor is strictly for testing purposes*/
 
@@ -51,81 +61,158 @@ public class FirebaseObjects {
             this.lastName = lastName;
         }
 
+        //@PropertyName("Email")
         public String getEmail() {
             return email;
         }
 
-        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, Boolean gps_follow) {
+        public UserDBO() {
+            //empty constructor for snapshot.
+        }
+
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow) {
             //this.username = username;
             this.email = email;
             this.firstName = firstName;
             this.lastName = lastName;
             this.password = password;
-            this.acc_type = acc_type;
-            this.gps_follow = gps_follow;
-            this.device_ids = new ArrayList<String>();
+            this.accountType = AccountType;
+            this.gpsFollow = gpsFollow;
+            this.devicesFollowed = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
         }
 
-        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, Boolean gps_follow, int age, int weight, int height) {
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, int age, int weight, int height) {
             //this.username = username;
             this.email = email;
             this.firstName = firstName;
             this.lastName = lastName;
             this.password = password;
-            this.acc_type = acc_type;
-            this.gps_follow = gps_follow;
+            this.accountType = AccountType;
+            this.gpsFollow = gpsFollow;
             this.age = age;
             this.weight = weight;
             this.height = height;
-            this.device_ids = new ArrayList<String>();
+            this.devicesFollowed = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
         }
 
+        public UserDBO(String username, String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, int age, int weight, int height, ArrayList<String> DevicesFollowed, ArrayList<EventsDBO> events) {
+            this.username = username;
+            this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.password = password;
+            this.accountType = AccountType;
+            this.gpsFollow = gpsFollow;
+            this.age = age;
+            this.weight = weight;
+            this.height = height;
+            this.devicesFollowed = DevicesFollowed;
+            this.events = events;
+        }
+
+        //@PropertyName("First Name")
         public String getFirstName() {
             return firstName;
         }
 
+        //@PropertyName("Last Name")
         public String getLastName() {
             return lastName;
         }
 
-        public Boolean getAcc_type() {
-            return acc_type;
+        //@PropertyName("Account Type")
+        public Boolean getAccountType() {
+            return accountType;
         }
 
+        //@PropertyName("Age")
         public int getAge() {
             return age;
         }
 
+        //@PropertyName("Weight")
         public int getWeight() {
             return weight;
         }
 
+        //@PropertyName("Height")
         public int getHeight() {
             return height;
         }
 
-        public Boolean getGps_follow() {
-            return gps_follow;
+        //@PropertyName("Username")
+        public String getUsername() {
+            return username;
+        }
+        //@PropertyName("Username")
+        public void setUsername(String username) {
+            this.username = username;
+        }
+        //@PropertyName("Email")
+        public void setEmail(String email) {
+            this.email = email;
         }
 
-        public void setGps_follow(Boolean gps_follow) {
-            this.gps_follow = gps_follow;
+        //@PropertyName("First Name")
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
         }
 
-        public void setDevice_ids(ArrayList<String> device_ids) {
-            this.device_ids = device_ids;
+        //@PropertyName("Last Name")
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
         }
 
+        //@PropertyName("Password")
+        public String getPassword() {
+            return password;
+        }
+        //@PropertyName("Password")
+        public void setPassword(String password) {
+            this.password = password;
+        }
+        //@PropertyName("Account Type")
+        public void setAccountType(Boolean AccountType) {
+            this.accountType = AccountType;
+        }
+        //@PropertyName("Age")
+        public void setAge(Integer age) {
+            this.age = age;
+        }
+        //@PropertyName("Weight")
+        public void setWeight(Integer weight) {
+            this.weight = weight;
+        }
+        //@PropertyName("Height")
+        public void setHeight(Integer height) {
+            this.height = height;
+        }
+
+        //@PropertyName("GPS Follow")
+        public Boolean getGpsFollow() {
+            return gpsFollow;
+        }
+        //@PropertyName("GPS Follow")
+        public void setGpsFollow(Boolean gpsFollow) {
+            this.gpsFollow = gpsFollow;
+        }
+        //@PropertyName("Devices Followed")
+        public void setDevicesFollowed(ArrayList<String> devicesFollowed) {
+            this.devicesFollowed = devicesFollowed;
+        }
+        //@PropertyName("Events")
         public void setEvents(ArrayList<EventsDBO> events) {
             this.events = events;
         }
 
-        public ArrayList<String> getDevice_ids() {
-            return device_ids;
+        //@PropertyName("Devices Followed")
+        public ArrayList<String> getDevicesFollowed() {
+            return devicesFollowed;
         }
 
+        //@PropertyName("Events")
         public ArrayList<EventsDBO> getEvents() {
             return events;
         }
