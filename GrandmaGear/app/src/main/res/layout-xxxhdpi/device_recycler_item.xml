@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:visibility="invisible"
         android:text="@string/id_hint"
         app:layout_constraintStart_toEndOf="@+id/patient_image"
         app:layout_constraintTop_toTopOf="@+id/patient_image"
@@ -76,4 +77,13 @@
         android:text="50%"
         app:layout_constraintBottom_toBottomOf="@+id/battery_button"
         app:layout_constraintStart_toEndOf="@+id/battery_button" />
+
+    <TextView
+        android:id="@+id/patient_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/device_id"
+        app:layout_constraintEnd_toEndOf="@+id/device_id"
+        app:layout_constraintStart_toStartOf="@+id/device_id" />
 </androidx.constraintlayout.widget.ConstraintLayout>

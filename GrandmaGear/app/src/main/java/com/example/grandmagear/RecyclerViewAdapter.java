@@ -1,26 +1,28 @@
 package com.example.grandmagear;
 
-import android.content.Context;
-import android.nfc.Tag;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "Adapter__";
     ArrayList<String> mPatients;
+    FirebaseHelper firebaseHelper;
 
     public RecyclerViewAdapter(ArrayList<String> patients) {
         this.mPatients = patients;
@@ -36,8 +38,52 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.mDeviceIdText.setText(mPatients.get(position));
+        firebaseHelper.firebaseFirestore
+                .collection(FirebaseHelper.deviceDB)
+                .document(mPatients.get(position))
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        if(documentSnapshot != null && documentSnapshot.exists()){
+                            FirebaseObjects.DevicesDBO device = documentSnapshot
+                                    .toObject(FirebaseObjects.DevicesDBO.class);
+                            holder.mHeartBeatText.setText(String.valueOf(device.heartrate) + "bpm");
+                            notifyDataSetChanged();
+                        }
+                    }
+                });
+        firebaseHelper.firebaseFirestore
+                .collection(FirebaseHelper.deviceDB)
+                .document(mPatients.get(position))
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if(documentSnapshot != null && documentSnapshot.exists()){
+                            FirebaseObjects.DevicesDBO device = documentSnapshot
+                                    .toObject(FirebaseObjects.DevicesDBO.class);
+                            holder.mHeartBeatText.setText(String.valueOf(device.heartrate) + "bpm");
+                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                                    .document(device.id)
+                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot snapshot = task.getResult();
+                                    if(snapshot!=null && snapshot.exists()){
+                                        FirebaseObjects.UserDBO patient = snapshot
+                                                .toObject(FirebaseObjects.UserDBO.class);
+                                        String name = (String)patient.firstName + " " + (String)patient.lastName;
+                                        holder.mPatientName.setText(name);
+                                    }
+                                }
+                            });
+                            holder.mDeviceBattery.setText(String.valueOf(device.deviceBattery) +"%");
+                            notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -53,6 +99,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected TextView mDeviceIdText;
         protected ImageView mPatientImage;
         protected ImageView mHeartGraph;
+        protected TextView mDeviceBattery;
+        protected TextView mPatientName;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,7 +111,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mPatientImage = itemView.findViewById(R.id.patient_image);
             mHeartGraph = itemView.findViewById(R.id.heartBeatImage);
             mBatteryButton = itemView.findViewById(R.id.battery_button);
-
+            mDeviceBattery = itemView.findViewById(R.id.battery_level);
+            mPatientName = itemView.findViewById(R.id.patient_name);
 
             mLocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
