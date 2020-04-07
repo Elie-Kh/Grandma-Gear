@@ -17,6 +17,7 @@ public class FirebaseObjects {
     public static final String GPS_Follow = "gpsFollow";
     public static final String Devices_Followed = "devicesFollowed";
     public static final String Events = "events";
+    public static final String Image = "image";
 
     //variable names for device
     public static final String ID = "id";
@@ -218,39 +219,43 @@ public class FirebaseObjects {
     }
 
     public static class DevicesDBO{
-        protected String deviceID;
-        protected int bpm;
-        protected long latGPS;    //latitude
-        protected long lonGPS;    //longitude
+        protected String id;
+        protected int heartrate;
+        protected long latitude;    //latitude
+        protected long longitude;    //longitude
         protected int deviceBattery;
         protected int phoneBattery;
         protected ArrayList<Notifications> notifications; //notifications linked to that device only
 
-        public DevicesDBO(String deviceID) {
-            this.deviceID = deviceID;
+        public DevicesDBO() {
+            //constructor for firestore snapshot
         }
 
-        public DevicesDBO(String deviceID, int bpm, int deviceBattery, int phoneBattery) {
-            this.deviceID = deviceID;
-            this.bpm = bpm;
+        public DevicesDBO(String id) {
+            this.id = id;
+        }
+
+        public DevicesDBO(String id, int heartrate, int deviceBattery, int phoneBattery) {
+            this.id = id;
+            this.heartrate = heartrate;
             this.deviceBattery = deviceBattery;
             this.phoneBattery = phoneBattery;
         }
 
-        public String getDeviceID() {
-            return deviceID;
+        public String getId() {
+            return id;
         }
 
-        public int getBpm() {
-            return bpm;
+        public int getHeartrate() {
+            return heartrate;
         }
 
-        public long getLatGPS() {
-            return latGPS;
+        public long getLatitude() {
+            return latitude;
         }
 
-        public long getLonGPS() {
-            return lonGPS;
+        public long getLongitude() {
+            return longitude;
         }
 
         public int getDeviceBattery() {
@@ -267,6 +272,30 @@ public class FirebaseObjects {
 
         public void setNotifications(ArrayList<FirebaseObjects.Notifications> notifications){
             this.notifications = notifications;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public void setHeartrate(int heartrate) {
+            this.heartrate = heartrate;
+        }
+
+        public void setLatitude(long latitude) {
+            this.latitude = latitude;
+        }
+
+        public void setLongitude(long longitude) {
+            this.longitude = longitude;
+        }
+
+        public void setDeviceBattery(int deviceBattery) {
+            this.deviceBattery = deviceBattery;
+        }
+
+        public void setPhoneBattery(int phoneBattery) {
+            this.phoneBattery = phoneBattery;
         }
     }
 

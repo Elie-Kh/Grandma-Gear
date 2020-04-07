@@ -158,12 +158,12 @@ public class FirebaseHelper {
     public void addDevice(final FirebaseObjects.DevicesDBO device){
 
         //device.deviceID = firebaseAuth.getUid();
-        final DocumentReference documentReference = firebaseFirestore.collection(deviceDB).document(device.deviceID);
+        final DocumentReference documentReference = firebaseFirestore.collection(deviceDB).document(device.id);
         Map<String,Object> devices = new HashMap<>();
         devices.put(FirebaseObjects.ID, firebaseAuth.getUid());
-        devices.put(FirebaseObjects.Longitude, device.lonGPS);
-        devices.put(FirebaseObjects.Latitude, device.latGPS);
-        devices.put(FirebaseObjects.Heartrate, device.bpm);
+        devices.put(FirebaseObjects.Longitude, device.longitude);
+        devices.put(FirebaseObjects.Latitude, device.latitude);
+        devices.put(FirebaseObjects.Heartrate, device.heartrate);
         devices.put(FirebaseObjects.PhoneBattery, device.phoneBattery);
         devices.put(FirebaseObjects.DeviceBattery, device.deviceBattery);
         devices.put(FirebaseObjects.Notifications, device.notifications);
@@ -171,7 +171,7 @@ public class FirebaseHelper {
         documentReference.set(devices).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: Device profile is created for " + device.deviceID);
+                Log.d(TAG, "onSuccess: Device profile is created for " + device.id);
             }
         });
         documentReference.set(devices).addOnFailureListener(new OnFailureListener() {
@@ -183,7 +183,7 @@ public class FirebaseHelper {
     }
 
     public void editDevice(FirebaseObjects.DevicesDBO device, final String field, final Object newVal){
-        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(device.deviceID);
+        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(device.id);
 
         firebaseFirestore.runTransaction(new Transaction.Function<Void>() {
             @Nullable
@@ -208,7 +208,7 @@ public class FirebaseHelper {
 
     public void editLocation(FirebaseObjects.DevicesDBO device, final Object newLongitude,
                              final Object newLatitude){
-        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(device.deviceID);
+        final DocumentReference documentReference = firebaseFirestore.collection(userDB).document(device.id);
 
         firebaseFirestore.runTransaction(new Transaction.Function<Void>() {
             @Nullable

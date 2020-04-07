@@ -14,6 +14,11 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.Collections;
 
 public class AddPatientFragment extends DialogFragment {
@@ -80,22 +85,61 @@ public class AddPatientFragment extends DialogFragment {
                     ((UserActivity)getActivity()).thisUser.setDevicesFollowed(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
                     user.setDevicesFollowed(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
 
-                    firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
+                    firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                            .document(patientDevice)
+                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onCallback(FirebaseObjects.UserDBO users) {
-                            user = users;
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
-                                    users.devicesFollowed;
-                            Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
-                                    DividerItemDecoration.VERTICAL));
-                           Log.d(TAG, "Added Patient");
-                            getDialog().dismiss();
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot snapshot = task.getResult();
+                            if(snapshot!= null && snapshot.exists()){
+                                firebaseHelper.firebaseFirestore
+                                        .collection(FirebaseHelper.userDB)
+                                        .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        DocumentSnapshot snapshot = task.getResult();
+                                        FirebaseObjects.UserDBO users = snapshot.toObject(FirebaseObjects.UserDBO.class);
+                                        user = users;
+                                        users.devicesFollowed.add(patientDevice);
+                                        firebaseHelper.firebaseFirestore
+                                                .collection(FirebaseHelper.userDB)
+                                                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                                                .set(users);
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
+                                                users.devicesFollowed;
+                                        Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
+                                                DividerItemDecoration.VERTICAL));
+
+                                        getDialog().dismiss();
+                                    }
+                                });
+                            }
                         }
-                    }, user, patientDevice);
+                    });
+
+
+
+//                    firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
+//                        @Override
+//                        public void onCallback(FirebaseObjects.UserDBO users) {
+//                            user = users;
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
+//                                    users.devicesFollowed;
+//                            Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
+//                                    DividerItemDecoration.VERTICAL));
+//                           Log.d(TAG, "Added Patient");
+//                            getDialog().dismiss();
+//                        }
+//                    }, user, patientDevice);
                     //((UserActivity)getActivity()).thisUser.device_ids.add(patientDevice);
                     //((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
                 }
