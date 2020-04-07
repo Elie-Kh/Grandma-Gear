@@ -19,13 +19,13 @@ public class FirebaseObjects {
     public static final String Events = "events";
 
     //variable names for device
-    public static final String ID = "ID";
-    public static final String Longitude = "Longitude";
-    public static final String Latitude = "Latitude";
-    public static final String Heartrate = "Heartrate";
-    public static final String Notifications = "Notifications";
-    public static final String DeviceBattery = "DeviceBattery";
-    public static final String PhoneBattery = "PhoneBattery";
+    public static final String ID = "id";
+    public static final String Longitude = "longitude";
+    public static final String Latitude = "latitude";
+    public static final String Heartrate = "heartrate";
+    public static final String Notifications = "notifications";
+    public static final String DeviceBattery = "deviceBattery";
+    public static final String PhoneBattery = "phoneBattery";
 
     public static class UserDBO{
         //@PropertyName("Username")
