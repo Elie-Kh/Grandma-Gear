@@ -41,7 +41,7 @@
     <string name="last_name">Last Name</string>
     <string name="weight">Weight lbs</string>
     <string name="age">Age</string>
-    <string name="height">Height</string>
+    <string name="height">Height cm</string>
     <string name="device_id">Device ID</string>
     <string name="register">Register</string>
 

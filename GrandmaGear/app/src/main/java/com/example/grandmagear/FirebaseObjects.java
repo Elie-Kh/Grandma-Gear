@@ -28,30 +28,19 @@ public class FirebaseObjects {
     public static final String PhoneBattery = "phoneBattery";
 
     public static class UserDBO{
-        //@PropertyName("Username")
         public String username;
-        //@PropertyName("Email")
         public String email;
-        //@PropertyName("First Name")
         public String firstName;
-        //@PropertyName("Last Name")
         public String lastName;
-        //@PropertyName("Password")
         public String password;
-        //@PropertyName("Account Type")
         public Boolean accountType;
-        //@PropertyName("GPS Follow")
         public Boolean gpsFollow = false;
-        //@PropertyName("Age")
         public Integer age = 0;
-        //@PropertyName("Weight")
         public Integer weight = 0;
-        //@PropertyName("Height")
         public Integer height = 0;
-        //@PropertyName("Devices Followed")
         public ArrayList<String> devicesFollowed;
-        //@PropertyName("Events")
         public ArrayList<EventsDBO> events;
+        public ArrayList<Notifications> notifications;
 
         /*the following constructor is strictly for testing purposes*/
 
@@ -80,6 +69,7 @@ public class FirebaseObjects {
             this.gpsFollow = gpsFollow;
             this.devicesFollowed = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
+            this.notifications = new ArrayList<Notifications>();
         }
 
         public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, int age, int weight, int height) {
@@ -95,6 +85,7 @@ public class FirebaseObjects {
             this.height = height;
             this.devicesFollowed = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
+            this.notifications = new ArrayList<Notifications>();
         }
 
         public UserDBO(String username, String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, int age, int weight, int height, ArrayList<String> DevicesFollowed, ArrayList<EventsDBO> events) {
@@ -216,6 +207,14 @@ public class FirebaseObjects {
         public ArrayList<EventsDBO> getEvents() {
             return events;
         }
+
+        public ArrayList<Notifications> getNotifications(){
+            return notifications;
+        }
+
+        public void setNotifications(ArrayList<Notifications> notifications){
+            this.notifications = notifications;
+        }
     }
 
     public static class DevicesDBO{
@@ -265,6 +264,10 @@ public class FirebaseObjects {
         public ArrayList<FirebaseObjects.Notifications> getNotifications() {
             return notifications;
         }
+
+        public void setNotifications(ArrayList<FirebaseObjects.Notifications> notifications){
+            this.notifications = notifications;
+        }
     }
 
     public static class EventsDBO{
@@ -288,22 +291,26 @@ public class FirebaseObjects {
 
     public static class Notifications{
 
-        protected String notificationType;
-        protected String notificationInfo;
-        protected int time;
+        protected String notificationTitle;
+        protected String notificationText;
+        protected String time;
 
-        public Notifications(String notificationType, String notificationInfo, int time) {
-            this.notificationType = notificationType;
-            this.notificationInfo = notificationInfo;
+        public Notifications(String notificationTitle, String notificationText, String time) {
+            this.notificationTitle = notificationTitle;
+            this.notificationText = notificationText;
             this.time = time;
         }
 
-        public String getNotificationType() {
-            return notificationType;
+        public String getNotificationTitle() {
+            return notificationTitle;
         }
 
-        public String getNotificationInfo() {
-            return notificationInfo;
+        public String getNotificationText() {
+            return notificationText;
+        }
+
+        public String getNotificationTime(){
+            return time;
         }
     }
 }
