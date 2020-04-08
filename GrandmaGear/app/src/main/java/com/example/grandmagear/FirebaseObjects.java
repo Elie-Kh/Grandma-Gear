@@ -322,12 +322,16 @@ public class FirebaseObjects {
 
         protected String notificationTitle;
         protected String notificationText;
-        protected String time;
+        protected String notificationTime;
 
-        public Notifications(String notificationTitle, String notificationText, String time) {
+        public Notifications() {
+            //constructor for snapshot
+        }
+
+        public Notifications(String notificationTitle, String notificationText, String notificationTime) {
             this.notificationTitle = notificationTitle;
             this.notificationText = notificationText;
-            this.time = time;
+            this.notificationTime = notificationTime;
         }
 
         public String getNotificationTitle() {
@@ -339,7 +343,19 @@ public class FirebaseObjects {
         }
 
         public String getNotificationTime(){
-            return time;
+            return notificationTime;
+        }
+
+        public void setNotificationTitle(String notificationTitle) {
+            this.notificationTitle = notificationTitle;
+        }
+
+        public void setNotificationText(String notificationText) {
+            this.notificationText = notificationText;
+        }
+
+        public void setNotificationTime(String notificationTime) {
+            this.notificationTime = notificationTime;
         }
     }
 }
