@@ -1,5 +1,6 @@
 package com.example.grandmagear;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 
@@ -23,9 +25,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "Adapter__";
     ArrayList<String> mPatients;
     FirebaseHelper firebaseHelper;
+    private NotificationHelper notificationHelper;
+    private FirebaseObjects.UserDBO userDBO;
+    private boolean check = true;
 
-    public RecyclerViewAdapter(ArrayList<String> patients) {
+    public RecyclerViewAdapter(ArrayList<String> patients, final Context context) {
         this.mPatients = patients;
+        FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if(documentSnapshot != null && documentSnapshot.exists()){
+                    userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                    notificationHelper = new NotificationHelper(context, userDBO);
+                }
+            }
+        });
     }
 
     @NonNull
@@ -47,11 +63,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot documentSnapshot = task.getResult();
-                        if(documentSnapshot != null && documentSnapshot.exists()){
+                        if(documentSnapshot != null && documentSnapshot.exists()) {
                             FirebaseObjects.DevicesDBO device = documentSnapshot
                                     .toObject(FirebaseObjects.DevicesDBO.class);
                             holder.mHeartBeatText.setText(String.valueOf(device.heartrate) + "bpm");
-                            notifyDataSetChanged();
+                            if (check) {
+                                if ((Integer)device.heartrate < 60) {
+                                    notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
+                                    check = false;
+                                }
+                            }else {
+                                if ((Integer)device.heartrate >= 60){
+                                    check = true;
+                                }
+                            }
                         }
                     }
                 });

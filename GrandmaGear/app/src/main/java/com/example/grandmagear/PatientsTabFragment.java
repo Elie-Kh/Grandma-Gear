@@ -57,7 +57,7 @@ public class PatientsTabFragment extends Fragment {
                         DocumentSnapshot documentSnapshot = task.getResult();
                         thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
                         mRecyclerView = view.findViewById(R.id.device_recycler);
-                        mAdapter = new RecyclerViewAdapter(mPatientsList);
+                        mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         mRecyclerView.setAdapter(mAdapter);
                         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
@@ -80,7 +80,7 @@ public class PatientsTabFragment extends Fragment {
                     thisUser = snapshot.toObject(FirebaseObjects.UserDBO.class);
                     mPatientsList = thisUser.devicesFollowed;
                     mRecyclerView = view.findViewById(R.id.device_recycler);
-                    mAdapter = new RecyclerViewAdapter(mPatientsList);
+                    mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     mRecyclerView.setAdapter(mAdapter);
                     mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
