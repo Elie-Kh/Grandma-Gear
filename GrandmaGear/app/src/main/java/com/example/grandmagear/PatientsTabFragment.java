@@ -56,44 +56,45 @@ public class PatientsTabFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot documentSnapshot = task.getResult();
                         thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                        mPatientsList = thisUser.devicesFollowed;
                         mRecyclerView = view.findViewById(R.id.device_recycler);
                         mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         mRecyclerView.setAdapter(mAdapter);
                         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
                                 DividerItemDecoration.VERTICAL));
-                        mAdapter.notifyDataSetChanged();
+                        //mAdapter.notifyDataSetChanged();
                     }
                 });
 
-        documentReference
-                .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
-                    return;
-                }
-
-                if (snapshot != null) {
-                    Log.d(TAG, "Current data: " + snapshot.getData());
-                    thisUser = snapshot.toObject(FirebaseObjects.UserDBO.class);
-                    mPatientsList = thisUser.devicesFollowed;
-                    mRecyclerView = view.findViewById(R.id.device_recycler);
-                    mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
-                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    mRecyclerView.setAdapter(mAdapter);
-                    mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                            DividerItemDecoration.VERTICAL));
-                    mAdapter.notifyDataSetChanged();
-
-
-                } else {
-                    Log.d(TAG, "Current data: null");
-                }
-            }
-
-        });
+//        documentReference
+//                .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+//                if (e != null) {
+//                    Log.w(TAG, "Listen failed.", e);
+//                    return;
+//                }
+//
+//                if (snapshot != null) {
+//                    Log.d(TAG, "Current data: " + snapshot.getData());
+//                    thisUser = snapshot.toObject(FirebaseObjects.UserDBO.class);
+//                    mPatientsList = thisUser.devicesFollowed;
+//                    mRecyclerView = view.findViewById(R.id.device_recycler);
+//                    mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
+//                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                    mRecyclerView.setAdapter(mAdapter);
+//                    mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+//                            DividerItemDecoration.VERTICAL));
+//                    //mAdapter.notifyDataSetChanged();
+//
+//
+//                } else {
+//                    Log.d(TAG, "Current data: null");
+//                }
+//            }
+//
+//        });
 
 
         return view;

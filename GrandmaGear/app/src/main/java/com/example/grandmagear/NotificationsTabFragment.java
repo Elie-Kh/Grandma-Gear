@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,7 +30,7 @@ public class NotificationsTabFragment extends Fragment {
     private ArrayList<String> mNotificationTime = new ArrayList<String>();
     private SharedPreferencesHelper mSharedPreferencesHelper;
     private FirebaseObjects.UserDBO userDBO;
-    private ArrayList<HashMap<String, Object>> thisNotifications;
+    private ArrayList<FirebaseObjects.Notifications> thisNotifications;
     private FirebaseHelper firebaseHelper;
     private SharedPreferencesHelper sharedPreferencesHelper_Login;
 
@@ -61,32 +65,51 @@ public class NotificationsTabFragment extends Fragment {
         super.onCreate(savedInstanceState);
         sharedPreferencesHelper_Login = new SharedPreferencesHelper(getActivity(), "Login");
         firebaseHelper = new FirebaseHelper();
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       userDBO = user;
-                                      firebaseHelper.getNotifications_follower(new FirebaseHelper.Callback_Notifications() {
-                                          @Override
-                                          public void onCallback(ArrayList<HashMap<String, Object>> notifications) {
-                                              thisNotifications = notifications;
-                                              for(HashMap<String, Object> entry : thisNotifications ){
-                                                  Log.d(TAG, entry.get("notificationTitle").toString());
-                                                  Log.d(TAG, entry.get("notificationText").toString());
-                                                  Log.d(TAG, entry.get("notificationTime").toString());
-                                                  mNotificationTitle.add(entry.get("notificationTitle").toString());
-                                                  mNotificationText.add(entry.get("notificationText").toString());
-                                                  mNotificationTime.add(entry.get("notificationTime").toString());
-                                              }
-                                              mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime, getActivity());
-                                              mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                                              mRecyclerView.setAdapter(mAdapter);
-                                              mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                                                      DividerItemDecoration.VERTICAL));
-                                          }
-                                      });
-                                   }
-                               }, sharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(sharedPreferencesHelper_Login.getType()));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                thisNotifications = userDBO.notifications;
+                for (FirebaseObjects.Notifications entry : thisNotifications) {
+                    Log.d(TAG, entry.getNotificationTitle());
+                    Log.d(TAG, entry.getNotificationText());
+                    Log.d(TAG, entry.getNotificationTime());
+                    mNotificationTitle.add(entry.getNotificationTitle());
+                    mNotificationText.add(entry.getNotificationText());
+                    mNotificationTime.add(entry.getNotificationTime());
+                    mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText, mNotificationTime, getActivity());
+                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        mRecyclerView.setAdapter(mAdapter);
+                        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+                                DividerItemDecoration.VERTICAL));
+                }
+//                mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText, mNotificationTime, getActivity());
+//                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                mRecyclerView.setAdapter(mAdapter);
+//                mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+//                        DividerItemDecoration.VERTICAL));
+//                firebaseHelper.getNotifications_follower(new FirebaseHelper.Callback_Notifications() {
+//                    @Override
+//                    public void onCallback(ArrayList<HashMap<String, Object>> notifications) {
+//                        thisNotifications = notifications;
+//                        for (FirebaseObjects.Notifications entry : thisNotifications) {
+//                            Log.d(TAG, entry.getNotificationTitle());
+//                            Log.d(TAG, entry.getNotificationText());
+//                            Log.d(TAG, entry.getNotificationTime());
+//                            mNotificationTitle.add(entry.getNotificationTitle());
+//                            mNotificationText.add(entry.getNotificationText());
+//                            mNotificationTime.add(entry.getNotificationTime());
+//                        }
+//                        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText, mNotificationTime, getActivity());
+//                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                        mRecyclerView.setAdapter(mAdapter);
+//                        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+//                                DividerItemDecoration.VERTICAL));
+//                    }
+
 
 
         /*mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
@@ -102,5 +125,7 @@ public class NotificationsTabFragment extends Fragment {
         if(mSharedPreferencesHelper.getNotificationTime() != null){
             mNotificationTime = mSharedPreferencesHelper.getNotificationTime();
         }*/
+            }
+        });
     }
 }
