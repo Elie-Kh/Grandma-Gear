@@ -300,31 +300,31 @@ public class FirebaseHelper {
         void onCallback(FirebaseObjects.DevicesDBO device);
     }
 
-    public void getDevice(final Callback_Device callback, String deviceID) {
-        final FirebaseObjects.DevicesDBO[] returnable = {null};
-        firebaseFirestore
-                .collection(FirebaseHelper.deviceDB)
-                .whereEqualTo(FirebaseObjects.ID, deviceID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("deviceID")));
-
-                                returnable[0] = new FirebaseObjects.DevicesDBO(
-                                        (String)document.get(FirebaseObjects.ID),
-                                        (Integer) Math.round((Long) document.get(FirebaseObjects.Heartrate)),
-                                        (Integer) Math.round((Long) document.get(FirebaseObjects.PhoneBattery)),
-                                        (Integer) Math.round((Long) document.get(FirebaseObjects.DeviceBattery)));
-                                callback.onCallback(returnable[0]);
-                                // callback_notifications.onCallback(notifications);
-                            }
-                        }
-                    }
-                });
-    }
+//    public void getDevice(final Callback_Device callback, String deviceID) {
+//        final FirebaseObjects.DevicesDBO[] returnable = {null};
+//        firebaseFirestore
+//                .collection(FirebaseHelper.deviceDB)
+//                .whereEqualTo(FirebaseObjects.ID, deviceID)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+////                                Log.d("__GettingType", (String) Objects.requireNonNull(document.get("deviceID")));
+//
+//                                returnable[0] = new FirebaseObjects.DevicesDBO(
+//                                        (String)document.get(FirebaseObjects.ID),
+//                                        (Integer) Math.round((Long) document.get(FirebaseObjects.Heartrate)),
+//                                        (Integer) Math.round((Long) document.get(FirebaseObjects.PhoneBattery)),
+//                                        (Integer) Math.round((Long) document.get(FirebaseObjects.DeviceBattery)));
+//                                callback.onCallback(returnable[0]);
+//                                // callback_notifications.onCallback(notifications);
+//                            }
+//                        }
+//                    }
+//                });
+//    }
 
     public interface Callback_Notifications {
         void onCallback(ArrayList<HashMap<String, Object>> notifications);

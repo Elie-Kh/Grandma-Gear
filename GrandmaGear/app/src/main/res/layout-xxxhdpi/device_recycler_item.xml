@@ -41,7 +41,7 @@
         android:layout_height="21dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="60bpm"
+        android:text="0bpm"
         app:layout_constraintBottom_toBottomOf="@+id/heartBeatImage"
         app:layout_constraintStart_toEndOf="@+id/heartBeatImage"
         app:layout_constraintTop_toTopOf="@+id/heartBeatImage"

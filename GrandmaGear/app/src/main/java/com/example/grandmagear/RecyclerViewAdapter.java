@@ -1,6 +1,7 @@
 package com.example.grandmagear;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +15,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "Adapter__";
     ArrayList<String> mPatients;
-    FirebaseHelper firebaseHelper;
-    private NotificationHelper notificationHelper;
-    private FirebaseObjects.UserDBO userDBO;
-    private boolean check = true;
+    private FirebaseHelper firebaseHelper;
+    private static NotificationHelper notificationHelper;
+    private static FirebaseObjects.UserDBO userDBO;
+    //private boolean check = true;
 
     public RecyclerViewAdapter(ArrayList<String> patients, final Context context) {
-        this.mPatients = patients;
         FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -42,6 +45,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             }
         });
+        this.mPatients = patients;
     }
 
     @NonNull
@@ -54,32 +58,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.mDeviceIdText.setText(mPatients.get(position));
-        firebaseHelper.firebaseFirestore
-                .collection(FirebaseHelper.deviceDB)
-                .document(mPatients.get(position))
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        if(documentSnapshot != null && documentSnapshot.exists()) {
-                            FirebaseObjects.DevicesDBO device = documentSnapshot
-                                    .toObject(FirebaseObjects.DevicesDBO.class);
-                            holder.mHeartBeatText.setText(String.valueOf(device.heartrate) + "bpm");
-                            if (check) {
-                                if ((Integer)device.heartrate < 60) {
-                                    notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
-                                    check = false;
-                                }
-                            }else {
-                                if ((Integer)device.heartrate >= 60){
-                                    check = true;
-                                }
-                            }
-                        }
-                    }
-                });
+
         firebaseHelper.firebaseFirestore
                 .collection(FirebaseHelper.deviceDB)
                 .document(mPatients.get(position))
@@ -89,24 +70,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         if(documentSnapshot != null && documentSnapshot.exists()){
                             FirebaseObjects.DevicesDBO device = documentSnapshot
                                     .toObject(FirebaseObjects.DevicesDBO.class);
-                            holder.mHeartBeatText.setText(String.valueOf(device.heartrate) + "bpm");
-                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                                    .document(device.id)
-                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    DocumentSnapshot snapshot = task.getResult();
-                                    if(snapshot!=null && snapshot.exists()){
-                                        FirebaseObjects.UserDBO patient = snapshot
-                                                .toObject(FirebaseObjects.UserDBO.class);
-                                        String name = (String)patient.firstName + " " + (String)patient.lastName;
-                                        holder.mPatientName.setText(name);
+                            Log.d(TAG, "logging");
+                                holder.mHeartBeatText.setText((device.heartrate + "bpm"));
+                                //if (check) {
+                                    if ((Integer) device.heartrate < 60) {
+                                        notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
+                                        //check = false;
                                     }
-                                }
-                            });
-                            holder.mDeviceBattery.setText(String.valueOf(device.deviceBattery) +"%");
-                            notifyDataSetChanged();
-                        }
+                                //} else {
+                                    if ((Integer) device.heartrate >= 60) {
+                                        //check = true;
+                                    }
+                                //}
+                                FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                                        .document(device.id)
+                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        DocumentSnapshot snapshot = task.getResult();
+                                        if (snapshot != null && snapshot.exists()) {
+                                            FirebaseObjects.UserDBO patient = snapshot
+                                                    .toObject(FirebaseObjects.UserDBO.class);
+                                            String name = (String) patient.firstName + " " + (String) patient.lastName;
+                                            holder.mPatientName.setText(name);
+                                        }
+                                    }
+                                });
+                                holder.mDeviceBattery.setText((device.deviceBattery + "%"));
+                                //notifyItemChanged(position);
+                            }
+
                     }
                 });
     }
@@ -126,6 +119,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected ImageView mHeartGraph;
         protected TextView mDeviceBattery;
         protected TextView mPatientName;
+
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -159,9 +153,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     //go to battery display level
                 }
             });
-
-
-
         }
     }
 }

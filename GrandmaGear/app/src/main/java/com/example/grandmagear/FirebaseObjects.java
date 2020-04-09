@@ -225,6 +225,7 @@ public class FirebaseObjects {
         protected long longitude;    //longitude
         protected int deviceBattery;
         protected int phoneBattery;
+        protected long timeStamp;
         protected ArrayList<Notifications> notifications; //notifications linked to that device only
 
         public DevicesDBO() {
@@ -235,11 +236,20 @@ public class FirebaseObjects {
             this.id = id;
         }
 
-        public DevicesDBO(String id, int heartrate, int deviceBattery, int phoneBattery) {
+        public DevicesDBO(String id, int heartrate, int deviceBattery, int phoneBattery, long timeStamp) {
             this.id = id;
             this.heartrate = heartrate;
             this.deviceBattery = deviceBattery;
             this.phoneBattery = phoneBattery;
+            this.timeStamp = timeStamp;
+        }
+
+        public long getTimeStamp() {
+            return timeStamp;
+        }
+
+        public void setTimeStamp(long timeStamp) {
+            this.timeStamp = timeStamp;
         }
 
         public String getId() {
