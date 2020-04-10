@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,11 +42,26 @@ public class NotificationsTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_tab_fragment, container, false);
         mRecyclerView = view.findViewById(R.id.notificationRecycler);
-        /*mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime, getActivity());
+        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime, getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                DividerItemDecoration.VERTICAL));*/
+                DividerItemDecoration.VERTICAL));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                        thisNotifications = userDBO.notifications;
+                        if(userDBO.notifications.size() != 0) {
+                            mNotificationTitle.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTitle());
+                            mNotificationText.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationText());
+                            mNotificationTime.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTime());
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
         return view;
     }
 
@@ -68,24 +85,31 @@ public class NotificationsTabFragment extends Fragment {
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                 .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                 @Override
+                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
-                thisNotifications = userDBO.notifications;
-                for (FirebaseObjects.Notifications entry : thisNotifications) {
-                    Log.d(TAG, entry.getNotificationTitle());
-                    Log.d(TAG, entry.getNotificationText());
-                    Log.d(TAG, entry.getNotificationTime());
-                    mNotificationTitle.add(entry.getNotificationTitle());
-                    mNotificationText.add(entry.getNotificationText());
-                    mNotificationTime.add(entry.getNotificationTime());
-                    mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText, mNotificationTime, getActivity());
-                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        mRecyclerView.setAdapter(mAdapter);
-                        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                                DividerItemDecoration.VERTICAL));
-                }
+                                                     userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                                                     thisNotifications = userDBO.notifications;
+                                                     for (FirebaseObjects.Notifications entry : thisNotifications) {
+                                                         Log.d(TAG, entry.getNotificationTitle());
+                                                         Log.d(TAG, entry.getNotificationText());
+                                                         Log.d(TAG, entry.getNotificationTime());
+                                                         mNotificationTitle.add(entry.getNotificationTitle());
+                                                         mNotificationText.add(entry.getNotificationText());
+                                                         mNotificationTime.add(entry.getNotificationTime());
+//                                                         mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText, mNotificationTime, getActivity());
+//                                                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                                                         mRecyclerView.setAdapter(mAdapter);
+//                                                         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+//                                                                 DividerItemDecoration.VERTICAL));
+                                                     }
+                                                 }
+                                             }
+        );
+
+
+
+
 //                mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText, mNotificationTime, getActivity());
 //                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //                mRecyclerView.setAdapter(mAdapter);
@@ -126,6 +150,6 @@ public class NotificationsTabFragment extends Fragment {
             mNotificationTime = mSharedPreferencesHelper.getNotificationTime();
         }*/
             }
-        });
-    }
+
+
 }

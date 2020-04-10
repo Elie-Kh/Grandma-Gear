@@ -145,6 +145,7 @@ public class FirebaseHelper {
            @Override
            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                if(task.isSuccessful()){
+
                    ArrayList<FirebaseObjects.Notifications> notifications = new ArrayList<FirebaseObjects.Notifications>();
                    notifications = userDBO.getNotifications();
                    notifications.add(notification);
