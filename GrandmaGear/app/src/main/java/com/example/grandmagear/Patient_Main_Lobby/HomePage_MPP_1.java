@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -30,6 +31,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HomePage_MPP_1 extends AppCompatActivity {
     private static final String TAG = "HomePage_MPP_1";
@@ -51,6 +55,10 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     ImageView Heart;
     ImageView Battery;
     ImageView Earth;
+
+    Button PanicButton;
+    String deviceID;
+    String help = "no";
 
     FirebaseHelper firebaseHelper = new FirebaseHelper();
     SharedPreferencesHelper mSharedPreferencesHelper_Login;
@@ -104,9 +112,25 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Earth = findViewById(R.id.imageView_Earth_MPP_1);
         Battery = findViewById(R.id.imageView_BatteryLevel_MPP_1);
         locationSwitch = findViewById(R.id.locationSwitch);
+        PanicButton = findViewById(R.id.buttonPanic);
 
         BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
         batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+        PanicButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                help = "yes";
+                uploadDeviceInfo();
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        help = "no";
+                        uploadDeviceInfo();
+                    }
+                }, 3000);
+            }
+        });
 
 
     }
@@ -156,6 +180,8 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         }
         if(item.getItemId() == R.id.logout){
             logout();
+            FirebaseHelper.firebaseFirestore.clearPersistence();
+            FirebaseHelper.firebaseFirestore.terminate();
         }
         // If we got here, the user's action was not recognized.
         // Invoke the superclass to handle it.
@@ -271,6 +297,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
                                         .document(documentSnapshot.getReference().getId())
                                         .update(FirebaseObjects.DeviceOn, "on");
+                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                        .document(documentSnapshot.getReference().getId())
+                                        .update(FirebaseObjects.Help, help);
                             }
                         }
                     }

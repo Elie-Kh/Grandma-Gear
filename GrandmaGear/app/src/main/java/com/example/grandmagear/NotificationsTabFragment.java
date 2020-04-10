@@ -100,15 +100,7 @@ public class NotificationsTabFragment extends Fragment {
         super.onCreate(savedInstanceState);
         sharedPreferencesHelper_Login = new SharedPreferencesHelper(getActivity(), "Login");
         firebaseHelper = new FirebaseHelper();
-        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
 
-                    }
-                });
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                 .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
