@@ -13,6 +13,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,6 +36,7 @@ public class LogInActivity extends AppCompatActivity {
     protected FirebaseAuth firebaseAuth;
     protected TextView mCreateAccountTextView, mForgotPassTextView;
     protected SharedPreferencesHelper mSharedPreferencesHelper;
+    protected SharedPreferencesHelper mSharedPreferences;
     FirebaseHelper firebaseHelper;
 
     @Override
@@ -41,8 +44,32 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        //check if user had previously accepted disclaimer. If not, open fragment
+        mSharedPreferences = new SharedPreferencesHelper(LogInActivity.this,
+                "DisclaimerPreferences");
+        if(mSharedPreferences.getDisclaimerStatus() == null
+                || mSharedPreferences.getDisclaimerStatus().equals("False")){
+            DisclaimerFragment disclaimerFragment = new DisclaimerFragment();
+            disclaimerFragment.setCancelable(false);
+            disclaimerFragment.show(getSupportFragmentManager(), "DisclaimerFragment");
+        }
+
         mSharedPreferencesHelper = new SharedPreferencesHelper(LogInActivity.this, "Login");
         setupUI();
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void setupUI(){
@@ -103,7 +130,7 @@ public class LogInActivity extends AppCompatActivity {
                                                 startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                             }
                                             else {
-                                                startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                                startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                             }
                                         }
                                     });
@@ -215,6 +242,7 @@ public class LogInActivity extends AppCompatActivity {
 //            }
 //
 //        }
+
     }
 
     @Override
@@ -250,7 +278,7 @@ public class LogInActivity extends AppCompatActivity {
                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                     }
                                     else {
-                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                        startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                     }
                                         }
                                     });

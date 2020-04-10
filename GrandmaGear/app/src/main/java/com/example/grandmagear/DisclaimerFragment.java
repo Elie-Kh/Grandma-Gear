@@ -49,7 +49,7 @@ public class DisclaimerFragment extends DialogFragment {
                         "DisclaimerPreferences");
                 mSharedPreferences.saveDisclaimerStatus(false);
                 getDialog().dismiss();
-                ((MainActivity)getActivity()).finish();
+                ((LogInActivity)getActivity()).finish();
             }
         });
     }
