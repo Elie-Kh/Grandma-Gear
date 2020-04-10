@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -100,7 +101,7 @@ public class LogInActivity extends AppCompatActivity {
                                                 startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                             }
                                             else {
-                                                startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                                startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                             }
                                         }
                                     });
@@ -183,7 +184,7 @@ public class LogInActivity extends AppCompatActivity {
                                                 startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                             }
                                             else {
-                                                startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                                startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                             }
                                         }
                                     });
@@ -247,7 +248,7 @@ public class LogInActivity extends AppCompatActivity {
                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                     }
                                     else {
-                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                        startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                     }
                                         }
                                     });
