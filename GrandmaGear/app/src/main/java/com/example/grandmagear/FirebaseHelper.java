@@ -166,7 +166,8 @@ public class FirebaseHelper {
         devices.put(FirebaseObjects.Heartrate, device.heartrate);
         devices.put(FirebaseObjects.PhoneBattery, device.phoneBattery);
         devices.put(FirebaseObjects.DeviceBattery, device.deviceBattery);
-        devices.put(FirebaseObjects.Notifications, device.notifications);
+        devices.put(FirebaseObjects.Fall, device.fall);
+        devices.put(FirebaseObjects.DeviceOn, device.deviceOn);
 
         documentReference.set(devices).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
