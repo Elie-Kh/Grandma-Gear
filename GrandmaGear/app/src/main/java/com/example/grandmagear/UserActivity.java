@@ -25,7 +25,6 @@ public class UserActivity extends AppCompatActivity {
     protected MenuItem mLogout;
     protected FirebaseAuth firebaseAuth;
     protected FirebaseFirestore firebaseFirestore;
-    protected Button mSettings;
     protected FloatingActionButton mAddPatient;
     protected PatientsTabFragment mPatientsTabFragment =  new PatientsTabFragment();
     protected NotificationsTabFragment mNotificationTabFragment = new NotificationsTabFragment();
@@ -83,7 +82,7 @@ public class UserActivity extends AppCompatActivity {
         mViewPager.setAdapter(mTabsAdapter);
         tabLayout.setupWithViewPager(mViewPager);
 
-        mSettings = findViewById(R.id.client_settings_button);
+        //mSettings = findViewById(R.id.client_settings_button);
         mAddPatient = findViewById(R.id.add_patient_button);
         mAddPatient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +103,6 @@ public class UserActivity extends AppCompatActivity {
                 patientFrag.show(getSupportFragmentManager(), "AddPatientFragment");
             }
         });
-
         
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

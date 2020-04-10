@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
@@ -44,10 +45,15 @@ public class FirebaseHelper {
     public static final String eventDB = "eventDB";
     public static FirebaseAuth firebaseAuth;
     public static FirebaseFirestore firebaseFirestore;
+    public static FirebaseFirestoreSettings firebaseFirestoreSettings;
 
     public FirebaseHelper() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestoreSettings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        firebaseFirestore.setFirestoreSettings(firebaseFirestoreSettings);
     }
 
     public void AddUser(final FirebaseObjects.UserDBO newUser) {
