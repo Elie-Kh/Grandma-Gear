@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.LoginFilter;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -51,6 +52,20 @@ public class RegisterActivity extends AppCompatActivity {
         /*show back button*/
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     /*setup back click*/
