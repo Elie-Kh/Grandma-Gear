@@ -75,34 +75,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             FirebaseObjects.DevicesDBO device = documentSnapshot
                                     .toObject(FirebaseObjects.DevicesDBO.class);
                             Log.d(TAG, "logging");
-                                holder.mHeartBeatText.setText((device.heartrate + "bpm"));
-                                //if (check) {
-                                    if ((Integer) device.heartrate < 60) {
-                                        notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
-                                        //check = false;
-                                    }
-                                //} else {
-                                    if ((Integer) device.heartrate >= 60) {
-                                        //check = true;
-                                    }
-                                //}
-                                FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                                        .document(device.id)
-                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        DocumentSnapshot snapshot = task.getResult();
-                                        if (snapshot != null && snapshot.exists()) {
-                                            FirebaseObjects.UserDBO patient = snapshot
-                                                    .toObject(FirebaseObjects.UserDBO.class);
-                                            String name = (String) patient.firstName + " " + (String) patient.lastName;
-                                            holder.mPatientName.setText(name);
-                                        }
-                                    }
-                                });
-                                holder.mDeviceBattery.setText((device.deviceBattery + "%"));
-                                //notifyItemChanged(position);
+                            holder.mHeartBeatText.setText((device.heartrate + "bpm"));
+                            if ((Integer) device.heartrate < 60) {
+                                notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
+                                //check = false;
                             }
+                            if ((Integer) device.heartrate >= 60) {
+                                //check = true;
+                            }
+                            if(((String) device.helpRequested).equals("yes")){
+                                notificationHelper.sendOnFall("Panic button pressed", "The panic button has been pressed by ");
+                            }
+
+
+                            FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                                    .document(device.id)
+                                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot snapshot = task.getResult();
+                                    if (snapshot != null && snapshot.exists()) {
+                                        FirebaseObjects.UserDBO patient = snapshot
+                                                .toObject(FirebaseObjects.UserDBO.class);
+                                        String name = (String) patient.firstName + " " + (String) patient.lastName;
+                                        holder.mPatientName.setText(name);
+                                    }
+                                }
+                            });
+                            holder.mDeviceBattery.setText((device.deviceBattery + "%"));
+                            //notifyItemChanged(position);
+                        }
 
                     }
                 });

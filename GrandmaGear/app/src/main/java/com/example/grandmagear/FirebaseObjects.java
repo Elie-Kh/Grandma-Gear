@@ -2,6 +2,8 @@ package com.example.grandmagear;
 
 import java.util.ArrayList;
 
+import javax.xml.transform.Source;
+
 public class FirebaseObjects {
 
     //variable names for user
@@ -29,6 +31,7 @@ public class FirebaseObjects {
     public static final String PhoneBattery = "phoneBattery";
     public static final String Fall = "fall";
     public static final String DeviceOn = "deviceOn";
+    public static final String Help = "helpRequested";
 
     public static class UserDBO{
         public String username;
@@ -230,6 +233,7 @@ public class FirebaseObjects {
         protected String fall = "good";
         protected String deviceOn = "off";
         protected long timeStamp;
+        protected String helpRequested = "no";
         protected ArrayList<Notifications> notifications; //notifications linked to that device only
 
         public DevicesDBO() {
@@ -326,6 +330,14 @@ public class FirebaseObjects {
 
         public void setDeviceOn(String deviceOn) {
             this.deviceOn = deviceOn;
+        }
+
+        public String getHelpRequested() {
+            return helpRequested;
+        }
+
+        public void setHelpRequested(String helpRequested) {
+            this.helpRequested = helpRequested;
         }
     }
 

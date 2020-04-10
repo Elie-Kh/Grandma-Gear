@@ -136,4 +136,36 @@ public class NotificationHelper {
         sharedPreferencesHelperText.saveNotificationText(nText);
         sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
+
+    public void sendOnPanic(String title, String text){
+        Intent intent = new Intent(context, LogInActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
+        Notification notification = new NotificationCompat.Builder(context, App.BATTERY_CHANNEL)
+                .setSmallIcon(R.drawable.ic_warning)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setLargeIcon(largeIcon)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build();
+        notificationManagerCompat.notify(3, notification);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
+        String currentDateAndTime = sdf.format(new Date());
+
+        FirebaseObjects.Notifications help = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
+        firebaseHelper.addNotification(userDBO, help);
+
+        /*nTitle.add(title);
+        nText.add(text);
+        nTime.add(currentDateAndTime);
+
+        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
+        sharedPreferencesHelperText.saveNotificationText(nText);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
+    }
 }
