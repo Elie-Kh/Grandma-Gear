@@ -22,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +33,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private FirebaseHelper firebaseHelper;
     private static NotificationHelper notificationHelper;
     private static FirebaseObjects.UserDBO userDBO;
+    private OnItemClickedListener onItemClickedListener;
     //private boolean check = true;
 
-    public RecyclerViewAdapter(ArrayList<String> patients, final Context context) {
+    public RecyclerViewAdapter(ArrayList<String> patients, final OnItemClickedListener onItemClickedListener, final Context context) {
         FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -46,6 +49,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
         this.mPatients = patients;
+        this.onItemClickedListener = onItemClickedListener;
     }
 
     @NonNull
@@ -54,7 +58,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.device_recycler_item,
                 parent,false);
         view.setTag("recyclerView");
-        return new ViewHolder(view);
+        return new ViewHolder(view, onItemClickedListener);
     }
 
     @Override
@@ -102,6 +106,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     }
                 });
+
+
+
+        //Kizito, this is the code.
+
+    }
+
+    public long getDeviceID(@NonNull final ViewHolder view, final int position){
+        return Long.parseLong(view.mDeviceIdText.getText().toString());
     }
 
     @Override
@@ -109,21 +122,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mPatients.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        protected Button mLocationButton;
-        protected Button mBatteryButton;
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        protected TextView mLocationButton;
+        protected TextView mBatteryButton;
         protected TextView mHeartBeatText;
         protected TextView mDeviceIdText;
         protected ImageView mPatientImage;
         protected ImageView mHeartGraph;
         protected TextView mDeviceBattery;
         protected TextView mPatientName;
+        OnItemClickedListener onItemClickedListener;
 
 
-
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnItemClickedListener onItemClickedListener) {
             super(itemView);
+
+
             mLocationButton = itemView.findViewById(R.id.location_button);
             mHeartBeatText = itemView.findViewById(R.id.heart_beat_text);
             mDeviceIdText = itemView.findViewById(R.id.device_id);
@@ -133,27 +150,44 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mDeviceBattery = itemView.findViewById(R.id.battery_level);
             mPatientName = itemView.findViewById(R.id.patient_name);
 
-            mLocationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //go to GPS page.
-                }
-            });
+//            mLocationButton.setClickable(false);
+//            mBatteryButton.setClickable(false);
+//            mHeartGraph.setClickable(false);
 
-            mHeartGraph.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //go to heart graph
-                }
-            });
+            this.onItemClickedListener = onItemClickedListener;
+            itemView.setOnClickListener(this);
 
-            mBatteryButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //go to battery display level
-                }
-            });
+//            mLocationButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //go to GPS page.
+//                }
+//            });
+//
+//            mHeartGraph.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //go to heart graph
+//                }
+//            });
+//
+//            mBatteryButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //go to battery display level
+//
+//                }
+//            });
         }
+
+        @Override
+        public void onClick(View view) {
+            onItemClickedListener.onItemClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnItemClickedListener{
+        void onItemClick(int position);
     }
 }
 
