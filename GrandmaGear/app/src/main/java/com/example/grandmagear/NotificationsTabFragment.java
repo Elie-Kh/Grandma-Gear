@@ -69,12 +69,6 @@ public class NotificationsTabFragment extends Fragment {
         mNotificationTitle.add(title);
         mNotificationText.add(text);
         mNotificationTime.add(time);
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
-        mSharedPreferencesHelper.saveNotificationTitle(mNotificationTitle);
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Text");
-        mSharedPreferencesHelper.saveNotificationText(mNotificationText);
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Time");
-        mSharedPreferencesHelper.saveNotificationTime(mNotificationTime);
     }
 
     @Override
@@ -136,19 +130,6 @@ public class NotificationsTabFragment extends Fragment {
 
 
 
-        /*mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Title");
-        if(mSharedPreferencesHelper.getNotificationTitle() != null){
-            mNotificationTitle = mSharedPreferencesHelper.getNotificationTitle();
-        }
-
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Text");
-        if(mSharedPreferencesHelper.getNotificationText() != null){
-            mNotificationText = mSharedPreferencesHelper.getNotificationText();
-        }
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity(), "Notification Time");
-        if(mSharedPreferencesHelper.getNotificationTime() != null){
-            mNotificationTime = mSharedPreferencesHelper.getNotificationTime();
-        }*/
             }
 
 
