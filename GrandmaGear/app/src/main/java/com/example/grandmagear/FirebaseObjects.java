@@ -27,6 +27,8 @@ public class FirebaseObjects {
     public static final String Notifications = "notifications";
     public static final String DeviceBattery = "deviceBattery";
     public static final String PhoneBattery = "phoneBattery";
+    public static final String Fall = "fall";
+    public static final String DeviceOn = "deviceOn";
 
     public static class UserDBO{
         public String username;
@@ -225,6 +227,8 @@ public class FirebaseObjects {
         protected long longitude;    //longitude
         protected int deviceBattery;
         protected int phoneBattery;
+        protected String fall = "good";
+        protected String deviceOn = "off";
         protected long timeStamp;
         protected ArrayList<Notifications> notifications; //notifications linked to that device only
 
@@ -276,6 +280,14 @@ public class FirebaseObjects {
             return phoneBattery;
         }
 
+        public String getFall() {
+            return fall;
+        }
+
+        public String getDeviceOn() {
+            return deviceOn;
+        }
+
         public ArrayList<FirebaseObjects.Notifications> getNotifications() {
             return notifications;
         }
@@ -306,6 +318,14 @@ public class FirebaseObjects {
 
         public void setPhoneBattery(int phoneBattery) {
             this.phoneBattery = phoneBattery;
+        }
+
+        public void setFall(String fall) {
+            this.fall = fall;
+        }
+
+        public void setDeviceOn(String deviceOn) {
+            this.deviceOn = deviceOn;
         }
     }
 

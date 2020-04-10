@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,11 +19,17 @@ import android.widget.TextView;
 
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
+import com.example.grandmagear.LogInActivity;
 import com.example.grandmagear.R;
 import com.example.grandmagear.SharedPreferencesHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class HomePage_MPP_1 extends AppCompatActivity {
     private static final String TAG = "HomePage_MPP_1";
@@ -28,6 +37,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
     MenuItem Setting;
+    MenuItem Logout;
     Switch locationSwitch;
     TextView FullName;
     TextView Age;
@@ -45,7 +55,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     FirebaseHelper firebaseHelper = new FirebaseHelper();
     SharedPreferencesHelper mSharedPreferencesHelper_Login;
     protected FirebaseObjects.UserDBO thisUser;
-    protected FirebaseObjects.DevicesDBO tempDevice;
+    protected BatteryReceiver batteryReceiver = new BatteryReceiver();
+    protected IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+    int batLevel;
 
 
 
@@ -62,6 +74,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     public void onResume() {
         super.onResume();
             setUpUI();
+            registerReceiver(batteryReceiver, intentFilter);
             resumeSharedLocation();
             uploadWearerInfo();
             uploadDeviceInfo();
@@ -69,6 +82,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
             locationStatus(locationSwitch);
     }
 
+    @Override
+    protected void onPause() {
+        unregisterReceiver(batteryReceiver);
+        super.onPause();
+    }
 
     void setUpUI(){
 
@@ -77,6 +95,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Weight = findViewById(R.id.textView_Weight_Displayed_MPP_1);
         Height = findViewById(R.id.textView_Height_Displayed_MPP_1);
         BPM = findViewById(R.id.textView_BPM_Displayed);
+        BPM.setText("66");
         phoneBattery = findViewById(R.id.textView_PhoneBatteryLevel_Displayed);
         deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed);
 
@@ -86,14 +105,22 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Battery = findViewById(R.id.imageView_BatteryLevel_MPP_1);
         locationSwitch = findViewById(R.id.locationSwitch);
 
+        BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
+        batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
 
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.patient_action_bar,menu);
         Setting = findViewById(R.id.settings);
+        Logout = findViewById(R.id.logout);
 
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
@@ -111,6 +138,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                         }
                     }
                 });
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
         return super.onCreateOptionsMenu(menu);
 
 
@@ -121,7 +153,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.settings) {// User chose the "Settings" item, show the app settings UI...
             goToSettings();
-        }// If we got here, the user's action was not recognized.
+        }
+        if(item.getItemId() == R.id.logout){
+            logout();
+        }
+        // If we got here, the user's action was not recognized.
         // Invoke the superclass to handle it.
         return super.onOptionsItemSelected(item);
     }
@@ -216,38 +252,29 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     public void uploadDeviceInfo(){
 
-        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                .document(firebaseHelper.getCurrentUserID())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                tempDevice = task.getResult().toObject(FirebaseObjects.DevicesDBO.class);
-                BPM.setText(String.valueOf(tempDevice.getHeartrate()));
-                //TODO find where it got interchanged
-                deviceBattery.setText(String.valueOf(tempDevice.getPhoneBattery()));
-                phoneBattery.setText(String.valueOf(tempDevice.getDeviceBattery()));
-            }
-        });
-
-//        //TODO optimize the fetching method for universal input
-//        firebaseHelper.getDevice(new FirebaseHelper.Callback_Device() {
-//            @Override
-//            public void onCallback(FirebaseObjects.DevicesDBO device) {
-//                tempDevice = device;
-//                BPM.setText(String.valueOf(tempDevice.getHeartrate()));
-//                //TODO find where it got interchanged
-//                deviceBattery.setText(String.valueOf(tempDevice.getPhoneBattery()));
-//                phoneBattery.setText(String.valueOf(tempDevice.getDeviceBattery()));
-//            }
-//        }, firebaseHelper.getCurrentUserID());
-
-
-
-
-
-
-
+                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+                                Log.d(TAG, "docsnap " + documentSnapshot.getReference().getId());
+                                Log.d(TAG, firebaseHelper.getCurrentUserID());
+                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                        .document(documentSnapshot.getReference().getId())
+                                        .update(FirebaseObjects.Heartrate, Integer.parseInt(BPM.getText().toString()));
+                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                        .document(documentSnapshot.getReference().getId())
+                                        .update(FirebaseObjects.Fall, "fall");
+                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                        .document(documentSnapshot.getReference().getId())
+                                        .update(FirebaseObjects.DeviceOn, "on");
+                            }
+                        }
+                    }
+                });
     }
 
     public void displayLocation(){
@@ -262,6 +289,12 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     }
     public void disableShareLocation(){
         locationSwitch.setVisibility(View.INVISIBLE);
+    }
+
+    public void logout(){
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(getApplicationContext(), LogInActivity.class));
+        finish();
     }
 
 
