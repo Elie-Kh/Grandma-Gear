@@ -13,6 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,21 +74,36 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
         //sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Time");
         //sharedPreferencesHelper.saveNotificationTime(notificationTime);
         notifyItemRemoved(position);
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+
+//        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+//            @Override
+//            public void onCallback(FirebaseObjects.UserDBO user) {
+//                userDBO = user;
+//                firebaseHelper.getNotifications_follower(new FirebaseHelper.Callback_Notifications() {
+//                    @Override
+//                    public void onCallback(ArrayList<HashMap<String, Object>> notifications) {
+//                        thisNotifications = notifications;
+//                        thisNotifications.remove(position);
+//                        firebaseHelper.editUser(userDBO, FirebaseObjects.Notifications, thisNotifications);
+//                    }
+//                });
+//            }
+//        },sharedPreferencesHelper_Login.getEmail(),
+//                Boolean.parseBoolean(sharedPreferencesHelper_Login.getType()));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onCallback(FirebaseObjects.UserDBO user) {
-                userDBO = user;
-                firebaseHelper.getNotifications_follower(new FirebaseHelper.Callback_Notifications() {
-                    @Override
-                    public void onCallback(ArrayList<HashMap<String, Object>> notifications) {
-                        thisNotifications = notifications;
-                        thisNotifications.remove(position);
-                        firebaseHelper.editUser(userDBO, FirebaseObjects.Notifications, thisNotifications);
-                    }
-                });
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                userDBO.notifications.remove(position);
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                        .update("notifications", userDBO.notifications);
+
             }
-        },sharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(sharedPreferencesHelper_Login.getType()));
+        });
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

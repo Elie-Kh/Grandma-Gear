@@ -156,62 +156,62 @@ public class LogInActivity extends AppCompatActivity {
         mEmail.setText("");
         mLoginProgressBar.setVisibility(View.GONE);
 
-        if(firebaseAuth.getCurrentUser() != null){
-            if(mSharedPreferencesHelper.getEmail() != null) {
-                final String email = mSharedPreferencesHelper.getEmail();
-                final String password = mSharedPreferencesHelper.getPassword();
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            Toast.makeText(LogInActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
-                            final boolean[] emails = new boolean[1];
-                            FirebaseHelper.firebaseFirestore
-                                    .collection(FirebaseHelper.userDB)
-                                    .document(firebaseAuth.getCurrentUser().getUid())
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            DocumentSnapshot documentSnapshot = task.getResult();
-                                            mSharedPreferencesHelper.saveEmail
-                                                    ((String)documentSnapshot.get(FirebaseObjects.Email));
-                                            mSharedPreferencesHelper.saveType((Boolean)
-                                                    documentSnapshot.get(FirebaseObjects.Account_Type));
-                                            if((Boolean)
-                                                    documentSnapshot.get(FirebaseObjects.Account_Type)){
-                                                startActivity(new Intent(getApplicationContext(), UserActivity.class));
-                                            }
-                                            else {
-                                                startActivity(new Intent(getApplicationContext(), PatientActivity.class));
-                                            }
-                                        }
-                                    });
-//                            firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
-//                                @Override
-//                                public void onCallback(boolean checker) {
-//                                    emails[0] = checker;
-//                                    mSharedPreferencesHelper.saveEmail(email);
-//                                    mSharedPreferencesHelper.saveType(emails[0]);
-//                                    if(emails[0]){
-//                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
-//                                    }
-//                                    else {
-//                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
-//                                    }
-//                                }
-//                            }, email);
-
-
-                        }else{
-                            Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
-                            mLoginProgressBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
-            }
-
-        }
+//        if(firebaseAuth.getCurrentUser() != null){
+//            if(mSharedPreferencesHelper.getEmail() != null) {
+//                final String email = mSharedPreferencesHelper.getEmail();
+//                final String password = mSharedPreferencesHelper.getPassword();
+//                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if(task.isSuccessful()) {
+//                            Toast.makeText(LogInActivity.this, "Welcome back!", Toast.LENGTH_SHORT).show();
+//                            final boolean[] emails = new boolean[1];
+//                            FirebaseHelper.firebaseFirestore
+//                                    .collection(FirebaseHelper.userDB)
+//                                    .document(firebaseAuth.getCurrentUser().getUid())
+//                                    .get()
+//                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                                            DocumentSnapshot documentSnapshot = task.getResult();
+//                                            mSharedPreferencesHelper.saveEmail
+//                                                    ((String)documentSnapshot.get(FirebaseObjects.Email));
+//                                            mSharedPreferencesHelper.saveType((Boolean)
+//                                                    documentSnapshot.get(FirebaseObjects.Account_Type));
+//                                            if((Boolean)
+//                                                    documentSnapshot.get(FirebaseObjects.Account_Type)){
+//                                                startActivity(new Intent(getApplicationContext(), UserActivity.class));
+//                                            }
+//                                            else {
+//                                                startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+//                                            }
+//                                        }
+//                                    });
+////                            firebaseHelper.getType(new FirebaseHelper.Callback_Type() {
+////                                @Override
+////                                public void onCallback(boolean checker) {
+////                                    emails[0] = checker;
+////                                    mSharedPreferencesHelper.saveEmail(email);
+////                                    mSharedPreferencesHelper.saveType(emails[0]);
+////                                    if(emails[0]){
+////                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+////                                    }
+////                                    else {
+////                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+////                                    }
+////                                }
+////                            }, email);
+//
+//
+//                        }else{
+//                            Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
+//                            mLoginProgressBar.setVisibility(View.GONE);
+//                        }
+//                    }
+//                });
+//            }
+//
+//        }
     }
 
     @Override

@@ -47,25 +47,6 @@ public class PatientsTabFragment extends Fragment {
         final View view = inflater.inflate(R.layout.patient_tab_fragment, container, false);
         mSharedPreferencesHelper_login = new SharedPreferencesHelper(getActivity(), "Login");
 
-        final DocumentReference documentReference = firebaseHelper.firebaseFirestore
-                .collection((FirebaseHelper.userDB))
-                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid());
-
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
-                        mPatientsList = thisUser.devicesFollowed;
-                        mRecyclerView = view.findViewById(R.id.device_recycler);
-                        mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
-                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        mRecyclerView.setAdapter(mAdapter);
-                        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-                                DividerItemDecoration.VERTICAL));
-                        //mAdapter.notifyDataSetChanged();
-                    }
-                });
 
 //        documentReference
 //                .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<DocumentSnapshot>() {
@@ -124,5 +105,23 @@ public class PatientsTabFragment extends Fragment {
         if(mSharedPreferencesHelper.getIDs() != null) {
             mPatientsList = mSharedPreferencesHelper.getIDs();
         }
+        final DocumentReference documentReference = firebaseHelper.firebaseFirestore
+                .collection((FirebaseHelper.userDB))
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                mPatientsList = thisUser.devicesFollowed;
+                mRecyclerView = getView().findViewById(R.id.device_recycler);
+                mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
+                        DividerItemDecoration.VERTICAL));
+                //mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
