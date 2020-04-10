@@ -32,12 +32,23 @@ public class LogInActivity extends AppCompatActivity {
     protected FirebaseAuth firebaseAuth;
     protected TextView mCreateAccountTextView, mForgotPassTextView;
     protected SharedPreferencesHelper mSharedPreferencesHelper;
+    protected SharedPreferencesHelper mSharedPreferences;
     FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+
+        //check if user had previously accepted disclaimer. If not, open fragment
+        mSharedPreferences = new SharedPreferencesHelper(LogInActivity.this,
+                "DisclaimerPreferences");
+        if(mSharedPreferences.getDisclaimerStatus() == null
+                || mSharedPreferences.getDisclaimerStatus().equals("False")){
+            DisclaimerFragment disclaimerFragment = new DisclaimerFragment();
+            disclaimerFragment.setCancelable(false);
+            disclaimerFragment.show(getSupportFragmentManager(), "DisclaimerFragment");
+        }
 
         mSharedPreferencesHelper = new SharedPreferencesHelper(LogInActivity.this, "Login");
         setupUI();

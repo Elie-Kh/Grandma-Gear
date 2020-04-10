@@ -280,6 +280,14 @@ public class FirebaseObjects {
             return phoneBattery;
         }
 
+        public String getFall() {
+            return fall;
+        }
+
+        public String getDeviceOn() {
+            return deviceOn;
+        }
+
         public ArrayList<FirebaseObjects.Notifications> getNotifications() {
             return notifications;
         }
@@ -310,6 +318,14 @@ public class FirebaseObjects {
 
         public void setPhoneBattery(int phoneBattery) {
             this.phoneBattery = phoneBattery;
+        }
+
+        public void setFall(String fall) {
+            this.fall = fall;
+        }
+
+        public void setDeviceOn(String deviceOn) {
+            this.deviceOn = deviceOn;
         }
     }
 
