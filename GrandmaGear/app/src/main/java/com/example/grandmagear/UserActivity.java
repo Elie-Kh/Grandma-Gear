@@ -171,6 +171,8 @@ public class UserActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.logoutAction) {// User chose the "Settings" item, show the app settings UI...
             logout();
+            FirebaseHelper.firebaseFirestore.clearPersistence();
+            FirebaseHelper.firebaseFirestore.terminate();
         }// If we got here, the user's action was not recognized.
         // Invoke the superclass to handle it.
         return super.onOptionsItemSelected(item);
