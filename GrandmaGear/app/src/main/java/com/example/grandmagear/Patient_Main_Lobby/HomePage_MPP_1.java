@@ -111,6 +111,10 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
@@ -134,6 +138,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                         }
                     }
                 });
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
         return super.onCreateOptionsMenu(menu);
 
 

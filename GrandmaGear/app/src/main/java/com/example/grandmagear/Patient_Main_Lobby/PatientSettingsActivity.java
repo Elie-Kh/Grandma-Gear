@@ -15,6 +15,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -38,6 +39,20 @@ public class PatientSettingsActivity extends AppCompactPreferenceActivity {
 
         // load settings fragment
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setHomeButtonEnabled(false);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
 
