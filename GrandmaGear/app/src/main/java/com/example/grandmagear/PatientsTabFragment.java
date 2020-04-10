@@ -1,6 +1,7 @@
 package com.example.grandmagear;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class PatientsTabFragment extends Fragment {
+public class PatientsTabFragment extends Fragment implements RecyclerViewAdapter.OnItemClickedListener {
 
     private static final String TAG = "PatientsTabFrag__";
     protected RecyclerView mRecyclerView;
@@ -40,44 +42,13 @@ public class PatientsTabFragment extends Fragment {
     private SharedPreferencesHelper mSharedPreferencesHelper;
     private SharedPreferencesHelper mSharedPreferencesHelper_login;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.patient_tab_fragment, container, false);
         mSharedPreferencesHelper_login = new SharedPreferencesHelper(getActivity(), "Login");
-
-
-//        documentReference
-//                .addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
-//                if (e != null) {
-//                    Log.w(TAG, "Listen failed.", e);
-//                    return;
-//                }
-//
-//                if (snapshot != null) {
-//                    Log.d(TAG, "Current data: " + snapshot.getData());
-//                    thisUser = snapshot.toObject(FirebaseObjects.UserDBO.class);
-//                    mPatientsList = thisUser.devicesFollowed;
-//                    mRecyclerView = view.findViewById(R.id.device_recycler);
-//                    mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
-//                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//                    mRecyclerView.setAdapter(mAdapter);
-//                    mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
-//                            DividerItemDecoration.VERTICAL));
-//                    //mAdapter.notifyDataSetChanged();
-//
-//
-//                } else {
-//                    Log.d(TAG, "Current data: null");
-//                }
-//            }
-//
-//        });
-
-
         return view;
     }
 
@@ -115,7 +86,7 @@ public class PatientsTabFragment extends Fragment {
                 thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
                 mPatientsList = thisUser.devicesFollowed;
                 mRecyclerView = getView().findViewById(R.id.device_recycler);
-                mAdapter = new RecyclerViewAdapter(mPatientsList, getContext());
+                mAdapter = new RecyclerViewAdapter(mPatientsList, PatientsTabFragment.this, getContext());
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
@@ -123,5 +94,14 @@ public class PatientsTabFragment extends Fragment {
                 //mAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        //KIZITO_ENTER_THE_ACTIVITY_NAME.class
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.putExtra("wearerID", mPatientsList.get(position));
+        Log.d(TAG, intent.getExtras().toString());
+        startActivity(intent);
     }
 }

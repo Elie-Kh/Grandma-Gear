@@ -47,7 +47,7 @@
         app:layout_constraintTop_toTopOf="@+id/heartBeatImage"
         app:layout_constraintVertical_bias="0.346" />
 
-    <Button
+    <TextView
         android:id="@+id/location_button"
         android:layout_width="48dp"
         android:layout_height="50dp"
@@ -56,10 +56,9 @@
         app:layout_constraintBottom_toBottomOf="@+id/heart_beat_text"
         app:layout_constraintStart_toEndOf="@+id/heart_beat_text"
         app:layout_constraintTop_toTopOf="@+id/heart_beat_text"
-        app:layout_constraintVertical_bias="0.482"
-        tools:text="location" />
+        app:layout_constraintVertical_bias="0.482" />
 
-    <Button
+    <TextView
         android:id="@+id/battery_button"
         android:layout_width="48dp"
         android:layout_height="19dp"

@@ -109,11 +109,13 @@ public class AddPatientFragment extends DialogFragment {
                                         ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
                                                 users.devicesFollowed;
                                         Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
-                                        ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList, getContext());
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter.mPatients = users.devicesFollowed;
+                                        //((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList, ,getContext());
                                         ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                                         ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
                                         ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
                                                 DividerItemDecoration.VERTICAL));
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter.notifyDataSetChanged();
 
                                         getDialog().dismiss();
                                     }
