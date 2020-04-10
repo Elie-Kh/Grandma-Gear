@@ -297,8 +297,10 @@ public class LogInActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                            Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
-                            mLoginProgressBar.setVisibility(View.GONE);
+                            else {
+                                Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
+                                mLoginProgressBar.setVisibility(View.GONE);
+                            }
                         }
                     }
                 });

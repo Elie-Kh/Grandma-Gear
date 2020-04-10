@@ -1,6 +1,7 @@
 package com.example.grandmagear;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -17,14 +18,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.auth.User;
 
 public class UserActivity extends AppCompatActivity {
     protected MenuItem mLogout;
-    protected FirebaseAuth firebaseAuth;
-    protected FirebaseFirestore firebaseFirestore;
     protected FloatingActionButton mAddPatient;
     protected PatientsTabFragment mPatientsTabFragment =  new PatientsTabFragment();
     protected NotificationsTabFragment mNotificationTabFragment = new NotificationsTabFragment();
@@ -51,8 +54,6 @@ public class UserActivity extends AppCompatActivity {
     }
 
     void setupUI(){
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseHelper = new FirebaseHelper();
         mSharedPreferencesHelper = new SharedPreferencesHelper(UserActivity.this,
                 "PatientIDs");
@@ -96,6 +97,8 @@ public class UserActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 DocumentSnapshot documentSnapshot = task.getResult();
                                 thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+
+
                             }
                         });
                 //thisUser.setDevice_ids(mPatientsTabFragment.getmPatientsList());
@@ -103,6 +106,8 @@ public class UserActivity extends AppCompatActivity {
                 patientFrag.show(getSupportFragmentManager(), "AddPatientFragment");
             }
         });
+
+
         
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -138,7 +143,7 @@ public class UserActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(firebaseAuth.getCurrentUser() == null){
+        if(FirebaseHelper.firebaseAuth.getCurrentUser() == null){
             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
         }
     }
@@ -146,7 +151,7 @@ public class UserActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(firebaseAuth.getCurrentUser() == null){
+        if(FirebaseHelper.firebaseAuth.getCurrentUser() == null){
             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
         }
     }
