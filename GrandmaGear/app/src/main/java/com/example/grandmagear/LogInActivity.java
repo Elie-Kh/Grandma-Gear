@@ -3,7 +3,10 @@ package com.example.grandmagear;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -254,6 +257,18 @@ public class LogInActivity extends AppCompatActivity {
 
 
                         }else{
+                            ConnectivityManager connectivityManager
+                                    = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                            if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                                if (mSharedPreferencesHelper.getEmail() != null && !mSharedPreferencesHelper.getEmail().isEmpty()) {
+                                    if (Boolean.parseBoolean(mSharedPreferencesHelper.getType())) {
+                                        startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                                    } else {
+                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                    }
+                                }
+                            }
                             Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                             mLoginProgressBar.setVisibility(View.GONE);
                         }
@@ -261,5 +276,6 @@ public class LogInActivity extends AppCompatActivity {
                 });
             }
         }
+
     }
 }
