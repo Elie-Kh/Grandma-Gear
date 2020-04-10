@@ -100,7 +100,6 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                         .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
                         .update("notifications", userDBO.notifications);
-
             }
         });
         notifyDataSetChanged();

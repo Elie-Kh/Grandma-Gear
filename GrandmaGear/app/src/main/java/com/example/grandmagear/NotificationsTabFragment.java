@@ -1,5 +1,8 @@
 package com.example.grandmagear;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,13 +60,32 @@ public class NotificationsTabFragment extends Fragment {
                         userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
                         thisNotifications = userDBO.notifications;
                         if(userDBO.notifications.size() != 0) {
-                            mNotificationTitle.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTitle());
-                            mNotificationText.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationText());
-                            mNotificationTime.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTime());
+                            if(userDBO.notifications.size() > 1 && mNotificationText.size() < 1){
+                                for(int i = 0; i < thisNotifications.size(); i++){
+                                    mNotificationTitle.add(thisNotifications.get(i).getNotificationTitle());
+                                    mNotificationText.add(thisNotifications.get(i).getNotificationText());
+                                    mNotificationTime.add(thisNotifications.get(i).getNotificationTime());
+                                }
+                            }
+                            else {
+                                mNotificationTitle.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTitle());
+                                mNotificationText.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationText());
+                                mNotificationTime.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTime());
+                            }
+
                         }
                         mAdapter.notifyDataSetChanged();
                     }
                 });
+
+
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+//            thisNotifications = userDBO.notifications;
+//            mAdapter.notifyDataSetChanged();
+        }
         return view;
     }
 
@@ -78,10 +102,18 @@ public class NotificationsTabFragment extends Fragment {
         firebaseHelper = new FirebaseHelper();
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                 .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+
+                    }
+                });
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                                  @Override
                                                  public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                                                      userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
                                                      thisNotifications = userDBO.notifications;
                                                      for (FirebaseObjects.Notifications entry : thisNotifications) {

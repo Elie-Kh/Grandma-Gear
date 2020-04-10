@@ -49,9 +49,11 @@ public class FirebaseHelper {
 
     public FirebaseHelper() {
         firebaseAuth = FirebaseAuth.getInstance();
+
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestoreSettings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
+                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
                 .build();
         firebaseFirestore.setFirestoreSettings(firebaseFirestoreSettings);
     }
