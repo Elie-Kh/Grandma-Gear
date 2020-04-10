@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,12 +14,9 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static androidx.core.app.ActivityCompat.startActivityForResult;
-import static androidx.core.content.ContextCompat.getSystemService;
 
 public class BTHelper {
 
@@ -28,6 +26,8 @@ public class BTHelper {
 
     private BluetoothAdapter myBTAdapter;
     private BluetoothSocket btSocket = null;
+    private int highHR = 0;
+    private int lowHR = 0;
     protected BluetoothDevice hc05;
     protected SharedPreferencesHelper sharedPreferencesHelper;
     protected Context btContext;
@@ -60,31 +60,59 @@ public class BTHelper {
 
     }
 
+    public void estConnect(){
+
+        new BTconnection().execute();
+
+    }
+
     public BluetoothDevice getHC05(){
         return hc05;
+
     }
 
-    public void connectnConfirm(){
+    private class BTconnection extends AsyncTask<Void, Void, Void> {
+        private boolean isConnected =true;
 
-        do {
-            try {
-                btSocket = hc05.createInsecureRfcommSocketToServiceRecord(mUUID);
-                // System.out.println(btSocket);
-                btSocket.connect();
-                // System.out.println(btSocket.isConnected());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        } while (!btSocket.isConnected());
-
-        if(!btSocket.isConnected()){
-            popToast("Bluetooth connection failed");
-        } else {
-            popToast("Bluetooth connection established");
-
+        @Override
+        protected void onPreExecute(){
+            popToast("Connecting to Grandma Gear Hardware");
         }
+
+        @Override
+        protected Void doInBackground(Void...devices){
+            try{
+                if(btSocket==null || !streamOn){
+                    btSocket = hc05.createInsecureRfcommSocketToServiceRecord(mUUID);
+                    btSocket.connect();
+                }
+            } catch (IOException e){
+                isConnected = false;
+            }
+            if(!isConnected){
+                //TODO notify follower device is off
+            } else{
+                //TODO notify follower device is on
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute (Void result){
+            super.onPostExecute(result);
+
+            if(!isConnected){
+                popToast("Connection failed please try again");
+            } else {
+                popToast("Device Connected");
+                streamOn = true;
+            }
+        }
+
+
     }
+
 
     public void disconnectnConfirm(){
         int counter = 0;
@@ -109,29 +137,56 @@ public class BTHelper {
     public void content(TextView textview) {
 
         InputStream inputStream = null;
-        String message = "";
+        String heartRate = "";
 
-        if(btSocket.isConnected()) {
-            try {
-                inputStream = btSocket.getInputStream();
-                inputStream.skip(inputStream.available());
+        if(btSocket != null){
+            if(btSocket.isConnected()) {
+                try {
+                    inputStream = btSocket.getInputStream();
+                    inputStream.skip(inputStream.available());
 
-                for (int i = 0; i < 2; i++) {
-                    byte b = (byte) inputStream.read();
+                    for (int i = 0; i < 4; i++) {
+                        byte b = (byte) inputStream.read();
 
-                    if(((char) b) == 'f'){
-                        message = "FALL";
-                        break;
-                    } else
-                    message += (char) b;
+                        if (((char) b) == 'F') {
+                            //TODO signal fall
+
+                        } else if (((char) b) == 'N'){
+                            //TODO signal device off
+                        }else {
+                            heartRate += (char) b;
+                        }
+                    }
+
+                    if(Integer.parseInt(heartRate) > 100){
+                        highHR ++;
+                        lowHR = 0;
+                        textview.setText(heartRate);
+                        //TODO send HR to followers
+                        if(highHR > 3){
+                            //TODO send High HR notif
+                        }
+
+                    } else if ( Integer.parseInt(heartRate) < 60){
+                        lowHR ++;
+                        highHR =0;
+                        textview.setText(heartRate);
+                        //TODO send HR to followers
+                        if(lowHR > 3){
+                            //TODO send Low HR notif
+                        }
+
+                    } else {
+                        highHR = 0;
+                        lowHR = 0;
+                        textview.setText(heartRate);
+                        //TODO send heart rate to followers
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-                textview.setText(message);
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-
         }
 
 
@@ -161,13 +216,5 @@ public class BTHelper {
     public ArrayList<BluetoothDevice> deviceList(){
         return new ArrayList<>(myBTAdapter.getBondedDevices());
 
-        /*ArrayList<BluetoothDevice> deviceList = new ArrayList<>();
-
-        if(pairedDevices.size() >0){
-
-            for(BluetoothDevice device : pairedDevices){
-                deviceList
-            }
-        }*/
     }
 }

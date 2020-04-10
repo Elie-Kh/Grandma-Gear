@@ -112,7 +112,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     public void btConnect(){
         btHelper = new BTHelper(this, mSharedPreferencesHelper_BT.getHC05());
         btHelper.btEnable(this);
-        btHelper.connectnConfirm();
+        btHelper.estConnect();
         btHelper.content(BPM);
     }
 
