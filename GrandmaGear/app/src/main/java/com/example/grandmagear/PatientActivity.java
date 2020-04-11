@@ -15,7 +15,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class PatientActivity extends AppCompatActivity {
 
@@ -53,13 +56,16 @@ public class PatientActivity extends AppCompatActivity {
         firebaseHelper = new FirebaseHelper();
         Log.d("__THISTAG__", String.valueOf(Boolean.parseBoolean(mSharedPreferencesHelper.getType())));
         Log.d("__THISTAG__", mSharedPreferencesHelper.getEmail());
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-                                   }
-                               }, mSharedPreferencesHelper.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper.getType()));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                    }
+                });
 
         mHelpButton.setOnClickListener(new View.OnClickListener() {
             @Override

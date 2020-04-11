@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/id_hint"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/patient_image"
         app:layout_constraintTop_toTopOf="@+id/patient_image"
         tools:text="DeviceID" />
@@ -40,13 +41,13 @@
         android:layout_height="21dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="60bpm"
+        android:text="0bpm"
         app:layout_constraintBottom_toBottomOf="@+id/heartBeatImage"
         app:layout_constraintStart_toEndOf="@+id/heartBeatImage"
         app:layout_constraintTop_toTopOf="@+id/heartBeatImage"
         app:layout_constraintVertical_bias="0.346" />
 
-    <Button
+    <TextView
         android:id="@+id/location_button"
         android:layout_width="48dp"
         android:layout_height="50dp"
@@ -55,10 +56,9 @@
         app:layout_constraintBottom_toBottomOf="@+id/heart_beat_text"
         app:layout_constraintStart_toEndOf="@+id/heart_beat_text"
         app:layout_constraintTop_toTopOf="@+id/heart_beat_text"
-        app:layout_constraintVertical_bias="0.482"
-        tools:text="location" />
+        app:layout_constraintVertical_bias="0.482" />
 
-    <Button
+    <TextView
         android:id="@+id/battery_button"
         android:layout_width="48dp"
         android:layout_height="19dp"
@@ -76,4 +76,13 @@
         android:text="50%"
         app:layout_constraintBottom_toBottomOf="@+id/battery_button"
         app:layout_constraintStart_toEndOf="@+id/battery_button" />
+
+    <TextView
+        android:id="@+id/patient_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/device_id"
+        app:layout_constraintEnd_toEndOf="@+id/device_id"
+        app:layout_constraintStart_toStartOf="@+id/device_id" />
 </androidx.constraintlayout.widget.ConstraintLayout>
