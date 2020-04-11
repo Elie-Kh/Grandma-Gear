@@ -20,6 +20,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.Objects;
 
 public class AddPatientFragment extends DialogFragment {
 
@@ -121,6 +123,7 @@ public class AddPatientFragment extends DialogFragment {
                                     }
                                 });
                             }
+
                         }
                     });
 

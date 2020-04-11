@@ -178,6 +178,7 @@ public class RegisterActivity extends AppCompatActivity {
                         save = false;
                     }else if(Integer.parseInt(weight) < 80 || Integer.parseInt(weight) > 400){
                         mWeight.setError("Weight must be between 80 lbs and 400 lbs");
+
                         save = false;
                     }
 

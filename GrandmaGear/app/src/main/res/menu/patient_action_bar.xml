@@ -11,4 +11,10 @@
         app:showAsAction="never"
         />
 
+    <item android:title="@string/btDevice"
+        android:id="@+id/btDeviceSelect"
+        app:showAsAction="never"
+        />
+
+
 </menu>

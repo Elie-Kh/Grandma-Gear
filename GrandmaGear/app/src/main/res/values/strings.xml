@@ -89,6 +89,8 @@
     <string name="MPP_1_ReportsButton">Reports</string>
     <string name="MPP_1_textView_Location_Display"></string>
 
+    <string name="btDevice">Device Select</string>
+
 
     //Patient Settings
     <string name="MPP_S_Category_General">General</string>
@@ -144,6 +146,7 @@
     <string name="key_vibrate">key_vibrate</string>
     <string name="key_send_feedback">key_send_feedback</string>
     <string name="key_location">key_give_location</string>
+
 
 
     //Location Map Key
