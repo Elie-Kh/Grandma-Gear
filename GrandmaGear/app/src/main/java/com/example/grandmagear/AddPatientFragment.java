@@ -1,6 +1,5 @@
 package com.example.grandmagear;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
@@ -86,24 +84,67 @@ public class AddPatientFragment extends DialogFragment {
 //                                (((UserActivity) getActivity()).mPatientsTabFragment.mPatientsList.size()-1)
 //                        );
 //                    }
-                    ((UserActivity)getActivity()).thisUser.setDevice_ids(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
-                    user.setDevice_ids(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
-                    firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
+                    ((UserActivity)getActivity()).thisUser.setDevicesFollowed(((UserActivity) getActivity()).mPatientsTabFragment.getmPatientsList());
+                    user.setDevicesFollowed(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+
+                    firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                            .document(patientDevice)
+                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onCallback(FirebaseObjects.UserDBO users) {
-                            user = users;
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
-                                    users.device_ids;
-                            Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
-                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
-                                    DividerItemDecoration.VERTICAL));
-                           Log.d(TAG, "Added Patient");
-                            getDialog().dismiss();
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot snapshot = task.getResult();
+                            if(snapshot!= null && snapshot.exists()){
+                                firebaseHelper.firebaseFirestore
+                                        .collection(FirebaseHelper.userDB)
+                                        .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        DocumentSnapshot snapshot = task.getResult();
+                                        FirebaseObjects.UserDBO users = snapshot.toObject(FirebaseObjects.UserDBO.class);
+                                        user = users;
+                                        users.devicesFollowed.add(patientDevice);
+                                        firebaseHelper.firebaseFirestore
+                                                .collection(FirebaseHelper.userDB)
+                                                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                                                .set(users);
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
+                                                users.devicesFollowed;
+                                        Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter.mPatients = users.devicesFollowed;
+                                        //((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList, ,getContext());
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
+                                                DividerItemDecoration.VERTICAL));
+                                        ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter.notifyDataSetChanged();
+
+                                        getDialog().dismiss();
+                                    }
+                                });
+                            }
+
                         }
-                    }, user, patientDevice);
+                    });
+
+
+
+//                    firebaseHelper.addingPatient(new FirebaseHelper.Callback_AddPatient() {
+//                        @Override
+//                        public void onCallback(FirebaseObjects.UserDBO users) {
+//                            user = users;
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList =
+//                                    users.devicesFollowed;
+//                            Collections.sort(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mAdapter = new RecyclerViewAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mPatientsList);
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.setAdapter(((UserActivity)getActivity()).mPatientsTabFragment.mAdapter);
+//                            ((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.addItemDecoration(new DividerItemDecoration(((UserActivity)getActivity()).mPatientsTabFragment.mRecyclerView.getContext(),
+//                                    DividerItemDecoration.VERTICAL));
+//                           Log.d(TAG, "Added Patient");
+//                            getDialog().dismiss();
+//                        }
+//                    }, user, patientDevice);
                     //((UserActivity)getActivity()).thisUser.device_ids.add(patientDevice);
                     //((UserActivity) getActivity()).mPatientsTabFragment.addPatient(patientDevice);
                 }
