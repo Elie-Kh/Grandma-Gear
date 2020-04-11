@@ -41,20 +41,6 @@ public class PatientSettingsActivity extends AppCompactPreferenceActivity {
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
     }
 
-    @Override
-    public void onBackPressed() {
-        return;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setHomeButtonEnabled(false);
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
 
 
 
