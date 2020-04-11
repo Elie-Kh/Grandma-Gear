@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -46,6 +47,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     TextView BPM;
     TextView phoneBattery;
     TextView deviceBattery;
+    Button reportButton;
 
     ImageView ProfilePicture;
     ImageView Heart;
@@ -98,6 +100,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         BPM.setText("66");
         phoneBattery = findViewById(R.id.textView_PhoneBatteryLevel_Displayed);
         deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed);
+        reportButton = findViewById(R.id.buttonReports);
 
         ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_1);
         Heart = findViewById(R.id.imageView_Heart_MPP_1);
@@ -107,6 +110,13 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
         BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
         batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ReportsActivity.class));
+            }
+        });
 
 
     }
