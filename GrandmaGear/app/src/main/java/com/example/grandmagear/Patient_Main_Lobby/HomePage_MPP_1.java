@@ -64,6 +64,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     TextView BPM;
     TextView phoneBattery;
     TextView deviceBattery;
+    Button reportButton;
 
     ImageView ProfilePicture;
     ImageView Heart;
@@ -86,7 +87,6 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     protected FirebaseObjects.DevicesDBO tempDevice;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,16 +96,15 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
-            registerReceiver(batteryReceiver, intentFilter);
-            resumeSharedLocation();
-            uploadWearerInfo();
-            uploadDeviceInfo();
-            resumeLocation(locationSwitch);
-            locationStatus(locationSwitch);
+        registerReceiver(batteryReceiver, intentFilter);
+        resumeSharedLocation();
+        uploadWearerInfo();
+        uploadDeviceInfo();
+        resumeLocation(locationSwitch);
+        locationStatus(locationSwitch);
     }
 
     @Override
@@ -113,13 +112,13 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         unregisterReceiver(batteryReceiver);
         super.onPause();
 
-            if(mSharedPreferencesHelper_BT.getHC05() == null){
-                goToDeviceList();
-            } else btConnect();
+        if (mSharedPreferencesHelper_BT.getHC05() == null) {
+            goToDeviceList();
+        } else btConnect();
     }
 
 
-    void setUpUI(){
+    void setUpUI() {
 
         FullName = findViewById(R.id.textViewFullName_Displayed_MPP_1);
         Age = findViewById(R.id.textView_Age_Displayed_MPP_1);
@@ -129,6 +128,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         BPM.setText("66");
         phoneBattery = findViewById(R.id.textView_PhoneBatteryLevel_Displayed);
         deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed);
+        reportButton = findViewById(R.id.buttonReports);
 
         ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_1);
         Heart = findViewById(R.id.imageView_Heart_MPP_1);
@@ -137,7 +137,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         locationSwitch = findViewById(R.id.locationSwitch);
         PanicButton = findViewById(R.id.buttonPanic);
 
-        BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
+        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
         batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
         PanicButton.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +158,16 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         mSharedPreferencesHelper_BT = new SharedPreferencesHelper(this, "BTList");
 
 
+
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ReportsActivity.class));
+            }
+        });
     }
+
+
 
     public void btConnect(){
         btHelper = new BTHelper(this, mSharedPreferencesHelper_BT.getHC05());
