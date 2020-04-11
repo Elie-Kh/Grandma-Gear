@@ -2,12 +2,19 @@ package com.example.grandmagear.Patient_Main_Lobby;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.preference.SwitchPreference;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
+import android.preference.Preference;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +25,9 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.grandmagear.BTFragment;
+import com.example.grandmagear.BTHelper;
+import com.example.grandmagear.DisclaimerFragment;
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
 import com.example.grandmagear.LogInActivity;
@@ -25,6 +35,7 @@ import com.example.grandmagear.R;
 import com.example.grandmagear.SharedPreferencesHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.example.grandmagear.UserActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,6 +46,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.example.grandmagear.Patient_Main_Lobby.PatientSettingsActivity.location;
+
 public class HomePage_MPP_1 extends AppCompatActivity {
     private static final String TAG = "HomePage_MPP_1";
     private Handler mainHandler = new Handler();
@@ -42,6 +55,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     MenuItem Setting;
     MenuItem Logout;
+    MenuItem DeviceSelect;
     Switch locationSwitch;
     TextView FullName;
     TextView Age;
@@ -66,6 +80,10 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     protected BatteryReceiver batteryReceiver = new BatteryReceiver();
     protected IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     int batLevel;
+    protected BTHelper btHelper;
+
+    SharedPreferencesHelper mSharedPreferencesHelper_BT;
+    protected FirebaseObjects.DevicesDBO tempDevice;
 
 
 
@@ -74,6 +92,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page__mpp_1);
 
+        setUpUI();
     }
 
 
@@ -81,7 +100,6 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-            setUpUI();
             registerReceiver(batteryReceiver, intentFilter);
             resumeSharedLocation();
             uploadWearerInfo();
@@ -94,7 +112,12 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     protected void onPause() {
         unregisterReceiver(batteryReceiver);
         super.onPause();
+
+            if(mSharedPreferencesHelper_BT.getHC05() == null){
+                goToDeviceList();
+            } else btConnect();
     }
+
 
     void setUpUI(){
 
@@ -132,7 +155,16 @@ public class HomePage_MPP_1 extends AppCompatActivity {
             }
         });
 
+        mSharedPreferencesHelper_BT = new SharedPreferencesHelper(this, "BTList");
 
+
+    }
+
+    public void btConnect(){
+        btHelper = new BTHelper(this, mSharedPreferencesHelper_BT.getHC05());
+        btHelper.btEnable(this);
+        btHelper.estConnect();
+        btHelper.content(BPM);
     }
 
     @Override
@@ -167,6 +199,8 @@ public class HomePage_MPP_1 extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             getSupportActionBar().setHomeButtonEnabled(false);
         }
+        DeviceSelect = findViewById(R.id.btDeviceSelect);
+
         return super.onCreateOptionsMenu(menu);
 
 
@@ -178,26 +212,55 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         if (item.getItemId() == R.id.settings) {// User chose the "Settings" item, show the app settings UI...
             goToSettings();
         }
-        if(item.getItemId() == R.id.logout){
+        if (item.getItemId() == R.id.logout) {
             logout();
             FirebaseHelper.firebaseFirestore.clearPersistence();
             FirebaseHelper.firebaseFirestore.terminate();
+        }
+
+        if (item.getItemId() == R.id.btDeviceSelect) {
+            goToDeviceList();
         }
         // If we got here, the user's action was not recognized.
         // Invoke the superclass to handle it.
         return super.onOptionsItemSelected(item);
     }
-    public void goToSettings(){
+
+    public void goToSettings () {
         Intent intent = new Intent(this, PatientSettingsActivity.class);
         intent.putExtra(getString(R.string.PC_ID), "0");
         startActivity(intent);
     }
-    public void goToLocation(View view){
-       // Intent intent = new Intent(this, MapsLocationActivity.class);
+    public void goToLocation (View view){
+        // Intent intent = new Intent(this, MapsLocationActivity.class);
         //intent.putExtra(getString(R.string.PC_ID), "0");
         //startActivity(intent);
     }
 
+    public void goToDeviceList () {
+        BTFragment btFragment = new BTFragment();
+        btFragment.setCancelable(false);
+        btFragment.show(getSupportFragmentManager(), "BTFragment");
+    }
+
+
+
+    public void resumeSharedLocation() {
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(FirebaseObjects.UserDBO user) {
+                                       thisUser = user;
+
+                                       if (thisUser.getAccountType()) {
+                                           disableShareLocation();
+                                       } else {
+                                           displayShareLocation();
+                                       }
+                                   }
+                               }, mSharedPreferencesHelper_Login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+    }
 
     public void uploadWearerInfo(){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
@@ -217,45 +280,28 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                 });
 
     }
-    public void resumeSharedLocation(){
-        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
-                        if (thisUser.getAccountType()) {
-                            disableShareLocation();
-                        } else {
-                            displayShareLocation();
-                        }
-                    }
-                });
-    }
+
+
+
+
 
     public void resumeLocation(final Switch ls){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
-                        ls.setChecked(thisUser.getGpsFollow());
-                        if (thisUser.getGpsFollow()) {
-                            firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
-                            displayLocation();
-                        } else {
-                            firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
-                            disableLocation();
-                        }
-                    }
-                });
+        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+                                   @Override
+                                   public void onCallback(FirebaseObjects.UserDBO user) {
+                                       thisUser = user;
+                                       ls.setChecked(thisUser.getGpsFollow());
+                                       if (thisUser.getGpsFollow()) {
+                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
+                                           displayLocation();
+                                       } else {
+                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
+                                           disableLocation();
+                                       }
+                                   }
+                               }, mSharedPreferencesHelper_Login.getEmail(),
+                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
 
     }
 

@@ -49,6 +49,7 @@ public class PatientsTabFragment extends Fragment implements RecyclerViewAdapter
                              @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.patient_tab_fragment, container, false);
         mSharedPreferencesHelper_login = new SharedPreferencesHelper(getActivity(), "Login");
+
         return view;
     }
 
