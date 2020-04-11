@@ -27,6 +27,11 @@ public class BTFragment extends DialogFragment {
     protected ArrayList<BluetoothDevice> deviceList;
     protected BTHelper btHelper;
     private ArrayAdapter<BluetoothDevice> listAdapter;
+    protected FirebaseObjects.UserDBO thisUser;
+
+    public BTFragment(FirebaseObjects.UserDBO thisUser) {
+        this.thisUser = thisUser;
+    }
 
     @Nullable
     @Override
@@ -41,7 +46,7 @@ public class BTFragment extends DialogFragment {
     protected void setupLayout(View view){
         header = view.findViewById(R.id.btTitle);
         btList = view.findViewById(R.id.BTList);
-        btHelper = new BTHelper(getContext());
+        btHelper = new BTHelper(getContext(), thisUser);
         deviceList = btHelper.deviceList();
 
         listAdapter = new ArrayAdapter<BluetoothDevice>(getActivity(), android.R.layout.simple_list_item_1, deviceList);
