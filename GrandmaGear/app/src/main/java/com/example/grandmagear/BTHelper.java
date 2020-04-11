@@ -2,14 +2,23 @@ package com.example.grandmagear;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,20 +40,72 @@ public class BTHelper {
     protected BluetoothDevice hc05;
     protected SharedPreferencesHelper sharedPreferencesHelper;
     protected Context btContext;
+    protected NotificationHelper notificationHelper;
+    protected FirebaseHelper firebaseHelper;
+    protected FirebaseObjects.DevicesDBO device;
+    protected boolean firstOn;
 
-    public BTHelper(Context context){
+
+    public BTHelper(Context context, FirebaseObjects.UserDBO thisUser){
         sharedPreferencesHelper = new SharedPreferencesHelper(context, "BTList");
         myBTAdapter = BluetoothAdapter.getDefaultAdapter();
+        firebaseHelper = new FirebaseHelper();
+        notificationHelper = new NotificationHelper(context, thisUser);
         streamOn = false;
         btContext = context;
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+                               // Log.d(TAG, "docsnap " + documentSnapshot.getReference().getId());
+                               // Log.d(TAG, firebaseHelper.getCurrentUserID());
+                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                        .document(documentSnapshot.getReference().getId())
+                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        device = task.getResult().toObject(FirebaseObjects.DevicesDBO.class);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
     }
 
-    public BTHelper(Context context, String mac){
+    public BTHelper(Context context, String mac, FirebaseObjects.UserDBO thisUser){
         sharedPreferencesHelper = new SharedPreferencesHelper(context, "BTList");
         myBTAdapter = BluetoothAdapter.getDefaultAdapter();
         streamOn = false;
         btContext = context;
+        notificationHelper = new NotificationHelper(context, thisUser);
         setHc05(mac);
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+                                // Log.d(TAG, "docsnap " + documentSnapshot.getReference().getId());
+                                // Log.d(TAG, firebaseHelper.getCurrentUserID());
+                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                        .document(documentSnapshot.getReference().getId())
+                                        .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        device = task.getResult().toObject(FirebaseObjects.DevicesDBO.class);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
     }
 
     public void btEnable(Activity activity){
@@ -150,11 +211,27 @@ public class BTHelper {
 
                         if (((char) b) == 'F') {
                             //TODO signal fall
+                            notificationHelper.sendOnFall("A Fall", "A fall was detected");
 
                         } else if (((char) b) == 'N'){
                             //TODO signal device off
+                            if(firstOn) {
+                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                                        .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                                        .update(FirebaseObjects.DeviceOn, "off");
+                                firstOn = false;
+                            }
                         }else {
                             heartRate += (char) b;
+                        }
+                    }
+
+                    if(Integer.parseInt(heartRate)!=0){
+                        if(!firstOn) {
+                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                                    .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                                    .update(FirebaseObjects.DeviceOn, "on");
+                            firstOn = true;
                         }
                     }
 
@@ -164,6 +241,7 @@ public class BTHelper {
                         textview.setText(heartRate);
                         //TODO send HR to followers
                         if(highHR > 3){
+                            notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded");
                             //TODO send High HR notif
                         }
 
@@ -173,6 +251,7 @@ public class BTHelper {
                         textview.setText(heartRate);
                         //TODO send HR to followers
                         if(lowHR > 3){
+                            notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded");
                             //TODO send Low HR notif
                         }
 

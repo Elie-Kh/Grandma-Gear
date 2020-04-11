@@ -113,8 +113,8 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         super.onPause();
 
         if (mSharedPreferencesHelper_BT.getHC05() == null) {
-            goToDeviceList();
-        } else btConnect();
+           // goToDeviceList();
+        } //else btConnect();
     }
 
 
@@ -170,7 +170,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
     public void btConnect(){
-        btHelper = new BTHelper(this, mSharedPreferencesHelper_BT.getHC05());
+        btHelper = new BTHelper(this, mSharedPreferencesHelper_BT.getHC05(), thisUser);
         btHelper.btEnable(this);
         btHelper.estConnect();
         btHelper.content(BPM);
@@ -247,7 +247,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     }
 
     public void goToDeviceList () {
-        BTFragment btFragment = new BTFragment();
+        BTFragment btFragment = new BTFragment(thisUser);
         btFragment.setCancelable(false);
         btFragment.show(getSupportFragmentManager(), "BTFragment");
     }
