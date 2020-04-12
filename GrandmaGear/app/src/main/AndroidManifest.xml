@@ -45,11 +45,12 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_api_key" />
 
         <activity
             android:name=".Patient_Main_Lobby.MapsTrackingActivity"
-            android:label="@string/title_activity_maps_tracking"></activity>
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_maps_tracking"/>
         <activity
             android:name=".Patient_Main_Lobby.HomePage_MPP_2"
             android:parentActivityName=".MainActivity"

@@ -238,8 +238,8 @@ public class FirebaseObjects {
     public static class DevicesDBO{
         protected String id;
         protected int heartrate;
-        protected long latitude;    //latitude
-        protected long longitude;    //longitude
+        protected double latitude;    //latitude
+        protected double longitude;    //longitude
         protected int deviceBattery;
         protected int phoneBattery;
         protected String fall = "good";
@@ -280,11 +280,11 @@ public class FirebaseObjects {
             return heartrate;
         }
 
-        public long getLatitude() {
+        public double getLatitude() {
             return latitude;
         }
 
-        public long getLongitude() {
+        public double getLongitude() {
             return longitude;
         }
 

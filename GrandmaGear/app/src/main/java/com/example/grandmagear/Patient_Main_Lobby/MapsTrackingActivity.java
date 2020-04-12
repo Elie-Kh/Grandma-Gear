@@ -1,9 +1,12 @@
 package com.example.grandmagear.Patient_Main_Lobby;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 
+import com.example.grandmagear.FirebaseHelper;
+import com.example.grandmagear.FirebaseObjects;
 import com.example.grandmagear.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -11,11 +14,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class MapsTrackingActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
+    private String WearerID;
+    protected FirebaseHelper firerBaseHelper= new FirebaseHelper();
+    protected FirebaseObjects.DevicesDBO device;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +32,10 @@ public class MapsTrackingActivity extends FragmentActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Bundle b = getIntent().getExtras();
+        WearerID = b.getString("wearerID_MPP_2");
+
     }
 
 
@@ -41,8 +53,23 @@ public class MapsTrackingActivity extends FragmentActivity implements OnMapReady
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng WearerPosition = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(WearerPosition).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(WearerPosition));
+
+
+        firerBaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(WearerID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                device = document.toObject(FirebaseObjects.DevicesDBO.class);
+                double latitude = device.getLatitude();
+                double longitude = device.getLongitude();
+                LatLng WearerPosition = new LatLng(latitude, longitude);
+                mMap.addMarker(new MarkerOptions().position(WearerPosition).title("Wearer's Location"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(WearerPosition));
+            }
+        });
+
+
+
+
     }
 }
