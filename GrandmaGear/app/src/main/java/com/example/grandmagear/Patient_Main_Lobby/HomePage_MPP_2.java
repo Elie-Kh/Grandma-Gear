@@ -60,7 +60,9 @@ import com.example.grandmagear.UserActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -78,7 +80,7 @@ import java.util.TimerTask;
 import static com.example.grandmagear.Patient_Main_Lobby.PatientSettingsActivity.location;
 
 public class HomePage_MPP_2 extends AppCompatActivity {
-    private static final String TAG = "HomePage_MPP_1";
+    private static final String TAG = "HomePage_MPP_2";
     private Handler mainHandler = new Handler();
 
 
@@ -108,9 +110,9 @@ public class HomePage_MPP_2 extends AppCompatActivity {
     FirebaseHelper firebaseHelper = new FirebaseHelper();
     SharedPreferencesHelper mSharedPreferencesHelper_Login;
     protected FirebaseObjects.UserDBO thisUser;
-    protected BatteryReceiver batteryReceiver = new BatteryReceiver();
-    protected IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-    int batLevel;
+    protected FirebaseObjects.DevicesDBO device;
+
+
     protected BTHelper btHelper;
 
     SharedPreferencesHelper mSharedPreferencesHelper_BT;
@@ -125,16 +127,41 @@ public class HomePage_MPP_2 extends AppCompatActivity {
         setUpUI();
         Bundle b = getIntent().getExtras();
         WearerID = b.getString("wearerID");
+        Log.d(TAG, WearerID);
         try {
             setProfilePicture();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
 
+
         Earth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToTrackWearerLocation();
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(WearerID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        device = document.toObject(FirebaseObjects.DevicesDBO.class);
+                        String ID = device.getId();
+                        Log.d(TAG,ID);
+                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot document = task.getResult();
+                                thisUser = document.toObject(FirebaseObjects.UserDBO.class);
+                                Boolean gps_follow = thisUser.getGpsFollow();
+
+                                if(gps_follow){
+                                    goToTrackWearerLocation();
+                                }
+                                else{
+                                    Toast.makeText(getApplicationContext(), "The wearer hasn't enable Shared Location", Toast.LENGTH_LONG ).show();
+                                }
+                            }
+                        });
+                    }
+                });
             }
         });
     }
@@ -143,14 +170,14 @@ public class HomePage_MPP_2 extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        registerReceiver(batteryReceiver, intentFilter);
+
         uploadWearerInfo();
         uploadDeviceInfo();
     }
 
     @Override
     protected void onPause() {
-        unregisterReceiver(batteryReceiver);
+
         super.onPause();
 
         if (mSharedPreferencesHelper_BT.getHC05() == null) {
@@ -161,24 +188,23 @@ public class HomePage_MPP_2 extends AppCompatActivity {
 
     void setUpUI() {
 
-        FullName = findViewById(R.id.textViewFullName_Displayed_MPP_1);
-        Age = findViewById(R.id.textView_Age_Displayed_MPP_1);
-        Weight = findViewById(R.id.textView_Weight_Displayed_MPP_1);
-        Height = findViewById(R.id.textView_Height_Displayed_MPP_1);
-        BPM = findViewById(R.id.textView_BPM_Displayed);
-        BPM.setText("66");
-        phoneBattery = findViewById(R.id.textView_PhoneBatteryLevel_Displayed);
-        deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed);
-        reportButton = findViewById(R.id.buttonReports);
+        FullName = findViewById(R.id.textViewFullName_Displayed_MPP_2);
+        Age = findViewById(R.id.textView_Age_Displayed_MPP_2);
+        Weight = findViewById(R.id.textView_Weight_Displayed_MPP_2);
+        Height = findViewById(R.id.textView_Height_Displayed_MPP_2);
+        BPM = findViewById(R.id.textView_BPM_Displayed_MPP_2);
+        phoneBattery = findViewById(R.id.textView_PhoneBatteryLevel_Displayed_MPP_2);
+        deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed_MPP_2);
+        reportButton = findViewById(R.id.buttonReports_MPP_2);
 
-        ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_1);
-        Heart = findViewById(R.id.imageView_Heart_MPP_1);
-        Earth = findViewById(R.id.imageView_Earth_MPP_1);
-        Battery = findViewById(R.id.imageView_BatteryLevel_MPP_1);
+        ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_2);
+        Heart = findViewById(R.id.imageView_Heart_MPP_2);
+        Earth = findViewById(R.id.imageView_Earth_MPP_2);
+        Battery = findViewById(R.id.imageView_BatteryLevel_MPP_2);
 
 
-        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
-        batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+
 
         mSharedPreferencesHelper_BT = new SharedPreferencesHelper(this, "BTList");
 
@@ -210,9 +236,8 @@ public class HomePage_MPP_2 extends AppCompatActivity {
 
 
     public void goToTrackWearerLocation (){
-        Bundle b = getIntent().getExtras();
-        Intent intent = new Intent(this, MapsLocationActivity.class);
-        intent.putExtra("wearerID_MPP_2", b.getString("wearerID"));
+        Intent intent = new Intent(this, MapsTrackingActivity.class);
+        intent.putExtra("wearerID_MPP_2", WearerID);
         startActivity(intent);
     }
 
@@ -228,20 +253,30 @@ public class HomePage_MPP_2 extends AppCompatActivity {
 
     public void uploadWearerInfo(){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_2.this, "Login");
-        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
-                        FullName.setText(thisUser.getFirstName() + " " + thisUser.getLastName());
-                        Age.setText(String.valueOf(thisUser.getAge()));
-                        Weight.setText(String.valueOf(thisUser.getWeight()));
-                        Height.setText(String.valueOf(thisUser.getHeight()));
-                    }
-                });
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(WearerID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot != null && documentSnapshot.exists()){
+                    device = documentSnapshot.toObject(FirebaseObjects.DevicesDBO.class);
+                    BPM.setText(Integer.toString(device.getHeartrate()));
+                    phoneBattery.setText(Integer.toString(device.getPhoneBattery()));
+                    String ID = device.getId();
+                    Log.d(TAG,ID);
+                    firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot document = task.getResult();
+                            thisUser = document.toObject(FirebaseObjects.UserDBO.class);
+                            FullName.setText(thisUser.getFirstName() + " " + thisUser.getLastName());
+                            Age.setText(String.valueOf(thisUser.getAge()));
+                            Weight.setText(String.valueOf(thisUser.getWeight()));
+                            Height.setText(String.valueOf(thisUser.getHeight()));
+
+                        }
+                    });
+                }
+            }
+        });
 
     }
 
@@ -384,7 +419,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
     public void setProfilePicture() throws PackageManager.NameNotFoundException {
         File file = new File(getApplicationContext().getFilesDir(), WearerID);
         if (isOnline()){
-            fetchProfilePicture();
+            //fetchProfilePicture();
         }
         else if (fileExists(this, file)){
             offLineProfilePicture(file);

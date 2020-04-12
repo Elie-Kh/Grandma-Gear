@@ -20,7 +20,7 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="Key_API_GrandmaGear_Location" templateMergeStrategy="preserve" translatable="false">AIzaSyDVOVaUL4jt-s1wTos1jdQNNWfL28_ffJo</string>
+    <string name="Key_API_GrandmaGear" templateMergeStrategy="preserve" translatable="false">AIzaSyDVOVaUL4jt-s1wTos1jdQNNWfL28_ffJo</string>
     <!--
     TODO: Before you run your application, you need a Google Maps API key.
 
@@ -42,5 +42,5 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="Key_API_GrandmaGear_Tracking" translatable="false">AIzaSyDVOVaUL4jt-s1wTos1jdQNNWfL28_ffJo</string>
+    <string name="google_maps_key" translatable="false">YOUR_KEY_HERE</string>
 </resources>
