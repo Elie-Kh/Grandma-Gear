@@ -1,47 +1,53 @@
 package com.example.grandmagear;
 
-import android.bluetooth.BluetoothClass;
-
 import java.util.ArrayList;
+
+import javax.xml.transform.Source;
 
 public class FirebaseObjects {
 
     //variable names for user
-    public static final String Username = "Username";
-    public static final String Email = "Email";
-    public static final String First_Name = "First Name";
-    public static final String Last_Name = "Last Name";
-    public static final String Password = "Password";
-    public static final String Account_Type = "Account Type";
-    public static final String Age = "Age";
-    public static final String Height = "Height";
-    public static final String Weight = "Weight";
-    public static final String GPS_Follow = "GPS Follow";
-    public static final String Devices_Followed = "Devices Followed";
-    public static final String Events = "Events";
+    public static final String Username = "username";
+    public static final String Email = "email";
+    public static final String First_Name = "firstName";
+    public static final String Last_Name = "lastName";
+    public static final String Password = "password";
+    public static final String Account_Type = "accountType";
+    public static final String Age = "age";
+    public static final String Height = "height";
+    public static final String Weight = "weight";
+    public static final String GPS_Follow = "gpsFollow";
+    public static final String Devices_Followed = "devicesFollowed";
+    public static final String Events = "events";
+    public static final String image = "image";
 
     //variable names for device
-    public static final String ID = "ID";
-    public static final String Longitude = "Longitude";
-    public static final String Latitude = "Latitude";
-    public static final String Heartrate = "Heartrate";
-    public static final String Notifications = "Notifications";
-    public static final String DeviceBattery = "Device Battery";
-    public static final String PhoneBattery = "Phone Battery";
+    public static final String ID = "id";
+    public static final String Longitude = "longitude";
+    public static final String Latitude = "latitude";
+    public static final String Heartrate = "heartrate";
+    public static final String Notifications = "notifications";
+    public static final String DeviceBattery = "deviceBattery";
+    public static final String PhoneBattery = "phoneBattery";
+    public static final String Fall = "fall";
+    public static final String DeviceOn = "deviceOn";
+    public static final String Help = "helpRequested";
 
     public static class UserDBO{
-        protected String username;
-        protected String email;
-        protected String firstName;
-        protected String lastName;
-        protected String password;
-        protected Boolean acc_type;
-        protected Boolean gps_follow = false;
-        protected int age = 0;
-        protected int weight = 0;
-        protected int height = 0;
-        protected ArrayList<String> device_ids;
-        protected ArrayList<EventsDBO> events;
+        public String username;
+        public String email;
+        public String firstName;
+        public String lastName;
+        public String password;
+        public Boolean accountType;
+        public Boolean gpsFollow = false;
+        public Boolean image = false;
+        public Integer age = 0;
+        public Integer weight = 0;
+        public Integer height = 0;
+        public ArrayList<String> devicesFollowed;
+        public ArrayList<EventsDBO> events;
+        public ArrayList<Notifications> notifications;
 
         /*the following constructor is strictly for testing purposes*/
 
@@ -51,120 +57,235 @@ public class FirebaseObjects {
             this.lastName = lastName;
         }
 
+        //@PropertyName("Email")
         public String getEmail() {
             return email;
         }
 
-        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, Boolean gps_follow) {
-            //this.username = username;
-            this.email = email;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.password = password;
-            this.acc_type = acc_type;
-            this.gps_follow = gps_follow;
-            this.device_ids = new ArrayList<String>();
-            this.events = new ArrayList<EventsDBO>();
+        public UserDBO() {
+            //empty constructor for snapshot.
         }
 
-        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean acc_type, Boolean gps_follow, int age, int weight, int height) {
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image) {
             //this.username = username;
             this.email = email;
             this.firstName = firstName;
             this.lastName = lastName;
             this.password = password;
-            this.acc_type = acc_type;
-            this.gps_follow = gps_follow;
+            this.accountType = AccountType;
+            this.gpsFollow = gpsFollow;
+            this.image = image;
+            this.devicesFollowed = new ArrayList<String>();
+            this.events = new ArrayList<EventsDBO>();
+            this.notifications = new ArrayList<Notifications>();
+        }
+
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image, int age, int weight, int height) {
+            //this.username = username;
+            this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.password = password;
+            this.accountType = AccountType;
+            this.gpsFollow = gpsFollow;
+            this.image = image;
             this.age = age;
             this.weight = weight;
             this.height = height;
-            this.device_ids = new ArrayList<String>();
+            this.devicesFollowed = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
+            this.notifications = new ArrayList<Notifications>();
         }
 
+        public UserDBO(String username, String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image, int age, int weight, int height, ArrayList<String> DevicesFollowed, ArrayList<EventsDBO> events) {
+            this.username = username;
+            this.email = email;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.password = password;
+            this.accountType = AccountType;
+            this.gpsFollow = gpsFollow;
+            this.image = image;
+            this.age = age;
+            this.weight = weight;
+            this.height = height;
+            this.devicesFollowed = DevicesFollowed;
+            this.events = events;
+        }
+
+        //@PropertyName("First Name")
         public String getFirstName() {
             return firstName;
         }
 
+        //@PropertyName("Last Name")
         public String getLastName() {
             return lastName;
         }
 
-        public Boolean getAcc_type() {
-            return acc_type;
+        //@PropertyName("Account Type")
+        public Boolean getAccountType() {
+            return accountType;
         }
 
+        //@PropertyName("Age")
         public int getAge() {
             return age;
         }
 
+        //@PropertyName("Weight")
         public int getWeight() {
             return weight;
         }
 
+        //@PropertyName("Height")
         public int getHeight() {
             return height;
         }
 
-        public Boolean getGps_follow() {
-            return gps_follow;
+        //@PropertyName("Username")
+        public String getUsername() {
+            return username;
+        }
+        //@PropertyName("Username")
+        public void setUsername(String username) {
+            this.username = username;
+        }
+        //@PropertyName("Email")
+        public void setEmail(String email) {
+            this.email = email;
         }
 
-        public void setGps_follow(Boolean gps_follow) {
-            this.gps_follow = gps_follow;
+        //@PropertyName("First Name")
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
         }
 
-        public void setDevice_ids(ArrayList<String> device_ids) {
-            this.device_ids = device_ids;
+        //@PropertyName("Last Name")
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
         }
 
+        //@PropertyName("Password")
+        public String getPassword() {
+            return password;
+        }
+        //@PropertyName("Password")
+        public void setPassword(String password) {
+            this.password = password;
+        }
+        //@PropertyName("Account Type")
+        public void setAccountType(Boolean AccountType) {
+            this.accountType = AccountType;
+        }
+        //@PropertyName("Age")
+        public void setAge(Integer age) {
+            this.age = age;
+        }
+        //@PropertyName("Weight")
+        public void setWeight(Integer weight) {
+            this.weight = weight;
+        }
+        //@PropertyName("Height")
+        public void setHeight(Integer height) {
+            this.height = height;
+        }
+
+        public Boolean getImage() {
+            return image;
+        }
+
+        public void setImage(Boolean image) {
+            this.image = image;
+        }
+
+        //@PropertyName("GPS Follow")
+        public Boolean getGpsFollow() {
+            return gpsFollow;
+        }
+        //@PropertyName("GPS Follow")
+        public void setGpsFollow(Boolean gpsFollow) {
+            this.gpsFollow = gpsFollow;
+        }
+        //@PropertyName("Devices Followed")
+        public void setDevicesFollowed(ArrayList<String> devicesFollowed) {
+            this.devicesFollowed = devicesFollowed;
+        }
+        //@PropertyName("Events")
         public void setEvents(ArrayList<EventsDBO> events) {
             this.events = events;
         }
 
-        public ArrayList<String> getDevice_ids() {
-            return device_ids;
+        //@PropertyName("Devices Followed")
+        public ArrayList<String> getDevicesFollowed() {
+            return devicesFollowed;
         }
 
+        //@PropertyName("Events")
         public ArrayList<EventsDBO> getEvents() {
             return events;
+        }
+
+        public ArrayList<Notifications> getNotifications(){
+            return notifications;
+        }
+
+        public void setNotifications(ArrayList<Notifications> notifications){
+            this.notifications = notifications;
         }
     }
 
     public static class DevicesDBO{
-        protected String deviceID;
-        protected int bpm;
-        protected long latGPS;    //latitude
-        protected long lonGPS;    //longitude
+        protected String id;
+        protected int heartrate;
+        protected long latitude;    //latitude
+        protected long longitude;    //longitude
         protected int deviceBattery;
         protected int phoneBattery;
+        protected String fall = "good";
+        protected String deviceOn = "off";
+        protected long timeStamp;
+        protected String helpRequested = "no";
         protected ArrayList<Notifications> notifications; //notifications linked to that device only
 
-        public DevicesDBO(String deviceID) {
-            this.deviceID = deviceID;
+        public DevicesDBO() {
+            //constructor for firestore snapshot
         }
 
-        public DevicesDBO(String deviceID, int bpm, int deviceBattery, int phoneBattery) {
-            this.deviceID = deviceID;
-            this.bpm = bpm;
+        public DevicesDBO(String id) {
+            this.id = id;
+        }
+
+        public DevicesDBO(String id, int heartrate, int deviceBattery, int phoneBattery, long timeStamp) {
+            this.id = id;
+            this.heartrate = heartrate;
             this.deviceBattery = deviceBattery;
             this.phoneBattery = phoneBattery;
+            this.timeStamp = timeStamp;
         }
 
-        public String getDeviceID() {
-            return deviceID;
+        public long getTimeStamp() {
+            return timeStamp;
         }
 
-        public int getBpm() {
-            return bpm;
+        public void setTimeStamp(long timeStamp) {
+            this.timeStamp = timeStamp;
         }
 
-        public long getLatGPS() {
-            return latGPS;
+        public String getId() {
+            return id;
         }
 
-        public long getLonGPS() {
-            return lonGPS;
+        public int getHeartrate() {
+            return heartrate;
+        }
+
+        public long getLatitude() {
+            return latitude;
+        }
+
+        public long getLongitude() {
+            return longitude;
         }
 
         public int getDeviceBattery() {
@@ -175,8 +296,60 @@ public class FirebaseObjects {
             return phoneBattery;
         }
 
+        public String getFall() {
+            return fall;
+        }
+
+        public String getDeviceOn() {
+            return deviceOn;
+        }
+
         public ArrayList<FirebaseObjects.Notifications> getNotifications() {
             return notifications;
+        }
+
+        public void setNotifications(ArrayList<FirebaseObjects.Notifications> notifications){
+            this.notifications = notifications;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public void setHeartrate(int heartrate) {
+            this.heartrate = heartrate;
+        }
+
+        public void setLatitude(long latitude) {
+            this.latitude = latitude;
+        }
+
+        public void setLongitude(long longitude) {
+            this.longitude = longitude;
+        }
+
+        public void setDeviceBattery(int deviceBattery) {
+            this.deviceBattery = deviceBattery;
+        }
+
+        public void setPhoneBattery(int phoneBattery) {
+            this.phoneBattery = phoneBattery;
+        }
+
+        public void setFall(String fall) {
+            this.fall = fall;
+        }
+
+        public void setDeviceOn(String deviceOn) {
+            this.deviceOn = deviceOn;
+        }
+
+        public String getHelpRequested() {
+            return helpRequested;
+        }
+
+        public void setHelpRequested(String helpRequested) {
+            this.helpRequested = helpRequested;
         }
     }
 
@@ -201,22 +374,42 @@ public class FirebaseObjects {
 
     public static class Notifications{
 
-        protected String notificationType;
-        protected String notificationInfo;
-        protected int time;
+        protected String notificationTitle;
+        protected String notificationText;
+        protected String notificationTime;
 
-        public Notifications(String notificationType, String notificationInfo, int time) {
-            this.notificationType = notificationType;
-            this.notificationInfo = notificationInfo;
-            this.time = time;
+        public Notifications() {
+            //constructor for snapshot
         }
 
-        public String getNotificationType() {
-            return notificationType;
+        public Notifications(String notificationTitle, String notificationText, String notificationTime) {
+            this.notificationTitle = notificationTitle;
+            this.notificationText = notificationText;
+            this.notificationTime = notificationTime;
         }
 
-        public String getNotificationInfo() {
-            return notificationInfo;
+        public String getNotificationTitle() {
+            return notificationTitle;
+        }
+
+        public String getNotificationText() {
+            return notificationText;
+        }
+
+        public String getNotificationTime(){
+            return notificationTime;
+        }
+
+        public void setNotificationTitle(String notificationTitle) {
+            this.notificationTitle = notificationTitle;
+        }
+
+        public void setNotificationText(String notificationText) {
+            this.notificationText = notificationText;
+        }
+
+        public void setNotificationTime(String notificationTime) {
+            this.notificationTime = notificationTime;
         }
     }
 }
