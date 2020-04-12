@@ -148,7 +148,6 @@
     <string name="key_location">key_give_location</string>
 
 
-
     //Location Map Key
     <string name="google_map_key">AIzaSyDVOVaUL4jt-s1wTos1jdQNNWfL28_ffJo</string>
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
@@ -178,5 +177,6 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_maps_location">Map</string>
+    <string name="title_activity_maps_tracking">Map</string>
 
 </resources>
