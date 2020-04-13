@@ -66,7 +66,6 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.example.grandmagear.Patient_Main_Lobby.App.CHANNEL_1_ID;
 
 
 public class HomePage_MPP_1 extends AppCompatActivity {
@@ -86,7 +85,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     Button reportButton;
     NotificationHelper notificationHelper;
-
+    Boolean notificationCheck = false;
     ImageView ProfilePicture;
     ImageView Heart;
     ImageView Earth;
@@ -203,9 +202,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendOnChannel1();
-                //sendLocationRequestNotification("One of your Followers is requesting your location","Share Location Request");
-                //startActivity(new Intent(getApplicationContext(), ReportsActivity.class));
+                startActivity(new Intent(getApplicationContext(), ReportsActivity.class));
             }
         });
     }
@@ -326,8 +323,13 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                     Age.setText(String.valueOf(thisUser.getAge()));
                     Weight.setText(String.valueOf(thisUser.getWeight()));
                     Height.setText(String.valueOf(thisUser.getHeight()));
-                    if(thisUser.getRequestLocation()){
-                        //sendLocationRequestNotification("One of your Followers is requesting your location","Share Location Request");
+                    if(thisUser.getRequestLocation() && !notificationCheck){
+                        notificationHelper.sendOnRequestLocation("Share Location Requested", "One of your Followers is requesting your Location", firebaseHelper.getCurrentUserID());
+                        notificationCheck = true;
+                    }
+                    Log.d(TAG, thisUser.gpsFollow.toString());
+                    if(!thisUser.gpsFollow && notificationCheck){
+                        notificationCheck = false;
                     }
                 }
             }
@@ -651,77 +653,6 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         }
 
     }
-/*
-    private void sendLocationRequestNotification(String message, String title) {
-        try {
-            Intent intent = new Intent(this, HomePage_MPP_1.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent enableLocationActivityIntent = new Intent(this, HomePage_MPP_1
-                    .NotificationReceiver.class);
-            PendingIntent enableLocationActivityPendingIntent = PendingIntent.getBroadcast(this, 0 , enableLocationActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Intent disableLocationActivityIntent = new Intent(this, HomePage_MPP_1.class);
-            PendingIntent disableLocationActivityPendingIntent = PendingIntent.getActivity(this, 0 , disableLocationActivityIntent, PendingIntent.FLAG_ONE_SHOT);
-
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.sooken)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setColor(Color.GREEN)
-                    .setAutoCancel(true)
-                    .setOnlyAlertOnce(true)
-                    .addAction(R.drawable.enablelocation,"Accept", enableLocationActivityPendingIntent)
-                    .addAction(R.drawable.disablelocation,"Decline",disableLocationActivityPendingIntent)
-                    .setSound(defaultSoundUri)
-                    .setContentIntent(pendingIntent);
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            notificationManager.notify(0 , notificationBuilder.build());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-*/
-    public void sendOnChannel1() {
-        String message = "One of your Followers is requesting your location";
-        String title = "Share Location Request";
-
-        Intent activityIntent = new Intent(this, HomePage_MPP_1.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this,
-                0, activityIntent, 0);
-
-
-        Intent enableLocationActivityIntent = new Intent(this, NotificationReceiver.class);
-        PendingIntent enableLocationActivityPendingIntent = PendingIntent.getBroadcast(this, 0 , enableLocationActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.sooken)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setColor(Color.BLUE)
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .setOnlyAlertOnce(true)
-                .addAction(R.drawable.enablelocation, "Accept", enableLocationActivityPendingIntent)
-                .build();
-
-        notificationManager.notify(3, notification);
-    }
-
-
-
 
 
 }

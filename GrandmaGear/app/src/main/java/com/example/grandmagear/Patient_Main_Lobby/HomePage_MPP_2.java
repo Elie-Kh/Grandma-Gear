@@ -163,6 +163,13 @@ public class HomePage_MPP_2 extends AppCompatActivity {
                                                 case DialogInterface.BUTTON_POSITIVE:
                                                     //Yes button clicked
                                                     //TODO Send the user a location request to turn the Wearer's Share location Switch to True
+                                                    firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(WearerID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                            DocumentSnapshot document = task.getResult();
+                                                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(document.getId()).update(FirebaseObjects.requestLocation, true);
+                                                        }
+                                                    });
 
                                                     Toast.makeText(getApplicationContext(), "Request Sent", Toast.LENGTH_LONG).show();
                                                     break;
