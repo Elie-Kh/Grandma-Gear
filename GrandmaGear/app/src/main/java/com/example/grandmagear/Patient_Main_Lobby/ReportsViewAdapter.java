@@ -59,8 +59,14 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
             if(reportTitle.get(position).contains("Fall")){
                 holder.mReportImage.setImageResource(R.drawable.falling);
             }
+            if(reportTitle.get(position).contains("S.O.S.")){
+                holder.mReportImage.setImageResource(R.drawable.sos_icon);
+            }
             if (reportTitle.get(position).contains("Battery")){
                 holder.mReportImage.setImageResource(R.drawable.battery);
+            }
+            if(reportTitle.get(position).contains("Offline")){
+                holder.mReportImage.setImageResource(R.drawable.offfline_icon);
             }
     }
 

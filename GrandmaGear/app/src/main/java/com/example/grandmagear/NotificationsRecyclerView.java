@@ -64,6 +64,22 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
         holder.mNotificationTime.setText(notificationTime.get(position));
         holder.deviceID = deviceIDs.get(position);
 
+        if(notificationTitle.get(position).contains("BPM")){
+            holder.mPatientImage.setImageResource(R.drawable.heartbeat);
+        }
+        if(notificationTitle.get(position).contains("Fall")){
+            holder.mPatientImage.setImageResource(R.drawable.falling);
+        }
+        if (notificationTitle.get(position).contains("Battery")){
+            holder.mPatientImage.setImageResource(R.drawable.battery);
+        }
+        if(notificationTitle.get(position).contains("S.O.S.")){
+            holder.mPatientImage.setImageResource(R.drawable.sos_icon);
+        }
+        if(notificationTitle.get(position).contains("Offline")){
+            holder.mPatientImage.setImageResource(R.drawable.offfline_icon);
+        }
+
     }
 
     @Override

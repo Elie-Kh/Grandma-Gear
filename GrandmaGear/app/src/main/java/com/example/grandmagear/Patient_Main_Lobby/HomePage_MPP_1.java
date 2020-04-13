@@ -159,11 +159,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
             }
         });
         notificationHelper = new NotificationHelper(this,thisUser);
-        notificationHelper.sendOnBpm("Low BPM", "U died", firebaseHelper.getCurrentUserID());
+        //notificationHelper.sendOnBpm("Low BPM", "U died", firebaseHelper.getCurrentUserID());
 
 
         setUpUI();
-        notificationHelper.sendOnFall("Fall", "u fell", firebaseHelper.getCurrentUserID());
+        //otificationHelper.sendOnFall("Fall", "u fell", firebaseHelper.getCurrentUserID());
     }
 
 

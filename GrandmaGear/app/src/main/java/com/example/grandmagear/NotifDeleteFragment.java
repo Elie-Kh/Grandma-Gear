@@ -1,9 +1,12 @@
 package com.example.grandmagear;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,6 +34,10 @@ public class NotifDeleteFragment extends DialogFragment {
                              @javax.annotation.Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.delete_notif_fragment, container, false);
 
+        if(getDialog() != null && getDialog().getWindow() != null){
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        }
         setupLayout(view);
         return view;
     }
