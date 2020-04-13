@@ -4,10 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -50,8 +54,12 @@ import com.example.grandmagear.DisclaimerFragment;
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
 import com.example.grandmagear.LogInActivity;
+import com.example.grandmagear.NotificationHelper;
 import com.example.grandmagear.R;
 import com.example.grandmagear.SharedPreferencesHelper;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -67,6 +75,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -80,6 +94,9 @@ import static com.example.grandmagear.Patient_Main_Lobby.PatientSettingsActivity
 public class HomePage_MPP_1 extends AppCompatActivity {
     private static final String TAG = "HomePage_MPP_1";
     private Handler mainHandler = new Handler();
+    static HomePage_MPP_1 instance;
+    LocationRequest locationRequest;
+    FusedLocationProviderClient fusedLocationProviderClient;
 
 
     MenuItem Setting;
@@ -93,6 +110,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     TextView BPM;
 
     Button reportButton;
+    NotificationHelper notificationHelper;
 
     ImageView ProfilePicture;
     ImageView Heart;
@@ -116,6 +134,10 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     SharedPreferencesHelper mSharedPreferencesHelper_BT;
     protected FirebaseObjects.DevicesDBO tempDevice;
 
+    public static HomePage_MPP_1 getInstance(){
+        return instance;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +158,12 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                 }
             }
         });
+        notificationHelper = new NotificationHelper(this,thisUser);
+        notificationHelper.sendOnBpm("Low BPM", "U died", firebaseHelper.getCurrentUserID());
+
+
+        setUpUI();
+        notificationHelper.sendOnFall("Fall", "u fell", firebaseHelper.getCurrentUserID());
     }
 
 
@@ -160,6 +188,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     void setUpUI() {
 
+        instance = this;
         FullName = findViewById(R.id.textViewFullName_Displayed_MPP_1);
         Age = findViewById(R.id.textView_Age_Displayed_MPP_1);
         Weight = findViewById(R.id.textView_Weight_Displayed_MPP_1);
@@ -203,8 +232,75 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), ReportsActivity.class));
             }
         });
+
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        updateLocation();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(HomePage_MPP_1.this, "You must accept the location", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                }).check();
     }
 
+    private void updateLocation() {
+        buildLocationRequest();
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent());
+    }
+
+    private PendingIntent getPendingIntent() {
+        Intent intent = new Intent(this, LocationService.class);
+        intent.setAction(LocationService.ACTION_PROCESS_UPDATES);
+        return PendingIntent.getBroadcast(this,0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void buildLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setSmallestDisplacement(10f);
+    }
+
+    public void updateLocation(final double lat, final double lng){
+        HomePage_MPP_1.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                        .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()){
+                                    for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+                                        Log.d(TAG, "docsnap " + documentSnapshot.getReference().getId());
+                                        Log.d(TAG, firebaseHelper.getCurrentUserID());
+                                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                                .document(documentSnapshot.getReference().getId())
+                                                .update(FirebaseObjects.Latitude, lat);
+                                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                                .document(documentSnapshot.getReference().getId())
+                                                .update(FirebaseObjects.Longitude, lng);
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
+    }
 
 
     public void btConnect(){
@@ -294,21 +390,22 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
 
-    public void resumeSharedLocation() {
-        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
 
-                                       if (thisUser.getAccountType()) {
-                                           disableShareLocation();
-                                       } else {
-                                           displayShareLocation();
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+        public void resumeSharedLocation() {
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.getCurrentUserID()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        thisUser = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                        if (thisUser.getAccountType()) {
+                            disableShareLocation();
+                        } else {
+                            displayShareLocation();
+                        }
+                    }
+                });
     }
 
     public void uploadWearerInfo(){
@@ -335,22 +432,26 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
     public void resumeLocation(final Switch ls){
-        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-                                       ls.setChecked(thisUser.getGpsFollow());
-                                       if (thisUser.getGpsFollow()) {
-                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
-                                           displayLocation();
-                                       } else {
-                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
-                                           disableLocation();
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                        ls.setChecked(thisUser.getGpsFollow());
+                        if (thisUser.getGpsFollow()) {
+                            firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
+                            displayLocation();
+                        } else {
+                            firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
+                            disableLocation();
+                        }
+                    }
+                });
+
 
     }
 

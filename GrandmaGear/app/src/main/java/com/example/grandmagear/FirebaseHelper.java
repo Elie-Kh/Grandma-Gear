@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -146,22 +147,21 @@ public class FirebaseHelper {
         });
     }
 
-    public void addNotification(final FirebaseObjects.UserDBO userDBO,
-                                final FirebaseObjects.Notifications notification){
-       firebaseFirestore.collection(userDB).whereEqualTo(FirebaseObjects.Username, firebaseAuth.getCurrentUser().getUid())
-               .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-           @Override
-           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-               if(task.isSuccessful()){
-
-                   ArrayList<FirebaseObjects.Notifications> notifications = new ArrayList<FirebaseObjects.Notifications>();
-                   notifications = userDBO.getNotifications();
-                   notifications.add(notification);
-                   userDBO.setNotifications(notifications);
-                   editUser(userDBO, FirebaseObjects.Notifications, notifications);
-               }
-           }
-       });
+    public void addNotification(final FirebaseObjects.Notifications notification){
+       firebaseFirestore.collection(FirebaseHelper.userDB).document(firebaseAuth.getCurrentUser().getUid()).get()
+               .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       if(task.isSuccessful()) {
+                           FirebaseObjects.UserDBO userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                           ArrayList<FirebaseObjects.Notifications> notifications = new ArrayList<FirebaseObjects.Notifications>();
+                           notifications = userDBO.getNotifications();
+                           notifications.add(notification);
+                           userDBO.setNotifications(notifications);
+                           editUser(userDBO, FirebaseObjects.Notifications, notifications);
+                       }
+                   }
+               });
     }
 
     public void addDevice(final FirebaseObjects.DevicesDBO device){
@@ -339,7 +339,7 @@ public class FirebaseHelper {
         void onCallback(FirebaseObjects.UserDBO user);
     }
 
-    public void getUser(final Callback_getUser callback, String email, final boolean type){
+    public void getUser(String email, final boolean type){
         final FirebaseObjects.UserDBO[] returnable = {null};
         firebaseFirestore
                 .collection(FirebaseHelper.userDB)
@@ -375,7 +375,6 @@ public class FirebaseHelper {
                                             (Integer) Math.round((Long) document.get(FirebaseObjects.Height))
                                             );
                                 }
-                                callback.onCallback(returnable[0]);
                             }
                         }
                     }
