@@ -1,14 +1,18 @@
 package com.example.grandmagear.Patient_Main_Lobby;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
@@ -21,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ReportsActivity extends AppCompatActivity {
 
@@ -30,6 +35,8 @@ public class ReportsActivity extends AppCompatActivity {
     protected ArrayList<String> reportText = new ArrayList<String>();
     protected ArrayList<String> reportTime = new ArrayList<String>();
     protected FirebaseHelper firebaseHelper;
+    protected FirebaseObjects.UserDBO userDBO;
+    protected ArrayList<FirebaseObjects.Notifications> reports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +61,7 @@ public class ReportsActivity extends AppCompatActivity {
         firebaseHelper = new FirebaseHelper();
         recyclerView = findViewById(R.id.reportsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        reportTitle.add("hi");
-        reportText.add("yo");
-        reportTime.add("55");
+        createReports();
         reportsViewAdapter = new ReportsViewAdapter(reportTitle, reportText, reportTime);
         recyclerView.setAdapter(reportsViewAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,
@@ -64,18 +69,22 @@ public class ReportsActivity extends AppCompatActivity {
     }
 
     public void createReports(){
-        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot doc : task.getResult()){
-                                int bpm = (int) doc.get(FirebaseObjects.Heartrate);
-                            }
-                        }
-                    }
-                });
+       firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+               .document(firebaseHelper.getCurrentUserID()).get()
+               .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                       reports = userDBO.notifications;
+                       for(FirebaseObjects.Notifications entry : reports){
+                           reportTitle.add(entry.getNotificationTitle());
+                           reportText.add(entry.getNotificationText());
+                           reportTime.add(entry.getNotificationTime());
+                       }
+                       reportsViewAdapter.notifyDataSetChanged();
+                   }
+               });
     }
+
+
 }

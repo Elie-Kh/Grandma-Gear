@@ -13,6 +13,8 @@ public class App extends Application {
     public static final String FALL_CHANNEL = "fall";
     public static final String BATTERY_CHANNEL = "battery";
     public static final String PANIC_CHANNEL = "panic";
+    public static final String FOLLOWER_CHANNEL = "follower";
+    public static final String WEARER_CHANNEL = "wearer";
 
     @Override
     public void onCreate() {
@@ -40,11 +42,21 @@ public class App extends Application {
             NotificationChannel panic = new NotificationChannel(PANIC_CHANNEL,
                     "PANIC", NotificationManager.IMPORTANCE_HIGH);
 
+            NotificationChannel follower = new NotificationChannel(FOLLOWER_CHANNEL,
+                    "FOLLOWER",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+
+            NotificationChannel wearer = new NotificationChannel(WEARER_CHANNEL,
+                    "WEARER",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(bpm);
             manager.createNotificationChannel(fall);
             manager.createNotificationChannel(battery);
             manager.createNotificationChannel(panic);
+            manager.createNotificationChannel(follower);
+            manager.createNotificationChannel(wearer);
         }
     }
 }

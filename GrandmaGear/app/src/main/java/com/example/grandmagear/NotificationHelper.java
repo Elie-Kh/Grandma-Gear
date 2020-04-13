@@ -25,6 +25,7 @@ public class NotificationHelper {
     private ArrayList<String> nTitle = new ArrayList<String>();
     private ArrayList<String> nText = new ArrayList<String>();
     private ArrayList<String> nTime = new ArrayList<String>();
+    private ArrayList<String> nDeviceId = new ArrayList<String>();
     private Context context;
     private FirebaseObjects.UserDBO userDBO;
     private FirebaseHelper firebaseHelper;
@@ -36,7 +37,7 @@ public class NotificationHelper {
         firebaseHelper = new FirebaseHelper();
     }
 
-    public void sendOnBpm(String title, String text){
+    public void sendOnBpm(String title, String text, String deviceID){
         Intent intent = new Intent(context, LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
@@ -55,11 +56,20 @@ public class NotificationHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
         String currentDateAndTime = sdf.format(new Date());
 
-        FirebaseObjects.Notifications bpm = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
-        firebaseHelper.addNotification(userDBO, bpm);
+        FirebaseObjects.Notifications bpm = new FirebaseObjects.Notifications(title, text, currentDateAndTime, deviceID);
+        firebaseHelper.addNotification(bpm);
+
+        /*nTitle.add(title);
+        nText.add(text);
+        nTime.add(currentDateAndTime);
+
+        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
+        sharedPreferencesHelperText.saveNotificationText(nText);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
+
     }
 
-    public void sendOnFall(String title, String text){
+    public void sendOnFall(String title, String text, String deviceID){
         Intent intent = new Intent(context, LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
@@ -78,11 +88,19 @@ public class NotificationHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
         String currentDateAndTime = sdf.format(new Date());
 
-        FirebaseObjects.Notifications fall = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
-        firebaseHelper.addNotification(userDBO, fall);
+        FirebaseObjects.Notifications fall = new FirebaseObjects.Notifications(title, text, currentDateAndTime, deviceID);
+        firebaseHelper.addNotification(fall);
+
+        /*nTitle.add(title);
+        nText.add(text);
+        nTime.add(currentDateAndTime);
+
+        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
+        sharedPreferencesHelperText.saveNotificationText(nText);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
 
-    public void sendOnBattery(String title, String text){
+    public void sendOnBattery(String title, String text, String deviceID){
         Intent intent = new Intent(context, LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
@@ -102,11 +120,20 @@ public class NotificationHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
         String currentDateAndTime = sdf.format(new Date());
 
-        FirebaseObjects.Notifications battery = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
-        firebaseHelper.addNotification(userDBO, battery);
+
+        FirebaseObjects.Notifications battery = new FirebaseObjects.Notifications(title, text, currentDateAndTime, deviceID);
+        firebaseHelper.addNotification(battery);
+
+        /*nTitle.add(title);
+        nText.add(text);
+        nTime.add(currentDateAndTime);
+
+        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
+        sharedPreferencesHelperText.saveNotificationText(nText);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
 
-    public void sendOnPanic(String title, String text){
+    public void sendOnPanic(String title, String text, String deviceID){
         Intent intent = new Intent(context, LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
@@ -126,7 +153,15 @@ public class NotificationHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
         String currentDateAndTime = sdf.format(new Date());
 
-        FirebaseObjects.Notifications help = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
-        firebaseHelper.addNotification(userDBO, help);
+        FirebaseObjects.Notifications help = new FirebaseObjects.Notifications(title, text, currentDateAndTime, deviceID);
+        firebaseHelper.addNotification( help);
+
+        /*nTitle.add(title);
+        nText.add(text);
+        nTime.add(currentDateAndTime);
+
+        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
+        sharedPreferencesHelperText.saveNotificationText(nText);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
 }
