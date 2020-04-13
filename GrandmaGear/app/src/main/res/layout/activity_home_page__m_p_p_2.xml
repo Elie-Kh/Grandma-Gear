@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,202 +10,172 @@
         android:id="@+id/textView_FullName_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView_ProfilePicture_MPP_2"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="25dp"
-        android:layout_toEndOf="@+id/imageView_ProfilePicture_MPP_2"
-        android:text="@string/MPP_1_textView_FullName" />
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/MPP_1_textView_FullName"
+        app:layout_constraintStart_toEndOf="@+id/imageView_ProfilePicture_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/imageView_ProfilePicture_MPP_2" />
 
     <TextView
         android:id="@+id/textView_Age_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_FullName_MPP_2"
-        android:layout_alignStart="@+id/textView_FullName_MPP_2"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/MPP_1_textView_Age" />
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/MPP_1_textView_Age"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_ProfilePicture_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/imageView_ProfilePicture_MPP_2"
+        app:layout_constraintTop_toBottomOf="@+id/textView_FullName_MPP_2" />
 
     <TextView
         android:id="@+id/textView_Height_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textViewFullName_Displayed_MPP_2"
-        android:layout_alignBottom="@+id/textView_FullName_MPP_2"
-        android:layout_marginStart="100dp"
-        android:layout_marginBottom="-31dp"
-        android:text="@string/MPP_1_textView_Height" />
+        android:layout_marginEnd="60dp"
+        android:text="@string/MPP_1_textView_Height"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_FullName_MPP_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView_FullName_MPP_2" />
 
     <TextView
         android:id="@+id/textView_Weight_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView_FullName_MPP_2"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/textView_Age_MPP_2"
-        android:text="@string/MPP_1_textView_Weight" />
+        android:text="@string/MPP_1_textView_Weight"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_Age_MPP_2"
+        app:layout_constraintStart_toStartOf="@+id/textView_Height_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_Age_MPP_2" />
 
     <ImageView
         android:id="@+id/imageView_BatteryLevel_MPP_2"
         android:layout_width="71dp"
         android:layout_height="98dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="55dp"
-        android:layout_marginBottom="144dp"
-        android:src="@drawable/battery" />
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/battery"
+        app:layout_constraintBottom_toTopOf="@+id/imageView_Earth_MPP_2"
+        app:layout_constraintEnd_toEndOf="@+id/imageView_Earth_MPP_2"
+        app:layout_constraintStart_toStartOf="@+id/imageView_Earth_MPP_2" />
 
     <ImageView
         android:id="@+id/imageView_Heart_MPP_2"
         android:layout_width="146dp"
         android:layout_height="125dp"
-        android:layout_above="@+id/imageView_BatteryLevel_MPP_2"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="2dp"
-        android:layout_marginBottom="67dp"
-        android:src="@drawable/heart" />
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/heart"
+        app:layout_constraintBottom_toTopOf="@+id/imageView_BatteryLevel_MPP_2"
+        app:layout_constraintEnd_toEndOf="@+id/imageView_BatteryLevel_MPP_2"
+        app:layout_constraintStart_toStartOf="@+id/imageView_BatteryLevel_MPP_2" />
 
     <ImageView
         android:id="@+id/imageView_Earth_MPP_2"
         android:layout_width="84dp"
         android:layout_height="79dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="61dp"
-        android:layout_marginBottom="18dp"
-        android:src="@drawable/earth" />
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="36dp"
+        android:src="@drawable/earth2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewFullName_Displayed_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView_FullName_MPP_2"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/textView_FullName_MPP_2"
-        android:text="@string/MPP_1_textView_FullName_Displayed" />
+        android:layout_marginStart="2dp"
+        android:text="@string/MPP_1_textView_FullName_Displayed"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_FullName_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_FullName_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_FullName_MPP_2" />
 
     <TextView
         android:id="@+id/textView_Age_Displayed_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView_Age_MPP_2"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/textView_Age_MPP_2"
-        android:text="@string/MPP_1_textView_Age_Displayed" />
+        android:layout_marginStart="2dp"
+        android:text="@string/MPP_1_textView_Age_Displayed"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_Age_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_Age_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_Age_MPP_2" />
 
     <TextView
         android:id="@+id/textView_Height_Displayed_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView_Height_MPP_2"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/textView_Height_MPP_2"
-        android:text="@string/MPP_1_textView_Height_Displayed" />
+        android:layout_marginStart="2dp"
+        android:text="@string/MPP_1_textView_Height_Displayed"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_Height_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_Height_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_Height_MPP_2" />
 
     <TextView
         android:id="@+id/textView_Weight_Displayed_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView_Weight_MPP_2"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="0dp"
-        android:layout_toEndOf="@+id/textView_Weight_MPP_2"
-        android:text="@string/MPP_1_textView_Weight_Displayed" />
+        android:layout_marginStart="2dp"
+        android:text="@string/MPP_1_textView_Weight_Displayed"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_Weight_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_Weight_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_Weight_MPP_2" />
 
     <ImageView
         android:id="@+id/imageView_ProfilePicture_MPP_2"
         android:layout_width="102dp"
         android:layout_height="100dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="34dp"
-        android:src="@drawable/sooken" />
-
-    <TextView
-        android:id="@+id/textView_2dots_MPP_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView_Heart_MPP_2"
-        android:layout_marginStart="-31dp"
-        android:layout_marginBottom="-15dp"
-        android:layout_toEndOf="@+id/imageView_Heart_MPP_2"
-        android:text=":"
-        android:textSize="136sp" />
+        android:layout_marginStart="24dp"
+        android:src="@drawable/sooken"
+        app:layout_constraintBottom_toTopOf="@+id/imageView_Heart_MPP_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView_BPM_Displayed_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView_2dots_MPP_2"
-        android:layout_marginStart="7dp"
-        android:layout_marginBottom="-10dp"
-        android:layout_toEndOf="@+id/textView_2dots_MPP_2"
         android:text="@string/MPP_1_textView_BPM_value"
-        android:textSize="136dp" />
+        android:textSize="80dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_Heart_MPP_2"
+        app:layout_constraintEnd_toEndOf="@+id/textView_BPM_Title_MPP_2"
+        app:layout_constraintStart_toStartOf="@+id/textView_BPM_Title_MPP_2" />
 
     <TextView
         android:id="@+id/textView_BPM_Title_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView_BPM_Displayed_MPP_2"
-        android:layout_marginStart="58dp"
-        android:layout_marginBottom="-35dp"
-        android:layout_toEndOf="@+id/textView_2dots_MPP_2"
         android:text="@string/MPP_1_textView_BPM"
-        android:textSize="25dp" />
-
-    <TextView
-        android:id="@+id/textView_BraceletBatteryLevel_MPP_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_2"
-        android:layout_marginStart="1dp"
-        android:layout_marginBottom="49dp"
-        android:layout_toEndOf="@+id/imageView_BatteryLevel_MPP_2"
-        android:text="@string/MPP_1_textView_BraceletBatteryLevel" />
-
-    <TextView
-        android:id="@+id/textView_BraceletBatteryLevel_Displayed_MPP_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_2"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="49dp"
-        android:layout_toEndOf="@+id/textView_BraceletBatteryLevel_MPP_2" />
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView_Heart_MPP_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView_Heart_MPP_2" />
 
     <TextView
         android:id="@+id/textView_PhoneBatteryLevel_MPP_2"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView_BraceletBatteryLevel_MPP_2"
-        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_2"
-        android:layout_marginStart="-2dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/MPP_1_textView_PhoneBatteryLevel" />
+        android:layout_marginStart="12dp"
+        android:gravity="center"
+        android:text="@string/MPP_1_textView_PhoneBatteryLevel"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_BatteryLevel_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/imageView_BatteryLevel_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/imageView_BatteryLevel_MPP_2" />
 
     <TextView
         android:id="@+id/textView_PhoneBatteryLevel_Displayed_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView_BatteryLevel_MPP_2"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_toEndOf="@+id/textView_PhoneBatteryLevel_MPP_2" />
+        android:layout_marginStart="12dp"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_PhoneBatteryLevel_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_PhoneBatteryLevel_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_PhoneBatteryLevel_MPP_2" />
 
     <Button
         android:id="@+id/buttonReports_MPP_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="103dp"
-        android:layout_marginBottom="36dp"
-        android:text="@string/MPP_1_ReportsButton" />
+        android:text="@string/MPP_1_ReportsButton"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_Earth_MPP_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView_Earth_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/imageView_Earth_MPP_2" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

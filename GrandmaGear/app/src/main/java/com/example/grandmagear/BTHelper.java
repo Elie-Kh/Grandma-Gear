@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.internal.$Gson$Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -228,38 +230,63 @@ public class BTHelper {
 
                     if(Integer.parseInt(heartRate)!=0){
                         if(!firstOn) {
-                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                                    .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
-                                    .update(FirebaseObjects.DeviceOn, "on");
+                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        for(DocumentSnapshot doc : task.getResult().getDocuments()){
+                                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(doc.getId())
+                                                    .update(FirebaseObjects.DeviceOn, "on");
+                                        }
+                                    }
+                                }
+                            });
                             firstOn = true;
                         }
+                        final String finalHeartRate = heartRate;
+                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()){
+                                    for(DocumentSnapshot doc : task.getResult().getDocuments()){
+                                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(doc.getId())
+                                                .update(FirebaseObjects.Heartrate, finalHeartRate);
+                                    }
+                                }
+                            }
+                        });
                     }
 
                     if(Integer.parseInt(heartRate) > 100){
                         highHR ++;
                         lowHR = 0;
+                        textview.setTextColor(Color.RED);
                         textview.setText(heartRate);
-                        //TODO send HR to followers
+
                         if(highHR > 3){
                             notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded");
-                            //TODO send High HR notif
+
                         }
 
                     } else if ( Integer.parseInt(heartRate) < 60){
                         lowHR ++;
                         highHR =0;
+                        textview.setTextColor(Color.RED);
                         textview.setText(heartRate);
-                        //TODO send HR to followers
+
                         if(lowHR > 3){
                             notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded");
-                            //TODO send Low HR notif
+
                         }
 
                     } else {
                         highHR = 0;
                         lowHR = 0;
                         textview.setText(heartRate);
-                        //TODO send heart rate to followers
+                        textview.setTextColor(Color.GREEN);
+
                     }
 
                 } catch (IOException e) {
