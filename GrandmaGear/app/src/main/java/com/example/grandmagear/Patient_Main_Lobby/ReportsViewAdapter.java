@@ -1,5 +1,6 @@
 package com.example.grandmagear.Patient_Main_Lobby;
 
+import android.content.Context;
 import android.icu.text.MessagePattern;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -27,13 +28,15 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
     private ArrayList<String> reportTime;
     private FirebaseHelper firebaseHelper;
     private FirebaseObjects.UserDBO userDBO;
+    private boolean check;
 
     public ReportsViewAdapter(ArrayList<String> reportTitle, ArrayList<String> reportText,
-                              ArrayList<String> reportTime) {
+                              ArrayList<String> reportTime, boolean check) {
         this.reportTitle = reportTitle;
         this.reportText = reportText;
         this.reportTime = reportTime;
         firebaseHelper = new FirebaseHelper();
+        this.check = check;
     }
 
     @NonNull
@@ -55,6 +58,9 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
             }
             if(reportTitle.get(position).contains("Fall")){
                 holder.mReportImage.setImageResource(R.drawable.falling);
+            }
+            if (reportTitle.get(position).contains("Battery")){
+                holder.mReportImage.setImageResource(R.drawable.battery);
             }
     }
 
@@ -100,6 +106,10 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
             mReportTitle = itemView.findViewById(R.id.reportTitle);
             mReportText = itemView.findViewById(R.id.reportText);
             mReportTime = itemView.findViewById(R.id.reportTime);
+
+            if(check){
+                mDeleteReportImage.setVisibility(View.GONE);
+            }
 
             mDeleteReportImage.setOnClickListener(new View.OnClickListener() {
                 @Override

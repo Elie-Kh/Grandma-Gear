@@ -213,7 +213,9 @@ public class HomePage_MPP_2 extends AppCompatActivity {
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ReportsActivity.class));
+                Intent intent = new Intent(getApplicationContext(), ReportsActivity2.class);
+                intent.putExtra("wearerID_MPP_2", WearerID);
+                startActivity(intent);
             }
         });
     }
@@ -333,7 +335,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
 
 
 
-    public void fetchProfilePicture(){
+    /*public void fetchProfilePicture(){
         //TODO Confirm the linking is properly implemented
 
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(getApplicationContext(), "Login");
@@ -372,7 +374,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
                                    }
                                }, mSharedPreferencesHelper_Login.getEmail(),
                 Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
-    }
+    }*/
     public void offLineProfilePicture(File file) {
         if(file.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());

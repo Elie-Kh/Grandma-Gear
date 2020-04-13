@@ -37,6 +37,7 @@ public class ReportsActivity extends AppCompatActivity {
     protected FirebaseHelper firebaseHelper;
     protected FirebaseObjects.UserDBO userDBO;
     protected ArrayList<FirebaseObjects.Notifications> reports;
+    protected boolean check = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class ReportsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.reportsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         createReports();
-        reportsViewAdapter = new ReportsViewAdapter(reportTitle, reportText, reportTime);
+        reportsViewAdapter = new ReportsViewAdapter(reportTitle, reportText, reportTime, check);
         recyclerView.setAdapter(reportsViewAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));
