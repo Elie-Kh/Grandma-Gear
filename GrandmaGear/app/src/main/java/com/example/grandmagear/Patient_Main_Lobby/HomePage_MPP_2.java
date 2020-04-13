@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
 import android.app.DownloadManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -20,6 +23,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -128,11 +132,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         WearerID = b.getString("wearerID");
         Log.d(TAG, WearerID);
-        try {
-            setProfilePicture();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        setProfilePicture();
 
 
         Earth.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +156,27 @@ public class HomePage_MPP_2 extends AppCompatActivity {
                                     goToTrackWearerLocation();
                                 }
                                 else{
-                                    Toast.makeText(getApplicationContext(), "The wearer hasn't enable Shared Location", Toast.LENGTH_LONG ).show();
+                                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which){
+                                                case DialogInterface.BUTTON_POSITIVE:
+                                                    //Yes button clicked
+                                                    //TODO Send the user a location request to turn the Wearer's Share location Switch to True
+
+                                                    Toast.makeText(getApplicationContext(), "Request Sent", Toast.LENGTH_LONG).show();
+                                                    break;
+
+                                                case DialogInterface.BUTTON_NEGATIVE:
+                                                    //Cancel button clicked
+                                                    break;
+                                            }
+                                        }
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(HomePage_MPP_2.this);
+                                    builder.setMessage("The wearer hasn't enable Shared Location. Would you like to send them a location request ?")
+                                            .setPositiveButton("Yes", dialogClickListener)
+                                            .setNegativeButton("Cancel", dialogClickListener).show();
                                 }
                             }
                         });
@@ -284,13 +304,6 @@ public class HomePage_MPP_2 extends AppCompatActivity {
 
 
 
-    public void allowTrackingLocation(){
-        //TODO a function that can fetch the Boolean image
-
-    }
-
-
-
     public void uploadDeviceInfo(){
 
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
@@ -334,50 +347,60 @@ public class HomePage_MPP_2 extends AppCompatActivity {
 
 
     public void fetchProfilePicture(){
-        //TODO Confirm the linking is properly implemented
-
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(getApplicationContext(), "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-                                       if (thisUser.getImage()) {
-                                           FirebaseStorage storage = FirebaseStorage.getInstance();
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(WearerID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                device = document.toObject(FirebaseObjects.DevicesDBO.class);
+                final String ID = device.getId();
+                Log.d(TAG,ID);
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        thisUser = document.toObject(FirebaseObjects.UserDBO.class);
+                        Boolean gps_follow = thisUser.getGpsFollow();
 
-                                           // Get image location
+                        if (thisUser.getImage()) {
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
 
-                                           Intent t = getIntent();
-                                           Bundle b = t.getExtras();
-                                           String filename = "gs://grandma-gear.appspot.com/WearerProfilePicture/" + WearerID;
-                                           StorageReference gsReference = storage.getReferenceFromUrl(filename);
+                            // Get image location
+
+                            Intent t = getIntent();
+                            Bundle b = t.getExtras();
+                            String filename = "gs://grandma-gear.appspot.com/WearerProfilePicture/" + ID;
+                            StorageReference gsReference = storage.getReferenceFromUrl(filename);
 
 
-                                           final long ONE_MEGABYTE = 1024 * 1024;
-                                           gsReference.getBytes(ONE_MEGABYTE*4).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                               @Override
-                                               public void onSuccess(byte[] bytes) {
-                                                   Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                                   storeProfilePicture(bmp);
-                                                   ProfilePicture.setImageBitmap(bmp);
-                                               }
-                                           }).addOnFailureListener(new OnFailureListener() {
-                                               @Override
-                                               public void onFailure(@NonNull Exception exception) {
-                                                   // Handle any errors
-                                               }
-                                           });
-                                       } else {
-                                           ProfilePicture.setImageResource(R.drawable.sooken);
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+                            final long ONE_MEGABYTE = 1024 * 1024;
+                            gsReference.getBytes(ONE_MEGABYTE*4).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    storeProfilePicture(bmp);
+                                    ProfilePicture.setImageBitmap(bmp);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle any errors
+                                }
+                            });
+                        } else {
+                            ProfilePicture.setImageResource(R.drawable.sooken);
+                        }
+                    }
+                });
+            }
+
+        });
     }
+
+
     public void offLineProfilePicture(File file) {
-        if(file.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            ProfilePicture.setImageBitmap(myBitmap);
-        }
+        Bitmap myBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        ProfilePicture.setImageBitmap(myBitmap);
     }
     public void storeProfilePicture(Bitmap bitmap){
         FileOutputStream outStream = null;
@@ -416,10 +439,10 @@ public class HomePage_MPP_2 extends AppCompatActivity {
         }
         return true;
     }
-    public void setProfilePicture() throws PackageManager.NameNotFoundException {
+    public void setProfilePicture() {
         File file = new File(getApplicationContext().getFilesDir(), WearerID);
         if (isOnline()){
-            //fetchProfilePicture();
+            fetchProfilePicture();
         }
         else if (fileExists(this, file)){
             offLineProfilePicture(file);
