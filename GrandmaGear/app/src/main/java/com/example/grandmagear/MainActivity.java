@@ -54,17 +54,8 @@ public class MainActivity extends AppCompatActivity {
             disclaimerFragment.show(getSupportFragmentManager(), "DisclaimerFragment");
         }
         initializePage();
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-            @Override
-            public void onCallback(FirebaseObjects.UserDBO user) {
-                userDBO = user;
-                /*notificationHelper = new NotificationHelper(MainActivity.this, userDBO);
-                notificationHelper.sendOnBpm("BPM Alert", "Low BPM");
-                notificationHelper.sendOnFall("FALL Alert", "Grandma Fell");
-                notificationHelper.sendOnBattery("BATTERY Alert", "Low Battery");*/
-            }
-        },sharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(sharedPreferencesHelper_Login.getType()));
+//        FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+//                .document()
 
 
     }

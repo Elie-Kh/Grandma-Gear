@@ -213,7 +213,7 @@ public class BTHelper {
 
                         if (((char) b) == 'F') {
                             //TODO signal fall
-                            notificationHelper.sendOnFall("A Fall", "A fall was detected");
+                            notificationHelper.sendOnFall("A Fall", "A fall was detected", firebaseHelper.getCurrentUserID());
 
                         } else if (((char) b) == 'N'){
                             //TODO signal device off
@@ -266,8 +266,7 @@ public class BTHelper {
                         textview.setText(heartRate);
 
                         if(highHR > 3){
-                            notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded");
-
+                             notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded", firebaseHelper.getCurrentUserID());
                         }
 
                     } else if ( Integer.parseInt(heartRate) < 60){
@@ -277,8 +276,7 @@ public class BTHelper {
                         textview.setText(heartRate);
 
                         if(lowHR > 3){
-                            notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded");
-
+                            notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded", firebaseHelper.getCurrentUserID());
                         }
 
                     } else {

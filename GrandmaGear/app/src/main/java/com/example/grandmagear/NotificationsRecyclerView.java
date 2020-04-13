@@ -25,6 +25,7 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
     private ArrayList<String> notificationTitle;
     private ArrayList<String> notificationText;
     private ArrayList<String> notificationTime;
+    private ArrayList<String> deviceIDs;
     private SharedPreferencesHelper sharedPreferencesHelper;
     private SharedPreferencesHelper sharedPreferencesHelper_Login;
     private Context context;
@@ -33,10 +34,11 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
     private ArrayList<HashMap<String, Object>> thisNotifications;
 
     public NotificationsRecyclerView(ArrayList<String> notificationTitle, ArrayList<String> notificationText,
-                                     ArrayList<String> notificationTime, Context context){
+                                     ArrayList<String> notificationTime,ArrayList<String> deviceIDs, Context context){
         this.notificationTitle = notificationTitle;
         this.notificationText = notificationText;
         this.notificationTime = notificationTime;
+        this.deviceIDs = deviceIDs;
         this.context = context;
         this.firebaseHelper = new FirebaseHelper();
         this.sharedPreferencesHelper_Login = new SharedPreferencesHelper(context, "Login");
@@ -56,6 +58,8 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
         holder.mNotificationTitle.setText(notificationTitle.get(position));
         holder.mNotificationText.setText(notificationText.get(position));
         holder.mNotificationTime.setText(notificationTime.get(position));
+        holder.deviceID = deviceIDs.get(position);
+
     }
 
     @Override
@@ -73,6 +77,7 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
         notificationTime.remove(position);
         //sharedPreferencesHelper = new SharedPreferencesHelper(context, "Notification Time");
         //sharedPreferencesHelper.saveNotificationTime(notificationTime);
+        deviceIDs.remove(position);
         notifyItemRemoved(position);
 
 //        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
@@ -112,6 +117,7 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
         protected TextView mNotificationTitle;
         protected TextView mNotificationText;
         protected TextView mNotificationTime;
+        protected String deviceID;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,6 +134,16 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
                     delete(getAdapterPosition());
                 }
             });
+
+            //SELECT IMAGE FROM FIREBASE.
+//            FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+//                    .document(deviceID)
+//                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    //GET IMAGE OF USER
+//                }
+//            });
         }
     }
 }
