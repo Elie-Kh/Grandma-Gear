@@ -1,6 +1,7 @@
 package com.example.grandmagear;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,12 +78,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             Log.d(TAG, "logging");
                             holder.mHeartBeatText.setText((device.heartrate + "bpm"));
                             if ((Integer) device.heartrate < 60) {
-                                notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
+                                holder.highBPM =0;
+                                holder.lowBPM++;
+                                holder.mHeartBeatText.setTextColor(Color.RED);
+
+                                if(holder.lowBPM > 3) {
+                                    notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
+                                }
                                 //check = false;
-                            }
-                            if ((Integer) device.heartrate >= 60) {
+                            }else if ((Integer) device.heartrate >= 100) {
+                                holder.highBPM++;
+                                holder.lowBPM =0;
+                                holder.mHeartBeatText.setTextColor(Color.RED);
+                                if(holder.highBPM > 3){
+                                    notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded for");
+                                }
                                 //check = true;
+                            } else {
+                                holder.highBPM =0;
+                                holder.lowBPM =0;
+                                holder.mHeartBeatText.setTextColor(Color.GREEN);
                             }
+
                             if(((String) device.helpRequested).equals("yes")){
                                 notificationHelper.sendOnFall("Panic button pressed", "The panic button has been pressed by ");
                             }
@@ -137,6 +154,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected TextView mDeviceBattery;
         protected TextView mPatientName;
         OnItemClickedListener onItemClickedListener;
+        protected int highBPM = 0;
+        protected int lowBPM = 0;
 
 
         public ViewHolder(@NonNull View itemView, OnItemClickedListener onItemClickedListener) {

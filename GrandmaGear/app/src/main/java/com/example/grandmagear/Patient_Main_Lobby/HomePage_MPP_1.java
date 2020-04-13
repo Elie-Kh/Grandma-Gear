@@ -91,13 +91,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     TextView Weight;
     TextView Height;
     TextView BPM;
-    TextView phoneBattery;
-    TextView deviceBattery;
+
     Button reportButton;
 
     ImageView ProfilePicture;
     ImageView Heart;
-    ImageView Battery;
     ImageView Earth;
 
     Button PanicButton;
@@ -171,14 +169,13 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Height = findViewById(R.id.textView_Height_Displayed_MPP_1);
         BPM = findViewById(R.id.textView_BPM_Displayed);
         BPM.setText("66");
-        phoneBattery = findViewById(R.id.textView_PhoneBatteryLevel_Displayed);
-        deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed);
+
         reportButton = findViewById(R.id.buttonReports);
 
         ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_1);
         Heart = findViewById(R.id.imageView_Heart_MPP_1);
         Earth = findViewById(R.id.imageView_Earth_MPP_1);
-        Battery = findViewById(R.id.imageView_BatteryLevel_MPP_1);
+
         locationSwitch = findViewById(R.id.locationSwitch);
         PanicButton = findViewById(R.id.buttonPanic);
 
@@ -286,9 +283,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         startActivity(intent);
     }
     public void goToLocation (View view){
-        // Intent intent = new Intent(this, MapsLocationActivity.class);
-        //intent.putExtra(getString(R.string.PC_ID), "0");
-        //startActivity(intent);
+         Intent intent = new Intent(this, MapsLocationActivity.class);
+        intent.putExtra(getString(R.string.PC_ID), "0");
+        startActivity(intent);
     }
 
     public void goToDeviceList () {
@@ -548,7 +545,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     public void fetchProfilePicture(){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(getApplicationContext(), "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
+       /* firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
                                    @Override
                                    public void onCallback(FirebaseObjects.UserDBO user) {
                                        thisUser = user;
@@ -581,7 +578,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                                        }
                                    }
                                }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));*/
     }
     public void offLineProfilePicture(File file) {
         if(file.exists()){

@@ -4,13 +4,10 @@
     Meaning if a string shows in 2 pages, it will be under the first page reached below.-->
 
     <!-- activity_disclaimer_fragment xml -->
-    <string name="disclaimer_text">This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.</string>
+    <string name="disclaimer_text"><b>WARNING!</b>\n This Product is <b>NOT</b> a substitute for medically prescribed patient care!
+        For best results, wearers should have a loved one or care taker download this app and follow their account.
+        Also note that erroneous Heart Rate values and Fall Detections are rare but possible.
+        Please consult the owner manual for more information.</string>
     <string name="accept_disclaimer">Accept</string>
     <string name="decline_disclaimer">Decline</string>
 
@@ -81,7 +78,7 @@
     <string name="MPP_1_textView_Weight">Weight:</string>
     <string name="MPP_1_textView_Weight_Displayed"></string>
     <string name="MPP_1_textView_BPM_value"></string>
-    <string name="MPP_1_textView_BPM">BPM</string>
+    <string name="MPP_1_textView_BPM">BPM:</string>
     <string name="MPP_1_textView_BraceletBatteryLevel">Bracelet Battery Level (%):</string>
     <string name="MPP_1_textView_PhoneBatteryLevel">Phone Battery Level (%):</string>
     <string name="MPP_1_textView_BatteryLevel_CurrentValue"></string>

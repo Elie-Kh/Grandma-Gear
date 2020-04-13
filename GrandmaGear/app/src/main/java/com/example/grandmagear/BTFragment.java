@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,10 +26,12 @@ public class BTFragment extends DialogFragment {
 
     protected ListView btList;
     protected TextView header;
+    protected Button cancelButton;
     protected ArrayList<BluetoothDevice> deviceList;
     protected BTHelper btHelper;
-    private ArrayAdapter<BluetoothDevice> listAdapter;
+    private ArrayAdapter<String> listAdapter;
     protected FirebaseObjects.UserDBO thisUser;
+    private ArrayList<String> btNames = new ArrayList<String>();
 
     public BTFragment(FirebaseObjects.UserDBO thisUser) {
         this.thisUser = thisUser;
@@ -46,10 +50,15 @@ public class BTFragment extends DialogFragment {
     protected void setupLayout(View view){
         header = view.findViewById(R.id.btTitle);
         btList = view.findViewById(R.id.BTList);
+        cancelButton = view.findViewById(R.id.btFragCancel);
         btHelper = new BTHelper(getContext(), thisUser);
         deviceList = btHelper.deviceList();
 
-        listAdapter = new ArrayAdapter<BluetoothDevice>(getActivity(), android.R.layout.simple_list_item_1, deviceList);
+
+        for(int i =0; i<deviceList.size(); i++){
+            btNames.add(deviceList.get(i).getName());
+        }
+        listAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, btNames);
         btList.setAdapter(listAdapter);
 
         btList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,6 +67,13 @@ public class BTFragment extends DialogFragment {
 
                 btHelper.setHc05(deviceList.get(position).getAddress());
                 ((HomePage_MPP_1)getActivity()).btConnect();
+                getDialog().dismiss();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 getDialog().dismiss();
             }
         });

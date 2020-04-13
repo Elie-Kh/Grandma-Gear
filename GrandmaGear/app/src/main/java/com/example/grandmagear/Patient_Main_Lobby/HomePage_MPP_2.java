@@ -194,7 +194,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
         Height = findViewById(R.id.textView_Height_Displayed_MPP_2);
         BPM = findViewById(R.id.textView_BPM_Displayed_MPP_2);
         phoneBattery = findViewById(R.id.textView_PhoneBatteryLevel_Displayed_MPP_2);
-        deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed_MPP_2);
+        //deviceBattery = findViewById(R.id.textView_BraceletBatteryLevel_Displayed_MPP_2);
         reportButton = findViewById(R.id.buttonReports_MPP_2);
 
         ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_2);
