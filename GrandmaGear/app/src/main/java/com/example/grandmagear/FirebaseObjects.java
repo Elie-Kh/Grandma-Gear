@@ -377,15 +377,17 @@ public class FirebaseObjects {
         protected String notificationTitle;
         protected String notificationText;
         protected String notificationTime;
+        protected String deviceID;
 
         public Notifications() {
             //constructor for snapshot
         }
 
-        public Notifications(String notificationTitle, String notificationText, String notificationTime) {
+        public Notifications(String notificationTitle, String notificationText, String notificationTime, String deviceID) {
             this.notificationTitle = notificationTitle;
             this.notificationText = notificationText;
             this.notificationTime = notificationTime;
+            this.deviceID = deviceID;
         }
 
         public String getNotificationTitle() {
@@ -410,6 +412,14 @@ public class FirebaseObjects {
 
         public void setNotificationTime(String notificationTime) {
             this.notificationTime = notificationTime;
+        }
+
+        public String getDeviceID() {
+            return deviceID;
+        }
+
+        public void setDeviceID(String deviceID) {
+            this.deviceID = deviceID;
         }
     }
 }

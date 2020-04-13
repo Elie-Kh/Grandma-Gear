@@ -50,6 +50,7 @@ import com.example.grandmagear.DisclaimerFragment;
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
 import com.example.grandmagear.LogInActivity;
+import com.example.grandmagear.NotificationHelper;
 import com.example.grandmagear.R;
 import com.example.grandmagear.SharedPreferencesHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -93,6 +94,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     TextView BPM;
 
     Button reportButton;
+    NotificationHelper notificationHelper;
 
     ImageView ProfilePicture;
     ImageView Heart;
@@ -136,6 +138,12 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                 }
             }
         });
+        notificationHelper = new NotificationHelper(this,thisUser);
+        notificationHelper.sendOnBpm("Low BPM", "U died", firebaseHelper.getCurrentUserID());
+
+
+        setUpUI();
+        notificationHelper.sendOnFall("Fall", "u fell", firebaseHelper.getCurrentUserID());
     }
 
 
@@ -296,21 +304,22 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
 
-    public void resumeSharedLocation() {
-        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
 
-                                       if (thisUser.getAccountType()) {
-                                           disableShareLocation();
-                                       } else {
-                                           displayShareLocation();
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+        public void resumeSharedLocation() {
+        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.getCurrentUserID()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        thisUser = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                        if (thisUser.getAccountType()) {
+                            disableShareLocation();
+                        } else {
+                            displayShareLocation();
+                        }
+                    }
+                });
     }
 
     public void uploadWearerInfo(){
@@ -337,22 +346,26 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
     public void resumeLocation(final Switch ls){
-        mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-                                       ls.setChecked(thisUser.getGpsFollow());
-                                       if (thisUser.getGpsFollow()) {
-                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
-                                           displayLocation();
-                                       } else {
-                                           firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
-                                           disableLocation();
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));
+
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot documentSnapshot = task.getResult();
+                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                        ls.setChecked(thisUser.getGpsFollow());
+                        if (thisUser.getGpsFollow()) {
+                            firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, true);
+                            displayLocation();
+                        } else {
+                            firebaseHelper.editUser(thisUser, FirebaseObjects.GPS_Follow, false);
+                            disableLocation();
+                        }
+                    }
+                });
+
 
     }
 
