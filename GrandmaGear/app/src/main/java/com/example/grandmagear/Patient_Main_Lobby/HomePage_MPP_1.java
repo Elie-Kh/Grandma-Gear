@@ -155,9 +155,6 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         unregisterReceiver(batteryReceiver);
         super.onPause();
 
-        if (mSharedPreferencesHelper_BT.getHC05() == null) {
-            // goToDeviceList();
-        } //else btConnect();
     }
 
 
@@ -168,12 +165,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         Weight = findViewById(R.id.textView_Weight_Displayed_MPP_1);
         Height = findViewById(R.id.textView_Height_Displayed_MPP_1);
         BPM = findViewById(R.id.textView_BPM_Displayed);
-        BPM.setText("66");
 
         reportButton = findViewById(R.id.buttonReports);
 
         ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_1);
-        Heart = findViewById(R.id.imageView_Heart_MPP_1);
+        Heart = findViewById(R.id.hrIcon);
         Earth = findViewById(R.id.imageView_Earth_MPP_1);
 
         locationSwitch = findViewById(R.id.locationSwitch);
@@ -199,7 +195,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
         mSharedPreferencesHelper_BT = new SharedPreferencesHelper(this, "BTList");
 
-
+        btConnect();
 
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,7 +222,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.patient_action_bar,menu);
-        Setting = findViewById(R.id.settings);
+        //Setting = findViewById(R.id.settings);
         Logout = findViewById(R.id.logout);
 
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
@@ -260,9 +256,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.settings) {// User chose the "Settings" item, show the app settings UI...
+        /*if (item.getItemId() == R.id.settings) {// User chose the "Settings" item, show the app settings UI...
             goToSettings();
-        }
+        }*/
         if (item.getItemId() == R.id.logout) {
             logout();
             FirebaseHelper.firebaseFirestore.clearPersistence();
@@ -277,11 +273,13 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     public void goToSettings () {
         Intent intent = new Intent(this, PatientSettingsActivity.class);
         intent.putExtra(getString(R.string.PC_ID), "0");
         startActivity(intent);
-    }
+    }*/
+
     public void goToLocation (View view){
          Intent intent = new Intent(this, MapsLocationActivity.class);
         intent.putExtra(getString(R.string.PC_ID), "0");
@@ -289,7 +287,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     }
 
     public void goToDeviceList () {
-        BTFragment btFragment = new BTFragment(thisUser);
+        BTFragment btFragment = new BTFragment(thisUser,false);
         btFragment.setCancelable(false);
         btFragment.show(getSupportFragmentManager(), "BTFragment");
     }

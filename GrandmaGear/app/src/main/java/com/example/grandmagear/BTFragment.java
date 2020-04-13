@@ -1,6 +1,7 @@
 package com.example.grandmagear;
 
 import android.app.Dialog;
+import android.app.ExpandableListActivity;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -31,10 +36,14 @@ public class BTFragment extends DialogFragment {
     protected BTHelper btHelper;
     private ArrayAdapter<String> listAdapter;
     protected FirebaseObjects.UserDBO thisUser;
+    protected FirebaseHelper firebaseHelper;
     private ArrayList<String> btNames = new ArrayList<String>();
+    protected boolean firstSync;
 
-    public BTFragment(FirebaseObjects.UserDBO thisUser) {
+    public BTFragment(FirebaseObjects.UserDBO thisUser, boolean firstSync) {
         this.thisUser = thisUser;
+        this.firstSync = firstSync;
+        firebaseHelper = new FirebaseHelper();
     }
 
     @Nullable
@@ -65,9 +74,30 @@ public class BTFragment extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                btHelper.setHc05(deviceList.get(position).getAddress());
-                ((HomePage_MPP_1)getActivity()).btConnect();
-                getDialog().dismiss();
+
+                    btHelper.setHc05(deviceList.get(position).getAddress());
+                    if(!firstSync) {
+                        ((HomePage_MPP_1) getActivity()).btConnect();
+                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                for(DocumentSnapshot snap : task.getResult()){
+                                    FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                            .document(snap.getId())
+                                            .delete();
+                                }
+                            }
+                        });
+                        final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(btHelper.getHC05().getAddress());
+                        firebaseHelper.addDevice(newDevice);
+                    }
+                    else {
+                        ((RegisterActivity)getActivity()).createDevice(btHelper.getHC05().getAddress());
+                    }
+                    getDialog().dismiss();
+
             }
         });
 
