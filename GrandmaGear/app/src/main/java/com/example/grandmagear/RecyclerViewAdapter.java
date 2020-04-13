@@ -87,7 +87,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 holder.mHeartBeatText.setTextColor(Color.RED);
 
                                 if(holder.lowBPM > 3) {
-                                    notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
+
+                                    notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for", "firebaseHelper.getCurrentUserID()");
                                 }
                                 //check = false;
                             }else if ((Integer) device.heartrate >= 100) {
@@ -95,7 +96,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 holder.lowBPM =0;
                                 holder.mHeartBeatText.setTextColor(Color.RED);
                                 if(holder.highBPM > 3){
-                                    notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded for");
+                                    notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded for", "firebaseHelper.getCurrentUserID()");
                                 }
                                 //check = true;
                             } else {
@@ -105,7 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             }
 
                             if(((String) device.helpRequested).equals("yes")){
-                                notificationHelper.sendOnFall("Panic button pressed", "The panic button has been pressed by ");
+                                notificationHelper.sendOnFall("Panic button pressed", "The panic button has been pressed by ", "firebaseHelper.getCurrentUserID()");
                             }
 
 

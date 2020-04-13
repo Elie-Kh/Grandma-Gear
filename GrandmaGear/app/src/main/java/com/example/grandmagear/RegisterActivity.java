@@ -55,20 +55,6 @@ public class RegisterActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Override
-    public void onBackPressed() {
-        return;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setHomeButtonEnabled(false);
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
     /*setup back click*/
     @Override
     public boolean onSupportNavigateUp() {

@@ -127,6 +127,8 @@ public class LogInActivity extends AppCompatActivity {
                                                     documentSnapshot.get(FirebaseObjects.Account_Type));
                                             if((Boolean)
                                                     documentSnapshot.get(FirebaseObjects.Account_Type)){
+                                                Intent serviceIntent = new Intent(LogInActivity.this, FirestoreService.class);
+                                                startService(serviceIntent);
                                                 startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                             }
                                             else {
@@ -275,6 +277,8 @@ public class LogInActivity extends AppCompatActivity {
                                                     documentSnapshot.get(FirebaseObjects.Account_Type));
                                             if((Boolean)
                                                     documentSnapshot.get(FirebaseObjects.Account_Type)){
+                                                Intent serviceIntent = new Intent(LogInActivity.this, FirestoreService.class);
+                                                startService(serviceIntent);
                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                     }
                                     else {
@@ -291,9 +295,11 @@ public class LogInActivity extends AppCompatActivity {
                             if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
                                 if (mSharedPreferencesHelper.getEmail() != null && !mSharedPreferencesHelper.getEmail().isEmpty()) {
                                     if (Boolean.parseBoolean(mSharedPreferencesHelper.getType())) {
+                                        Intent serviceIntent = new Intent(LogInActivity.this, FirestoreService.class);
+                                        startService(serviceIntent);
                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                     } else {
-                                        startActivity(new Intent(getApplicationContext(), PatientActivity.class));
+                                        startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                     }
                                 }
                             }
