@@ -325,6 +325,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                     Height.setText(String.valueOf(thisUser.getHeight()));
                     if(thisUser.getRequestLocation() && !notificationCheck){
                         notificationHelper.sendOnRequestLocation("Share Location Requested", "One of your Followers is requesting your Location", firebaseHelper.getCurrentUserID());
+                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(firebaseHelper.getCurrentUserID()).update(FirebaseObjects.requestLocation, false);
                         notificationCheck = true;
                     }
                     Log.d(TAG, thisUser.gpsFollow.toString());
