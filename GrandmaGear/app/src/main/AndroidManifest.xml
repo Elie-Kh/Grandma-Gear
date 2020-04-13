@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.grandmagear">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -25,7 +26,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
@@ -36,7 +36,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Patient_Main_Lobby.ReportsActivity2"></activity>
+        <receiver
+            android:name=".Patient_Main_Lobby.LocationService"/>
+
+        <activity android:name=".Patient_Main_Lobby.ReportsActivity2" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -109,11 +112,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <service android:name=".FirestoreService"
+
+        <service
+            android:name=".FirestoreService"
             android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            />
-        <receiver android:name="com.example.grandmagear.startUpReceiver">
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".startUpReceiver">
             android:enabled="true"
             android:exported="true">
             <intent-filter android:directBootAware="true">
@@ -121,7 +126,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.intent.action.REBOOT"/>
+                <action android:name="android.intent.action.REBOOT" />
             </intent-filter>
         </receiver>
     </application>
