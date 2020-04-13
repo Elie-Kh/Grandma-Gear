@@ -64,7 +64,7 @@ public class MapsTrackingActivity extends FragmentActivity implements OnMapReady
                 double longitude = device.getLongitude();
                 LatLng WearerPosition = new LatLng(latitude, longitude);
                 mMap.addMarker(new MarkerOptions().position(WearerPosition).title("Wearer's Location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(WearerPosition));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(WearerPosition,14));
             }
         });
 

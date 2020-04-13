@@ -15,6 +15,8 @@ public class App extends Application {
     public static final String PANIC_CHANNEL = "panic";
     public static final String FOLLOWER_CHANNEL = "follower";
     public static final String WEARER_CHANNEL = "wearer";
+    public static final String REQUEST_CHANNEL = "request";
+
 
     @Override
     public void onCreate() {
@@ -27,6 +29,9 @@ public class App extends Application {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel bpm = new NotificationChannel(BPM_CHANNEL,
                     "BPM",
+                    NotificationManager.IMPORTANCE_HIGH);
+            NotificationChannel request = new NotificationChannel(REQUEST_CHANNEL,
+                    "request",
                     NotificationManager.IMPORTANCE_HIGH);
             bpm.setDescription("channel bpm");
 
@@ -57,6 +62,7 @@ public class App extends Application {
             manager.createNotificationChannel(panic);
             manager.createNotificationChannel(follower);
             manager.createNotificationChannel(wearer);
+            manager.createNotificationChannel(request);
         }
     }
 }

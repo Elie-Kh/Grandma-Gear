@@ -20,6 +20,7 @@ public class FirebaseObjects {
     public static final String Devices_Followed = "devicesFollowed";
     public static final String Events = "events";
     public static final String image = "image";
+    public static final String requestLocation = "requestLocation";
 
     //variable names for device
     public static final String ID = "id";
@@ -42,6 +43,7 @@ public class FirebaseObjects {
         public Boolean accountType;
         public Boolean gpsFollow = false;
         public Boolean image = false;
+        public Boolean requestLocation = false;
         public Integer age = 0;
         public Integer weight = 0;
         public Integer height = 0;
@@ -66,7 +68,7 @@ public class FirebaseObjects {
             //empty constructor for snapshot.
         }
 
-        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image) {
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image, Boolean requestLocation) {
             //this.username = username;
             this.email = email;
             this.firstName = firstName;
@@ -75,12 +77,13 @@ public class FirebaseObjects {
             this.accountType = AccountType;
             this.gpsFollow = gpsFollow;
             this.image = image;
+            this.requestLocation = requestLocation;
             this.devicesFollowed = new ArrayList<String>();
             this.events = new ArrayList<EventsDBO>();
             this.notifications = new ArrayList<Notifications>();
         }
 
-        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image, int age, int weight, int height) {
+        public UserDBO(/*String username,*/ String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image, Boolean requestLocation, int age, int weight, int height) {
             //this.username = username;
             this.email = email;
             this.firstName = firstName;
@@ -89,6 +92,7 @@ public class FirebaseObjects {
             this.accountType = AccountType;
             this.gpsFollow = gpsFollow;
             this.image = image;
+            this.requestLocation = requestLocation;
             this.age = age;
             this.weight = weight;
             this.height = height;
@@ -97,7 +101,7 @@ public class FirebaseObjects {
             this.notifications = new ArrayList<Notifications>();
         }
 
-        public UserDBO(String username, String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image, int age, int weight, int height, ArrayList<String> DevicesFollowed, ArrayList<EventsDBO> events) {
+        public UserDBO(String username, String email, String firstName, String lastName, String password, Boolean AccountType, Boolean gpsFollow, Boolean image, Boolean requestLocation, int age, int weight, int height, ArrayList<String> DevicesFollowed, ArrayList<EventsDBO> events) {
             this.username = username;
             this.email = email;
             this.firstName = firstName;
@@ -106,6 +110,7 @@ public class FirebaseObjects {
             this.accountType = AccountType;
             this.gpsFollow = gpsFollow;
             this.image = image;
+            this.requestLocation = requestLocation;
             this.age = age;
             this.weight = weight;
             this.height = height;
@@ -197,6 +202,14 @@ public class FirebaseObjects {
 
         public void setImage(Boolean image) {
             this.image = image;
+        }
+
+        public Boolean getRequestLocation() {
+            return requestLocation;
+        }
+
+        public void setRequestLocation(Boolean requestLocation) {
+            this.requestLocation = requestLocation;
         }
 
         //@PropertyName("GPS Follow")

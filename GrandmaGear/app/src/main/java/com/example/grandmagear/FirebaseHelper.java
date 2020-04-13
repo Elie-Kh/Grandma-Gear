@@ -73,6 +73,8 @@ public class FirebaseHelper {
         user.put(FirebaseObjects.Height, newUser.height);
         user.put(FirebaseObjects.Weight, newUser.weight);
         user.put(FirebaseObjects.GPS_Follow, false);
+        user.put(FirebaseObjects.image, false);
+        user.put(FirebaseObjects.requestLocation, false);
         user.put(FirebaseObjects.Devices_Followed, newUser.devicesFollowed);
         user.put(FirebaseObjects.Events, newUser.events);
         user.put(FirebaseObjects.Notifications, newUser.notifications);
@@ -359,7 +361,8 @@ public class FirebaseHelper {
                                             (String) document.get(FirebaseObjects.Password),
                                             (Boolean) document.get(FirebaseObjects.Account_Type),
                                             (Boolean) document.get(FirebaseObjects.GPS_Follow),
-                                            (Boolean) document.get(FirebaseObjects.image));
+                                            (Boolean) document.get(FirebaseObjects.image),
+                                            (Boolean) document.get(FirebaseObjects.requestLocation));
                                 } else {
                                     Log.d("__TESTERS__", (String) Objects.requireNonNull(document.get(FirebaseObjects.Email)));
                                     returnable[0] = new FirebaseObjects.UserDBO(
@@ -370,6 +373,7 @@ public class FirebaseHelper {
                                             (Boolean) document.get(FirebaseObjects.Account_Type),
                                             (Boolean) document.get(FirebaseObjects.GPS_Follow),
                                             (Boolean) document.get(FirebaseObjects.image),
+                                            (Boolean) document.get(FirebaseObjects.requestLocation),
                                             (Integer) Math.round((Long) document.get(FirebaseObjects.Age)),
                                             (Integer) Math.round((Long) document.get(FirebaseObjects.Weight)),
                                             (Integer) Math.round((Long) document.get(FirebaseObjects.Height))

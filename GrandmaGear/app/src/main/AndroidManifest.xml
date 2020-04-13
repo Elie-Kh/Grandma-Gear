@@ -8,6 +8,7 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <!--
@@ -118,7 +119,10 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".startUpReceiver">
+        <receiver android:name=".startUpReceiver"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            />
+        <receiver android:name="com.example.grandmagear.startUpReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter android:directBootAware="true">
@@ -129,6 +133,8 @@
                 <action android:name="android.intent.action.REBOOT" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".Patient_Main_Lobby.NotificationReceiver"/>
+        <receiver android:name=".Patient_Main_Lobby.NotificationReceiverDecline"/>
     </application>
 
 </manifest>
