@@ -35,6 +35,7 @@ public class NotificationsTabFragment extends Fragment {
     private ArrayList<String> mNotificationTitle = new ArrayList<String>();
     private ArrayList<String> mNotificationText = new ArrayList<String>();
     private ArrayList<String> mNotificationTime = new ArrayList<String>();
+    private ArrayList<String> mDeviceIDs = new ArrayList<String >();
     private SharedPreferencesHelper mSharedPreferencesHelper;
     private FirebaseObjects.UserDBO userDBO;
     private ArrayList<FirebaseObjects.Notifications> thisNotifications;
@@ -47,7 +48,7 @@ public class NotificationsTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_tab_fragment, container, false);
         mRecyclerView = view.findViewById(R.id.notificationRecycler);
-        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime, getActivity());
+        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime, mDeviceIDs, getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
@@ -65,12 +66,14 @@ public class NotificationsTabFragment extends Fragment {
                                     mNotificationTitle.add(thisNotifications.get(i).getNotificationTitle());
                                     mNotificationText.add(thisNotifications.get(i).getNotificationText());
                                     mNotificationTime.add(thisNotifications.get(i).getNotificationTime());
+                                    mDeviceIDs.add(thisNotifications.get(i).getDeviceID());
                                 }
                             }
                             else {
                                 mNotificationTitle.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTitle());
                                 mNotificationText.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationText());
                                 mNotificationTime.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTime());
+                                mDeviceIDs.add(thisNotifications.get(thisNotifications.size() - 1).getDeviceID());
                             }
 
                         }
@@ -115,6 +118,7 @@ public class NotificationsTabFragment extends Fragment {
                                                          mNotificationTitle.add(entry.getNotificationTitle());
                                                          mNotificationText.add(entry.getNotificationText());
                                                          mNotificationTime.add(entry.getNotificationTime());
+                                                         mDeviceIDs.add(entry.getDeviceID());
 //                                                         mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText, mNotificationTime, getActivity());
 //                                                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //                                                         mRecyclerView.setAdapter(mAdapter);
