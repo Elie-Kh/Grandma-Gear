@@ -320,11 +320,11 @@ public class FirebaseObjects {
             this.heartrate = heartrate;
         }
 
-        public void setLatitude(long latitude) {
+        public void setLatitude(double latitude) {
             this.latitude = latitude;
         }
 
-        public void setLongitude(long longitude) {
+        public void setLongitude(double longitude) {
             this.longitude = longitude;
         }
 

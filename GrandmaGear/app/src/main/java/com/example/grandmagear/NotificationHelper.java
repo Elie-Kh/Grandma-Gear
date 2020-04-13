@@ -21,9 +21,6 @@ import java.util.Date;
 
 public class NotificationHelper {
     public static final String TAG = "_NotificationHelper";
-    private SharedPreferencesHelper sharedPreferencesHelperTitle;
-    private SharedPreferencesHelper sharedPreferencesHelperText;
-    private SharedPreferencesHelper sharedPreferencesHelperTime;
     private NotificationManagerCompat notificationManagerCompat;
     private ArrayList<String> nTitle = new ArrayList<String>();
     private ArrayList<String> nText = new ArrayList<String>();
@@ -34,9 +31,6 @@ public class NotificationHelper {
 
     public NotificationHelper(Context context, FirebaseObjects.UserDBO userDBO){
         this.notificationManagerCompat = NotificationManagerCompat.from(context);
-        this.sharedPreferencesHelperTitle = new SharedPreferencesHelper(context, "Notification Title");
-        this.sharedPreferencesHelperText = new SharedPreferencesHelper(context, "Notification Text");
-        this.sharedPreferencesHelperTime = new SharedPreferencesHelper(context, "Notification Time");
         this.context = context;
         this.userDBO = userDBO;
         firebaseHelper = new FirebaseHelper();
@@ -63,15 +57,6 @@ public class NotificationHelper {
 
         FirebaseObjects.Notifications bpm = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
         firebaseHelper.addNotification(userDBO, bpm);
-
-        /*nTitle.add(title);
-        nText.add(text);
-        nTime.add(currentDateAndTime);
-
-        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
-        sharedPreferencesHelperText.saveNotificationText(nText);
-        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
-
     }
 
     public void sendOnFall(String title, String text){
@@ -95,14 +80,6 @@ public class NotificationHelper {
 
         FirebaseObjects.Notifications fall = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
         firebaseHelper.addNotification(userDBO, fall);
-
-        /*nTitle.add(title);
-        nText.add(text);
-        nTime.add(currentDateAndTime);
-
-        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
-        sharedPreferencesHelperText.saveNotificationText(nText);
-        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
 
     public void sendOnBattery(String title, String text){
@@ -127,14 +104,6 @@ public class NotificationHelper {
 
         FirebaseObjects.Notifications battery = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
         firebaseHelper.addNotification(userDBO, battery);
-
-        /*nTitle.add(title);
-        nText.add(text);
-        nTime.add(currentDateAndTime);
-
-        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
-        sharedPreferencesHelperText.saveNotificationText(nText);
-        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
 
     public void sendOnPanic(String title, String text){
@@ -142,12 +111,12 @@ public class NotificationHelper {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
-        Notification notification = new NotificationCompat.Builder(context, App.BATTERY_CHANNEL)
+        Notification notification = new NotificationCompat.Builder(context, App.PANIC_CHANNEL)
                 .setSmallIcon(R.drawable.ic_warning)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setLargeIcon(largeIcon)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
@@ -159,13 +128,5 @@ public class NotificationHelper {
 
         FirebaseObjects.Notifications help = new FirebaseObjects.Notifications(title, text, currentDateAndTime);
         firebaseHelper.addNotification(userDBO, help);
-
-        /*nTitle.add(title);
-        nText.add(text);
-        nTime.add(currentDateAndTime);
-
-        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
-        sharedPreferencesHelperText.saveNotificationText(nText);
-        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
 }

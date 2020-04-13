@@ -12,6 +12,7 @@ public class App extends Application {
     public static final String BPM_CHANNEL = "bpm";
     public static final String FALL_CHANNEL = "fall";
     public static final String BATTERY_CHANNEL = "battery";
+    public static final String PANIC_CHANNEL = "panic";
 
     @Override
     public void onCreate() {
@@ -36,10 +37,14 @@ public class App extends Application {
                     "BATTERY",
                     NotificationManager.IMPORTANCE_LOW);
 
+            NotificationChannel panic = new NotificationChannel(PANIC_CHANNEL,
+                    "PANIC", NotificationManager.IMPORTANCE_HIGH);
+
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(bpm);
             manager.createNotificationChannel(fall);
             manager.createNotificationChannel(battery);
+            manager.createNotificationChannel(panic);
         }
     }
 }
