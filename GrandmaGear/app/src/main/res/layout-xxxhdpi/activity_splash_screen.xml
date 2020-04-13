@@ -15,8 +15,8 @@
         android:layout_marginTop="100dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/sooken"
-        tools:src="@drawable/sooken" />
+        app:srcCompat="@drawable/gg_splash_screen"
+        tools:src="@drawable/gg_splash_screen" />
 
 
 </RelativeLayout>

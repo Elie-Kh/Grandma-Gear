@@ -13,6 +13,8 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.grandmagear.Patient_Main_Lobby.NotificationReceiver;
+import com.example.grandmagear.Patient_Main_Lobby.NotificationReceiverDecline;
 import com.google.firebase.firestore.auth.User;
 
 import java.text.SimpleDateFormat;
@@ -148,7 +150,7 @@ public class NotificationHelper {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();
-        notificationManagerCompat.notify(3, notification);
+        notificationManagerCompat.notify(4, notification);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
         String currentDateAndTime = sdf.format(new Date());
@@ -164,4 +166,48 @@ public class NotificationHelper {
         sharedPreferencesHelperText.saveNotificationText(nText);
         sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
     }
+
+
+    public void sendOnRequestLocation(String title, String text, String deviceID){
+        Intent intent = new Intent(context, LogInActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        //Accept
+        Intent enableLocation = new Intent(context, NotificationReceiver.class);
+        PendingIntent enableLocationPendingIntent = PendingIntent.getBroadcast(context, 0, enableLocation, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        //Decline
+        Intent disableLocation = new Intent(context, NotificationReceiverDecline.class);
+        PendingIntent disableLocationPendingIntent = PendingIntent.getBroadcast(context, 0, disableLocation, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
+        Notification notification = new NotificationCompat.Builder(context, App.REQUEST_CHANNEL)
+                .setSmallIcon(R.drawable.ic_warning)
+                .setContentTitle(title)
+                .setContentText(text)
+                .setLargeIcon(largeIcon)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .addAction(R.drawable.enablelocation, "Accept", enableLocationPendingIntent)
+                .addAction(R.drawable.enablelocation, "Decline", disableLocationPendingIntent)
+                .build();
+        notificationManagerCompat.notify(5, notification);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss");
+        String currentDateAndTime = sdf.format(new Date());
+
+        FirebaseObjects.Notifications help = new FirebaseObjects.Notifications(title, text, currentDateAndTime, deviceID);
+        firebaseHelper.addNotification( help);
+
+        /*nTitle.add(title);
+        nText.add(text);
+        nTime.add(currentDateAndTime);
+
+        sharedPreferencesHelperTitle.saveNotificationTitle(nTitle);
+        sharedPreferencesHelperText.saveNotificationText(nText);
+        sharedPreferencesHelperTime.saveNotificationTime(nTime);*/
+    }
+
 }

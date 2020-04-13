@@ -201,6 +201,7 @@ public class FirestoreService extends Service {
         } else {
             startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
             //wearer service
+
         }
 
 

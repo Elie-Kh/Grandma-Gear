@@ -119,7 +119,7 @@
         android:layout_width="102dp"
         android:layout_height="100dp"
         android:layout_marginStart="24dp"
-        android:src="@drawable/sooken"
+        android:src="@drawable/gg_default_pic"
         app:layout_constraintBottom_toTopOf="@+id/hrIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
