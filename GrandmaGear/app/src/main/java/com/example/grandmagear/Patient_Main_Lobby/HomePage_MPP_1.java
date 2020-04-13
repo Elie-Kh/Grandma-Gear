@@ -4,35 +4,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
-import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.FileUtils;
 import android.os.Handler;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.Handler;
-import android.preference.Preference;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,7 +40,6 @@ import android.widget.Toast;
 
 import com.example.grandmagear.BTFragment;
 import com.example.grandmagear.BTHelper;
-import com.example.grandmagear.DisclaimerFragment;
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
 import com.example.grandmagear.LogInActivity;
@@ -57,12 +50,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.example.grandmagear.UserActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -70,13 +61,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.example.grandmagear.Patient_Main_Lobby.PatientSettingsActivity.location;
+import static com.example.grandmagear.Patient_Main_Lobby.App.CHANNEL_1_ID;
+
 
 public class HomePage_MPP_1 extends AppCompatActivity {
     private static final String TAG = "HomePage_MPP_1";
@@ -101,12 +92,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     ImageView Earth;
 
     Button PanicButton;
-    String deviceID;
     String help = "no";
     Uri imageUri;
     private final static  int PICK_IMAGE = 1;
+    protected FirebaseObjects.DevicesDBO device;
     private FirebaseStorage storage;
-    StorageReference storageReference;
     FirebaseHelper firebaseHelper = new FirebaseHelper();
     SharedPreferencesHelper mSharedPreferencesHelper_Login;
     protected FirebaseObjects.UserDBO thisUser;
@@ -114,15 +104,16 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     protected IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     int batLevel;
     protected BTHelper btHelper;
-
+    private NotificationManagerCompat notificationManager;
     SharedPreferencesHelper mSharedPreferencesHelper_BT;
-    protected FirebaseObjects.DevicesDBO tempDevice;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page__mpp_1);
+        notificationManager = NotificationManagerCompat.from(this);
         storage = FirebaseStorage.getInstance();
         setUpUI();
         try {
@@ -212,7 +203,9 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ReportsActivity.class));
+                sendOnChannel1();
+                //sendLocationRequestNotification("One of your Followers is requesting your location","Share Location Request");
+                //startActivity(new Intent(getApplicationContext(), ReportsActivity.class));
             }
         });
     }
@@ -291,7 +284,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         startActivity(intent);
     }
     public void goToLocation (View view){
-         Intent intent = new Intent(this, MapsLocationActivity.class);
+        Intent intent = new Intent(this, MapsLocationActivity.class);
         intent.putExtra(getString(R.string.PC_ID), "0");
         startActivity(intent);
     }
@@ -305,7 +298,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
 
-        public void resumeSharedLocation() {
+    public void resumeSharedLocation() {
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                 .document(firebaseHelper.getCurrentUserID()).get()
@@ -324,22 +317,24 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     public void uploadWearerInfo(){
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(HomePage_MPP_1.this, "Login");
-        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                .document(firebaseHelper.firebaseAuth.getCurrentUser().getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
-                        FullName.setText(thisUser.getFirstName() + " " + thisUser.getLastName());
-                        Age.setText(String.valueOf(thisUser.getAge()));
-                        Weight.setText(String.valueOf(thisUser.getWeight()));
-                        Height.setText(String.valueOf(thisUser.getHeight()));
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(firebaseHelper.firebaseAuth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot != null && documentSnapshot.exists()){
+                    thisUser = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
+                    FullName.setText(thisUser.getFirstName() + " " + thisUser.getLastName());
+                    Age.setText(String.valueOf(thisUser.getAge()));
+                    Weight.setText(String.valueOf(thisUser.getWeight()));
+                    Height.setText(String.valueOf(thisUser.getHeight()));
+                    if(thisUser.getRequestLocation()){
+                        //sendLocationRequestNotification("One of your Followers is requesting your location","Share Location Request");
                     }
-                });
+                }
+            }
+        });
 
     }
+
 
 
 
@@ -557,41 +552,45 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
 
     public void fetchProfilePicture(){
+        //TODO Confirm the linking is properly implemented
+
         mSharedPreferencesHelper_Login = new SharedPreferencesHelper(getApplicationContext(), "Login");
-       /* firebaseHelper.getUser(new FirebaseHelper.Callback_getUser() {
-                                   @Override
-                                   public void onCallback(FirebaseObjects.UserDBO user) {
-                                       thisUser = user;
-                                       if (thisUser.getImage()) {
-                                           FirebaseStorage storage = FirebaseStorage.getInstance();
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(firebaseHelper.firebaseAuth.getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                thisUser = document.toObject(FirebaseObjects.UserDBO.class);
 
-                                           // Get image location
+                if (thisUser.getImage()) {
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
 
-                                           Intent t = getIntent();
-                                           Bundle b = t.getExtras();
-                                           String filename = "gs://grandma-gear.appspot.com/WearerProfilePicture/" + firebaseHelper.getCurrentUserID();
-                                           StorageReference gsReference = storage.getReferenceFromUrl(filename);
+                    // Get image location
+
+                    Intent t = getIntent();
+                    Bundle b = t.getExtras();
+                    String filename = "gs://grandma-gear.appspot.com/WearerProfilePicture/" + thisUser.getUsername();
+                    StorageReference gsReference = storage.getReferenceFromUrl(filename);
 
 
-                                           final long ONE_MEGABYTE = 1024 * 1024;
-                                           gsReference.getBytes(ONE_MEGABYTE*4).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                               @Override
-                                               public void onSuccess(byte[] bytes) {
-                                                   Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                                   ProfilePicture.setImageBitmap(bmp);
-                                               }
-                                           }).addOnFailureListener(new OnFailureListener() {
-                                               @Override
-                                               public void onFailure(@NonNull Exception exception) {
-                                                   // Handle any errors
-                                               }
-                                           });
-                                       } else {
-                                           ProfilePicture.setImageResource(R.drawable.sooken);
-                                       }
-                                   }
-                               }, mSharedPreferencesHelper_Login.getEmail(),
-                Boolean.parseBoolean(mSharedPreferencesHelper_Login.getType()));*/
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    gsReference.getBytes(ONE_MEGABYTE*4).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            storeProfilePicture(bmp);
+                            ProfilePicture.setImageBitmap(bmp);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+                } else {
+                    ProfilePicture.setImageResource(R.drawable.sooken);
+                }
+            }
+        });
     }
     public void offLineProfilePicture(File file) {
         if(file.exists()){
@@ -652,6 +651,75 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         }
 
     }
+/*
+    private void sendLocationRequestNotification(String message, String title) {
+        try {
+            Intent intent = new Intent(this, HomePage_MPP_1.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent enableLocationActivityIntent = new Intent(this, HomePage_MPP_1
+                    .NotificationReceiver.class);
+            PendingIntent enableLocationActivityPendingIntent = PendingIntent.getBroadcast(this, 0 , enableLocationActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Intent disableLocationActivityIntent = new Intent(this, HomePage_MPP_1.class);
+            PendingIntent disableLocationActivityPendingIntent = PendingIntent.getActivity(this, 0 , disableLocationActivityIntent, PendingIntent.FLAG_ONE_SHOT);
+
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.sooken)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setColor(Color.GREEN)
+                    .setAutoCancel(true)
+                    .setOnlyAlertOnce(true)
+                    .addAction(R.drawable.enablelocation,"Accept", enableLocationActivityPendingIntent)
+                    .addAction(R.drawable.disablelocation,"Decline",disableLocationActivityPendingIntent)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(0 , notificationBuilder.build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+*/
+    public void sendOnChannel1() {
+        String message = "One of your Followers is requesting your location";
+        String title = "Share Location Request";
+
+        Intent activityIntent = new Intent(this, HomePage_MPP_1.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,
+                0, activityIntent, 0);
+
+
+        Intent enableLocationActivityIntent = new Intent(this, NotificationReceiver.class);
+        PendingIntent enableLocationActivityPendingIntent = PendingIntent.getBroadcast(this, 0 , enableLocationActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.sooken)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(Color.BLUE)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .addAction(R.drawable.enablelocation, "Accept", enableLocationActivityPendingIntent)
+                .build();
+
+        notificationManager.notify(3, notification);
+    }
+
 
 
 
