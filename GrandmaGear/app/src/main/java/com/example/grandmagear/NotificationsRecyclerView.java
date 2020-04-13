@@ -11,11 +11,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,9 +129,16 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
             mDeleteNotification.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    delete(getAdapterPosition());
+                    goToNotifDelete(getAdapterPosition());
+                    //delete(getAdapterPosition());
                 }
             });
         }
+    }
+
+    public void goToNotifDelete(int position){
+        NotifDeleteFragment deleteFragment = new NotifDeleteFragment(this, position);
+        deleteFragment.setCancelable(false);
+        deleteFragment.show(((UserActivity)context).getSupportFragmentManager(), "NotifDeleteFragment");
     }
 }

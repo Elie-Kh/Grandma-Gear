@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.grandmagear.Patient_Main_Lobby.WearerDeleteFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
@@ -35,6 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static NotificationHelper notificationHelper;
     private static FirebaseObjects.UserDBO userDBO;
     private OnItemClickedListener onItemClickedListener;
+    private Context context;
     //private boolean check = true;
 
     public RecyclerViewAdapter(ArrayList<String> patients, final OnItemClickedListener onItemClickedListener, final Context context) {
@@ -46,10 +48,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if(documentSnapshot != null && documentSnapshot.exists()){
                     userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
                     notificationHelper = new NotificationHelper(context, userDBO);
+
                 }
             }
         });
         this.mPatients = patients;
+        this.context = context;
         this.onItemClickedListener = onItemClickedListener;
     }
 
@@ -153,6 +157,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected ImageView mHeartGraph;
         protected TextView mDeviceBattery;
         protected TextView mPatientName;
+        protected ImageView wearerDelete;
         OnItemClickedListener onItemClickedListener;
         protected int highBPM = 0;
         protected int lowBPM = 0;
@@ -170,10 +175,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mBatteryButton = itemView.findViewById(R.id.battery_button);
             mDeviceBattery = itemView.findViewById(R.id.battery_level);
             mPatientName = itemView.findViewById(R.id.patient_name);
+            wearerDelete = itemView.findViewById(R.id.wearerDeleteIcon);
 
 //            mLocationButton.setClickable(false);
 //            mBatteryButton.setClickable(false);
 //            mHeartGraph.setClickable(false);
+
+            wearerDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getWearerDeleteView(getAdapterPosition());
+                }
+            });
 
             this.onItemClickedListener = onItemClickedListener;
             itemView.setOnClickListener(this);
@@ -209,6 +222,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public interface OnItemClickedListener{
         void onItemClick(int position);
+    }
+
+    public void getWearerDeleteView(int position){
+        WearerDeleteFragment wearerDeleteFragment = new WearerDeleteFragment(this, position);
+        wearerDeleteFragment.setCancelable(false);
+        wearerDeleteFragment.show(((UserActivity)context).getSupportFragmentManager(), "WearerDeleteFragment");
+    }
+
+    public void delete(final int position){
+        mPatients.remove(position);
+        notifyItemRemoved(position);
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                userDBO.devicesFollowed.remove(position);
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                        .update(FirebaseObjects.Devices_Followed, userDBO.devicesFollowed);
+            }
+        });
+        notifyDataSetChanged();
     }
 }
 

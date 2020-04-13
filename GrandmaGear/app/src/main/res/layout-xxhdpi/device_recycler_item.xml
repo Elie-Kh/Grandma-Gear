@@ -5,12 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/wearerDeleteIcon"
+        android:layout_width="47dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/battery_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_delete" />
+
     <TextView
         android:id="@+id/device_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/id_hint"
+        android:textColor="#000000"
         android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/patient_image"
         app:layout_constraintTop_toTopOf="@+id/patient_image"
@@ -40,6 +51,7 @@
         android:layout_width="57dp"
         android:layout_height="21dp"
         android:ems="10"
+        android:textColor="#000000"
         android:inputType="textPersonName"
         android:text="0bpm"
         app:layout_constraintBottom_toBottomOf="@+id/heartBeatImage"
@@ -62,26 +74,29 @@
         android:id="@+id/battery_button"
         android:layout_width="48dp"
         android:layout_height="19dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
         android:background="@drawable/battery_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/location_button"
         app:layout_constraintStart_toEndOf="@+id/location_button"
-        app:layout_constraintTop_toTopOf="@+id/location_button"
-        app:layout_constraintVertical_bias="0.384" />
+        app:layout_constraintTop_toTopOf="@+id/location_button" />
 
     <TextView
         android:id="@+id/battery_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
         android:text="50%"
-        app:layout_constraintBottom_toBottomOf="@+id/battery_button"
-        app:layout_constraintStart_toEndOf="@+id/battery_button" />
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="@+id/battery_button"
+        app:layout_constraintStart_toStartOf="@+id/battery_button"
+        app:layout_constraintTop_toBottomOf="@+id/battery_button" />
 
     <TextView
         android:id="@+id/patient_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/device_id"
         app:layout_constraintEnd_toEndOf="@+id/device_id"
         app:layout_constraintStart_toStartOf="@+id/device_id" />

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:ems="10"
+        android:textColor="#000000"
         android:hint="@string/device_id_hint"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,6 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/add_button"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/custom_button4"
         app:layout_constraintStart_toStartOf="@+id/device_id_adding_fragment"
         app:layout_constraintTop_toBottomOf="@+id/device_id_adding_fragment" />
 
@@ -32,6 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel_button"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/custom_button2"
         app:layout_constraintBottom_toBottomOf="@+id/add_device_adding_fragment"
         app:layout_constraintEnd_toEndOf="@+id/device_id_adding_fragment"
         app:layout_constraintTop_toTopOf="@+id/add_device_adding_fragment" />

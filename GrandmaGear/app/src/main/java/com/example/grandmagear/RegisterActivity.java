@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected FirebaseFirestore firebaseFirestore;
     protected FirebaseHelper firebaseHelper;
     protected SharedPreferencesHelper mSharedPreferencesHelper;
+
     protected String userID;
     protected boolean save = true;
     protected boolean acc_type = false;
@@ -80,10 +81,11 @@ public class RegisterActivity extends AppCompatActivity {
         mLastName = findViewById(R.id.lastName);
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
+
         mAge = findViewById(R.id.age);
         mWeight = findViewById(R.id.weight);
         mHeight = findViewById(R.id.height);
-        mDevice = findViewById(R.id.deviceID);
+
         mRegisterButton = findViewById(R.id.registerButton);
         mRegisterProgressBar = findViewById(R.id.registerProgressBar);
         mRegisterSpinner = findViewById(R.id.registerSpinner);
@@ -129,6 +131,8 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
             finish();
         }
+
+
 
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,8 +242,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false, false, Integer.parseInt(age),
                                             Integer.parseInt(weight), Integer.parseInt(height));
                                     firebaseHelper.AddUser(newUser);
-                                    final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
-                                    firebaseHelper.addDevice(newDevice);
+                                    getBTFrag(newUser);
                                 }
                                 mSharedPreferencesHelper.saveEmail(email);
                                 mSharedPreferencesHelper.savePassword(password);
@@ -286,5 +289,15 @@ public class RegisterActivity extends AppCompatActivity {
         return email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    public void getBTFrag(FirebaseObjects.UserDBO user){
+        BTFragment btFragment = new BTFragment(user, true);
+        btFragment.setCancelable(false);
+        btFragment.show(getSupportFragmentManager(),"BTFragment");
+    }
+
+    public void createDevice(String deviceID){
+        final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
+        firebaseHelper.addDevice(newDevice);
+    }
 
 }

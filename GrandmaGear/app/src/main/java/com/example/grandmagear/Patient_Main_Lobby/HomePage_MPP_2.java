@@ -198,7 +198,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
         reportButton = findViewById(R.id.buttonReports_MPP_2);
 
         ProfilePicture = findViewById(R.id.imageView_ProfilePicture_MPP_2);
-        Heart = findViewById(R.id.imageView_Heart_MPP_2);
+        Heart = findViewById(R.id.hrIcon);
         Earth = findViewById(R.id.imageView_Earth_MPP_2);
         Battery = findViewById(R.id.imageView_BatteryLevel_MPP_2);
 
@@ -242,7 +242,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
     }
 
     public void goToDeviceList () {
-        BTFragment btFragment = new BTFragment(thisUser);
+        BTFragment btFragment = new BTFragment(thisUser,false);
         btFragment.setCancelable(false);
         btFragment.show(getSupportFragmentManager(), "BTFragment");
     }
