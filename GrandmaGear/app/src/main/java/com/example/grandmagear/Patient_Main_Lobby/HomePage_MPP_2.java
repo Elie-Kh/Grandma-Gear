@@ -167,7 +167,10 @@ public class HomePage_MPP_2 extends AppCompatActivity {
                                                         @Override
                                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                             DocumentSnapshot document = task.getResult();
-                                                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(document.getId()).update(FirebaseObjects.requestLocation, true);
+                                                            FirebaseObjects.DevicesDBO device = document.toObject(FirebaseObjects.DevicesDBO.class);
+                                                            Log.d(TAG, document.getId() + "      test");
+                                                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB).document(device.getId()).update(FirebaseObjects.requestLocation, true);
+
                                                         }
                                                     });
 

@@ -174,11 +174,11 @@ public class NotificationHelper {
 
         //Accept
         Intent enableLocation = new Intent(context, NotificationReceiver.class);
-        PendingIntent enableLocationPendingIntent = PendingIntent.getBroadcast(context, 0, enableLocation, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent enableLocationPendingIntent = PendingIntent.getBroadcast(context, 0, enableLocation, PendingIntent.FLAG_CANCEL_CURRENT);
 
         //Decline
         Intent disableLocation = new Intent(context, NotificationReceiverDecline.class);
-        PendingIntent disableLocationPendingIntent = PendingIntent.getBroadcast(context, 0, disableLocation, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent disableLocationPendingIntent = PendingIntent.getBroadcast(context, 0, disableLocation, PendingIntent.FLAG_CANCEL_CURRENT);
 
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
         Notification notification = new NotificationCompat.Builder(context, App.REQUEST_CHANNEL)
