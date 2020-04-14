@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -216,6 +218,7 @@ public class BTHelper {
         }
         @Override
         protected Void doInBackground(Void... voids) {
+//            Looper.prepare();
             content(textView, active);
             return null;
         }
@@ -362,18 +365,24 @@ public class BTHelper {
 
     private void refresh(final TextView textview){
 
-        final Handler handler = new Handler();
-
+//        Looper.prepare();
+        final Handler handler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+            }
+        };
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-
                 //content(textview);
                 if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1) {
                     ContentAsync contentAsync = new ContentAsync(textview, true);
+                    contentAsync.execute();
                 }
                 else {
                     ContentAsync contentAsync = new ContentAsync(textview, false);
+                    contentAsync.execute();
                 }
 
             }
