@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static androidx.core.app.ActivityCompat.startActivityForResult;
+import static com.example.grandmagear.FirebaseHelper.TAG;
 
 public class BTHelper {
 
@@ -66,7 +67,7 @@ public class BTHelper {
                                // Log.d(TAG, "docsnap " + documentSnapshot.getReference().getId());
                                // Log.d(TAG, firebaseHelper.getCurrentUserID());
                                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                                        .document(documentSnapshot.getReference().getId())
+                                        .document(documentSnapshot.getId())
                                         .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -139,7 +140,7 @@ public class BTHelper {
     }
 
     private class BTconnection extends AsyncTask<Void, Void, Void> {
-        private boolean isConnected =true;
+        boolean isConnected = true;
 
         @Override
         protected void onPreExecute(){
@@ -148,8 +149,11 @@ public class BTHelper {
 
         @Override
         protected Void doInBackground(Void...devices){
+
             try{
                 if(btSocket==null || !streamOn){
+                    //disconnectnConfirm();
+                    hc05 = getHC05();
                     btSocket = hc05.createInsecureRfcommSocketToServiceRecord(mUUID);
                     btSocket.connect();
                 }
@@ -158,11 +162,13 @@ public class BTHelper {
             }
             if(!isConnected){
                 //TODO notify follower device is off
+                firebaseHelper = new FirebaseHelper();
                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                         .document(firebaseHelper.getCurrentUserID())
                         .update(FirebaseObjects.DeviceOn,"off");
             } else{
                 //TODO notify follower device is on
+                firebaseHelper = new FirebaseHelper();
                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                         .document(firebaseHelper.getCurrentUserID())
                         .update(FirebaseObjects.DeviceOn,"on");
@@ -177,6 +183,18 @@ public class BTHelper {
 
             if(!isConnected){
                 popToast("Connection failed please try again");
+                if(btSocket != null){
+                    try {
+                        disconnectnConfirm();
+                        btSocket = null;
+                        hc05 = getHC05();
+                        btSocket = hc05.createInsecureRfcommSocketToServiceRecord(mUUID);
+                        btSocket.connect();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ;
+                }
             } else {
                 popToast("Device Connected");
                 streamOn = true;
@@ -214,14 +232,14 @@ public class BTHelper {
         }
         InputStream inputStream = null;
         String heartRate = "";
-
+        Log.d(TAG, "content: BTSOCKET" + btSocket);
         if(btSocket != null){
             if(btSocket.isConnected()) {
                 try {
                     inputStream = btSocket.getInputStream();
                     inputStream.skip(inputStream.available());
 
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < 3; i++) {
                         byte b = (byte) inputStream.read();
 
                         if (((char) b) == 'F') {
@@ -236,6 +254,8 @@ public class BTHelper {
                                         .update(FirebaseObjects.DeviceOn, "off");
                                 firstOn = false;
                             }
+                        }else if(((char) b) == ' '){
+
                         }else {
                             heartRate += (char) b;
                         }
@@ -266,7 +286,7 @@ public class BTHelper {
                                 if(task.isSuccessful()){
                                     for(DocumentSnapshot doc : task.getResult().getDocuments()){
                                         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(doc.getId())
-                                                .update(FirebaseObjects.Heartrate, finalHeartRate);
+                                                .update(FirebaseObjects.Heartrate,Integer.parseInt( finalHeartRate));
                                     }
                                 }
                             }
@@ -280,7 +300,9 @@ public class BTHelper {
                         textview.setText(heartRate);
 
                         if(highHR > 3){
-                             notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded", firebaseHelper.getCurrentUserID());
+
+                                notificationHelper.sendOnBpm("High BPM", "A bpm of " + heartRate + " was recorded", firebaseHelper.getCurrentUserID());
+                                highHR = 0;
                         }
 
                     } else if ( Integer.parseInt(heartRate) < 60){
@@ -290,7 +312,8 @@ public class BTHelper {
                         textview.setText(heartRate);
 
                         if(lowHR > 3){
-                            notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded", firebaseHelper.getCurrentUserID());
+                            notificationHelper.sendOnBpm("Low BPM", "A bpm of " + heartRate + " was recorded", firebaseHelper.getCurrentUserID());
+                            lowHR = 0;
                         }
 
                     } else {

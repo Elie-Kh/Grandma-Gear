@@ -84,6 +84,11 @@ public class BTFragment extends DialogFragment {
 
                     btHelper.setHc05(deviceList.get(position).getAddress());
                     if(!firstSync) {
+                        try{
+                            btHelper.disconnectnConfirm();
+                        } catch (Exception e){
+
+                        }
                         ((HomePage_MPP_1) getActivity()).btConnect();
                         final String address = btHelper.getHC05().getAddress().replaceAll(":","");
                         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
@@ -107,6 +112,7 @@ public class BTFragment extends DialogFragment {
                         });
                     }
                     else {
+
                         ((HomePage_MPP_1)getActivity()).createDevice(btHelper.getHC05().getAddress().replaceAll(":",""));
                     }
                     getDialog().dismiss();

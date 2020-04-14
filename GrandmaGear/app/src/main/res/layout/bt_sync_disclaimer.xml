@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/frag_layout">
 
     <TextView
         android:id="@+id/warningLabelTextViewW"
@@ -28,7 +29,8 @@
         android:text="@string/bt_sync_warn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/warningLabelTextViewW" />
+        app:layout_constraintTop_toBottomOf="@+id/warningLabelTextViewW"
+        />
 
     <Button
         android:id="@+id/continueRegButton"
