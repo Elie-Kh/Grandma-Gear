@@ -4,19 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
+
 import android.Manifest;
-import android.app.Activity;
-import android.app.DownloadManager;
-import androidx.core.app.NotificationCompat;
+
 import androidx.core.app.NotificationManagerCompat;
-import android.app.Notification;
-import android.app.NotificationManager;
+
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,8 +18,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -485,7 +477,8 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                                 Log.d(TAG, firebaseHelper.getCurrentUserID());
                                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
                                         .document(documentSnapshot.getReference().getId())
-                                        .update(FirebaseObjects.Heartrate, Integer.parseInt(BPM.getText().toString()));
+                                        .update(FirebaseObjects.Heartrate, 67);
+//                                        .update(FirebaseObjects.Heartrate, Integer.parseInt(BPM.getText().toString()));
                                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
                                         .document(documentSnapshot.getReference().getId())
                                         .update(FirebaseObjects.Fall, "fall");
@@ -677,7 +670,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                         }
                     });
                 } else {
-                    ProfilePicture.setImageResource(R.drawable.sooken);
+                    ProfilePicture.setImageResource(R.drawable.gg_default_pic);
                 }
             }
         });
@@ -735,7 +728,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
             Log.d(TAG, "2nd else statement activated");
         }
         else {
-            ProfilePicture.setImageResource(R.drawable.sooken);
+            ProfilePicture.setImageResource(R.drawable.gg_default_pic);
             Log.d(TAG, "Last else statement activated");
 
         }

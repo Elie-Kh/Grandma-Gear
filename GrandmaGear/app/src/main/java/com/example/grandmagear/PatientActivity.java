@@ -50,7 +50,7 @@ public class PatientActivity extends AppCompatActivity {
         mOKButton = findViewById(R.id.ok_button);
         mDeviceID = findViewById(R.id.device_id_edit_text);
         mLogo = findViewById(R.id.app_logo);
-        mLogo.setImageResource(R.drawable.sooken);
+        mLogo.setImageResource(R.drawable.gg_default_pic);
         mSharedPreferencesHelper = new SharedPreferencesHelper(PatientActivity.this,
                 "Login");
         firebaseHelper = new FirebaseHelper();
