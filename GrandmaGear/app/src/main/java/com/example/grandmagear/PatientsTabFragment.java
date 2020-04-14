@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
+import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_2;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -100,7 +101,7 @@ public class PatientsTabFragment extends Fragment implements RecyclerViewAdapter
     @Override
     public void onItemClick(int position) {
         //KIZITO_ENTER_THE_ACTIVITY_NAME.class
-        Intent intent = new Intent(getContext(), MainActivity.class);
+        Intent intent = new Intent(getContext(), HomePage_MPP_2.class);
         intent.putExtra("wearerID", mPatientsList.get(position));
         Log.d(TAG, intent.getExtras().toString());
         startActivity(intent);

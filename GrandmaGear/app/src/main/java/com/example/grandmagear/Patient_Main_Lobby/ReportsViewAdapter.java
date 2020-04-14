@@ -1,5 +1,6 @@
 package com.example.grandmagear.Patient_Main_Lobby;
 
+import android.content.Context;
 import android.icu.text.MessagePattern;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -11,7 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.grandmagear.FirebaseHelper;
+import com.example.grandmagear.FirebaseObjects;
+import com.example.grandmagear.NotifDeleteFragment;
 import com.example.grandmagear.R;
+import com.example.grandmagear.UserActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -20,11 +28,19 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
     private ArrayList<String> reportTitle;
     private ArrayList<String> reportText;
     private ArrayList<String> reportTime;
+    private FirebaseHelper firebaseHelper;
+    private FirebaseObjects.UserDBO userDBO;
+    private Context context;
+    private boolean check;
 
-    public ReportsViewAdapter(ArrayList<String> reportTitle, ArrayList<String> reportText, ArrayList<String> reportTime) {
+    public ReportsViewAdapter(ArrayList<String> reportTitle, ArrayList<String> reportText,
+                              ArrayList<String> reportTime, boolean check, Context context) {
         this.reportTitle = reportTitle;
         this.reportText = reportText;
         this.reportTime = reportTime;
+        firebaseHelper = new FirebaseHelper();
+        this.check = check;
+        this.context = context;
     }
 
     @NonNull
@@ -41,6 +57,21 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
             holder.mReportTitle.setText(reportTitle.get(position));
             holder.mReportText.setText(reportText.get(position));
             holder.mReportTime.setText(reportTime.get(position));
+            if(reportTitle.get(position).contains("BPM")){
+                holder.mReportImage.setImageResource(R.drawable.heartbeat);
+            }
+            if(reportTitle.get(position).contains("Fall")){
+                holder.mReportImage.setImageResource(R.drawable.falling);
+            }
+            if(reportTitle.get(position).contains("S.O.S.")){
+                holder.mReportImage.setImageResource(R.drawable.sos_icon);
+            }
+            if (reportTitle.get(position).contains("Battery")){
+                holder.mReportImage.setImageResource(R.drawable.battery);
+            }
+            if(reportTitle.get(position).contains("Offline")){
+                holder.mReportImage.setImageResource(R.drawable.offfline_icon);
+            }
     }
 
     @Override
@@ -48,11 +79,25 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
         return reportTitle.size();
     }
 
-    public void delete(int position){
+    public void delete(final int position){
         reportTitle.remove(position);
         reportText.remove(position);
         reportTime.remove(position);
         notifyItemRemoved(position);
+
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                userDBO.notifications.remove(position);
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                        .update("notifications", userDBO.notifications);
+            }
+        });
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -72,12 +117,22 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
             mReportText = itemView.findViewById(R.id.reportText);
             mReportTime = itemView.findViewById(R.id.reportTime);
 
+            if(check){
+                mDeleteReportImage.setVisibility(View.GONE);
+            }
+
             mDeleteReportImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    delete(getAdapterPosition());
+                    goToDeleteNotifView(getAdapterPosition());
                 }
             });
         }
+    }
+
+    public void goToDeleteNotifView(int position){
+        NotifDeleteFragment deleteFragment = new NotifDeleteFragment(this, position);
+        deleteFragment.setCancelable(false);
+        deleteFragment.show(((ReportsActivity)context).getSupportFragmentManager(), "NotifDeleteFragment");
     }
 }

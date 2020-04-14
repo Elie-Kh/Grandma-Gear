@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/frag_layout">
+
+    <TextView
+        android:id="@+id/warningLabelTextViewW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/delete_warn"
+        android:textSize="24sp"
+        android:textColor="#8E1600"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/warningTextViewN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:text="@string/delete_warn_notif"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/warningLabelTextViewW" />
+
+    <Button
+        android:id="@+id/confirmDeleteNotifButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/Confirm"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/custom_button4"
+        app:layout_constraintStart_toStartOf="@+id/warningTextViewN"
+        app:layout_constraintTop_toBottomOf="@+id/warningTextViewN" />
+
+    <Button
+        android:id="@+id/cancelDeleteNotifButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="@string/cancel_button"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/custom_button2"
+        app:layout_constraintEnd_toEndOf="@+id/warningTextViewN"
+        app:layout_constraintTop_toBottomOf="@+id/warningTextViewN" />
+</androidx.constraintlayout.widget.ConstraintLayout>

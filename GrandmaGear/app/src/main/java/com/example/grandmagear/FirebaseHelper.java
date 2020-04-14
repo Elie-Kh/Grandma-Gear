@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -72,6 +73,8 @@ public class FirebaseHelper {
         user.put(FirebaseObjects.Height, newUser.height);
         user.put(FirebaseObjects.Weight, newUser.weight);
         user.put(FirebaseObjects.GPS_Follow, false);
+        user.put(FirebaseObjects.image, false);
+        user.put(FirebaseObjects.requestLocation, false);
         user.put(FirebaseObjects.Devices_Followed, newUser.devicesFollowed);
         user.put(FirebaseObjects.Events, newUser.events);
         user.put(FirebaseObjects.Notifications, newUser.notifications);
@@ -146,22 +149,21 @@ public class FirebaseHelper {
         });
     }
 
-    public void addNotification(final FirebaseObjects.UserDBO userDBO,
-                                final FirebaseObjects.Notifications notification){
-       firebaseFirestore.collection(userDB).whereEqualTo(FirebaseObjects.Username, firebaseAuth.getCurrentUser().getUid())
-               .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-           @Override
-           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-               if(task.isSuccessful()){
-
-                   ArrayList<FirebaseObjects.Notifications> notifications = new ArrayList<FirebaseObjects.Notifications>();
-                   notifications = userDBO.getNotifications();
-                   notifications.add(notification);
-                   userDBO.setNotifications(notifications);
-                   editUser(userDBO, FirebaseObjects.Notifications, notifications);
-               }
-           }
-       });
+    public void addNotification(final FirebaseObjects.Notifications notification){
+       firebaseFirestore.collection(FirebaseHelper.userDB).document(firebaseAuth.getCurrentUser().getUid()).get()
+               .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       if(task.isSuccessful()) {
+                           FirebaseObjects.UserDBO userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                           ArrayList<FirebaseObjects.Notifications> notifications = new ArrayList<FirebaseObjects.Notifications>();
+                           notifications = userDBO.getNotifications();
+                           notifications.add(notification);
+                           userDBO.setNotifications(notifications);
+                           editUser(userDBO, FirebaseObjects.Notifications, notifications);
+                       }
+                   }
+               });
     }
 
     public void addDevice(final FirebaseObjects.DevicesDBO device){
@@ -339,7 +341,7 @@ public class FirebaseHelper {
         void onCallback(FirebaseObjects.UserDBO user);
     }
 
-    public void getUser(final Callback_getUser callback, String email, final boolean type){
+    public void getUser(String email, final boolean type){
         final FirebaseObjects.UserDBO[] returnable = {null};
         firebaseFirestore
                 .collection(FirebaseHelper.userDB)
@@ -358,7 +360,9 @@ public class FirebaseHelper {
                                             (String) document.get(FirebaseObjects.Last_Name),
                                             (String) document.get(FirebaseObjects.Password),
                                             (Boolean) document.get(FirebaseObjects.Account_Type),
-                                            (Boolean) document.get(FirebaseObjects.GPS_Follow));
+                                            (Boolean) document.get(FirebaseObjects.GPS_Follow),
+                                            (Boolean) document.get(FirebaseObjects.image),
+                                            (Boolean) document.get(FirebaseObjects.requestLocation));
                                 } else {
                                     Log.d("__TESTERS__", (String) Objects.requireNonNull(document.get(FirebaseObjects.Email)));
                                     returnable[0] = new FirebaseObjects.UserDBO(
@@ -368,12 +372,13 @@ public class FirebaseHelper {
                                             (String) document.get(FirebaseObjects.Password),
                                             (Boolean) document.get(FirebaseObjects.Account_Type),
                                             (Boolean) document.get(FirebaseObjects.GPS_Follow),
+                                            (Boolean) document.get(FirebaseObjects.image),
+                                            (Boolean) document.get(FirebaseObjects.requestLocation),
                                             (Integer) Math.round((Long) document.get(FirebaseObjects.Age)),
                                             (Integer) Math.round((Long) document.get(FirebaseObjects.Weight)),
                                             (Integer) Math.round((Long) document.get(FirebaseObjects.Height))
                                             );
                                 }
-                                callback.onCallback(returnable[0]);
                             }
                         }
                     }

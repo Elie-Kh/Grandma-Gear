@@ -15,7 +15,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/sooken" />
+        tools:srcCompat="@drawable/gg_default_pic" />
 
     <Button
         android:id="@+id/help_button"

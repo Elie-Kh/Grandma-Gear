@@ -1,6 +1,11 @@
 package com.example.grandmagear;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.grandmagear.Patient_Main_Lobby.WearerDeleteFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,9 +29,14 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +47,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static NotificationHelper notificationHelper;
     private static FirebaseObjects.UserDBO userDBO;
     private OnItemClickedListener onItemClickedListener;
+    private Context context;
     //private boolean check = true;
 
     public RecyclerViewAdapter(ArrayList<String> patients, final OnItemClickedListener onItemClickedListener, final Context context) {
@@ -45,10 +59,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if(documentSnapshot != null && documentSnapshot.exists()){
                     userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
                     notificationHelper = new NotificationHelper(context, userDBO);
+
                 }
             }
         });
         this.mPatients = patients;
+        this.context = context;
         this.onItemClickedListener = onItemClickedListener;
     }
 
@@ -70,23 +86,69 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .document(mPatients.get(position))
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                    public void onEvent(@Nullable final DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                         if(documentSnapshot != null && documentSnapshot.exists()){
-                            FirebaseObjects.DevicesDBO device = documentSnapshot
+                            final FirebaseObjects.DevicesDBO device = documentSnapshot
                                     .toObject(FirebaseObjects.DevicesDBO.class);
                             Log.d(TAG, "logging");
                             holder.mHeartBeatText.setText((device.heartrate + "bpm"));
-                            if ((Integer) device.heartrate < 60) {
-                                notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for");
-                                //check = false;
-                            }
-                            if ((Integer) device.heartrate >= 60) {
-                                //check = true;
-                            }
-                            if(((String) device.helpRequested).equals("yes")){
-                                notificationHelper.sendOnFall("Panic button pressed", "The panic button has been pressed by ");
-                            }
+                            firebaseHelper.firebaseFirestore
+                                    .collection(FirebaseHelper.userDB)
+                                    .document(device.id)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            DocumentSnapshot snapshot = task.getResult();
+                                            if (snapshot != null && snapshot.exists()) {
+                                                FirebaseObjects.UserDBO patient = snapshot
+                                                        .toObject(FirebaseObjects.UserDBO.class);
+                                                String name = (String) patient.firstName + " " + (String) patient.lastName;
+                                                if ((Integer) device.heartrate < 60) {
+                                                    holder.highBPM = 0;
+                                                    holder.lowBPM++;
+                                                    holder.mHeartBeatText.setTextColor(Color.RED);
 
+                                                    if (holder.lowBPM > 3) {
+
+                                                        notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for " + name, documentSnapshot.getId());
+                                                    }
+                                                    //check = false;
+                                                } else if ((Integer) device.heartrate >= 100) {
+                                                    holder.highBPM++;
+                                                    holder.lowBPM = 0;
+                                                    holder.mHeartBeatText.setTextColor(Color.RED);
+                                                    if (holder.highBPM > 3) {
+                                                        notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded for " + name, documentSnapshot.getId());
+                                                    }
+                                                    //check = true;
+                                                } else {
+                                                    holder.highBPM = 0;
+                                                    holder.lowBPM = 0;
+                                                    holder.mHeartBeatText.setTextColor(Color.GREEN);
+                                                }
+
+                                                if (((String) device.helpRequested).equals("yes")) {
+                                                    notificationHelper.sendOnFall("Panic button pressed", "The panic button has been pressed by " + name, documentSnapshot.getId());
+                                                }
+
+                                                if(((String) device.fall).equals("fall")){
+                                                    notificationHelper.sendOnFall("Fall", name + " has fallen!", documentSnapshot.getId());
+                                                    firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(documentSnapshot.getId())
+                                                            .update(FirebaseObjects.Fall, "good");
+                                                }
+
+                                                if((Integer) device.phoneBattery < 20 && holder.sendBattery){
+                                                    notificationHelper.sendOnBattery("Battery level low", "Battery level getting low for " + name, documentSnapshot.getId());
+                                                    holder.sendBattery = false;
+                                                }
+                                                if((Integer) device.phoneBattery > 20 && !holder.sendBattery){
+                                                    holder.sendBattery = true;
+                                                }
+                                            }
+
+                                        }
+                                    });
 
                             FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                                     .document(device.id)
@@ -99,10 +161,46 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                 .toObject(FirebaseObjects.UserDBO.class);
                                         String name = (String) patient.firstName + " " + (String) patient.lastName;
                                         holder.mPatientName.setText(name);
+                                        if(device.getDeviceOn().equals("on")){
+                                        if (patient.getImage()) {
+                                            FirebaseStorage storage = FirebaseStorage.getInstance();
+
+                                            // Get image location
+
+                                            //Intent t = getIntent();
+                                            //Bundle b = t.getExtras();
+                                            String filename = "gs://grandma-gear.appspot.com/WearerProfilePicture/" + patient.getUsername();
+                                            StorageReference gsReference = storage.getReferenceFromUrl(filename);
+
+
+                                            final long ONE_MEGABYTE = 1024 * 1024;
+                                            gsReference.getBytes(ONE_MEGABYTE*4).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] bytes) {
+                                                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                    storeProfilePicture(bmp);
+                                                    holder.mPatientImage.setImageBitmap(bmp);
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception exception) {
+                                                    // Handle any errors
+                                                }
+                                            });
+                                        } else {
+                                            holder.mPatientImage.setImageResource(R.drawable.gg_default_pic);
+                                        }
+                                    }
+                                        else {
+                                                holder.mPatientImage.setImageResource(R.drawable.offfline_icon);
+
+                                        }
                                     }
                                 }
                             });
-                            holder.mDeviceBattery.setText((device.deviceBattery + "%"));
+                            holder.mDeviceBattery.setText((device.phoneBattery + "%"));
+
+
                             //notifyItemChanged(position);
                         }
 
@@ -112,6 +210,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
         //Kizito, this is the code.
+
+    }
+
+    public void storeProfilePicture(Bitmap bitmap){
+        FileOutputStream outStream = null;
+
+        // Write to SD Card
+
+        File file = new File(((UserActivity)context).getFilesDir(), "GrandmaGearProfilePicture");
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+            // PNG is a lossless format, the compression factor (100) is ignored
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -136,7 +249,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         protected ImageView mHeartGraph;
         protected TextView mDeviceBattery;
         protected TextView mPatientName;
+        protected ImageView wearerDelete;
         OnItemClickedListener onItemClickedListener;
+        protected int highBPM = 0;
+        protected int lowBPM = 0;
+        protected boolean sendBattery = true;
 
 
         public ViewHolder(@NonNull View itemView, OnItemClickedListener onItemClickedListener) {
@@ -151,10 +268,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mBatteryButton = itemView.findViewById(R.id.battery_button);
             mDeviceBattery = itemView.findViewById(R.id.battery_level);
             mPatientName = itemView.findViewById(R.id.patient_name);
+            wearerDelete = itemView.findViewById(R.id.wearerDeleteIcon);
 
 //            mLocationButton.setClickable(false);
 //            mBatteryButton.setClickable(false);
 //            mHeartGraph.setClickable(false);
+
+            wearerDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getWearerDeleteView(getAdapterPosition());
+                }
+            });
 
             this.onItemClickedListener = onItemClickedListener;
             itemView.setOnClickListener(this);
@@ -190,6 +315,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public interface OnItemClickedListener{
         void onItemClick(int position);
+    }
+
+    public void getWearerDeleteView(int position){
+        WearerDeleteFragment wearerDeleteFragment = new WearerDeleteFragment(this, position);
+        wearerDeleteFragment.setCancelable(false);
+        wearerDeleteFragment.show(((UserActivity)context).getSupportFragmentManager(), "WearerDeleteFragment");
+    }
+
+    public void delete(final int position){
+        mPatients.remove(position);
+        notifyItemRemoved(position);
+        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                userDBO = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                userDBO.devicesFollowed.remove(position);
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
+                        .update(FirebaseObjects.Devices_Followed, userDBO.devicesFollowed);
+            }
+        });
+        notifyDataSetChanged();
     }
 }
 

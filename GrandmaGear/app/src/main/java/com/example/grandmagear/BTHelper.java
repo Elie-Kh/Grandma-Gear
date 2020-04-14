@@ -7,18 +7,23 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.internal.$Gson$Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +31,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static androidx.core.app.ActivityCompat.startActivityForResult;
+import static com.example.grandmagear.FirebaseHelper.TAG;
 
 public class BTHelper {
 
@@ -64,7 +70,7 @@ public class BTHelper {
                                // Log.d(TAG, "docsnap " + documentSnapshot.getReference().getId());
                                // Log.d(TAG, firebaseHelper.getCurrentUserID());
                                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                                        .document(documentSnapshot.getReference().getId())
+                                        .document(documentSnapshot.getId())
                                         .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -85,7 +91,7 @@ public class BTHelper {
         notificationHelper = new NotificationHelper(context, thisUser);
         setHc05(mac);
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.firebaseAuth.getCurrentUser())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -103,6 +109,10 @@ public class BTHelper {
                                     }
                                 });
                             }
+                        }
+                        else {
+                            FirebaseObjects.DevicesDBO device = new FirebaseObjects.DevicesDBO(getHC05().getAddress());
+                            firebaseHelper.addDevice(device);
                         }
                     }
                 });
@@ -133,7 +143,7 @@ public class BTHelper {
     }
 
     private class BTconnection extends AsyncTask<Void, Void, Void> {
-        private boolean isConnected =true;
+        boolean isConnected = true;
 
         @Override
         protected void onPreExecute(){
@@ -142,8 +152,11 @@ public class BTHelper {
 
         @Override
         protected Void doInBackground(Void...devices){
+
             try{
                 if(btSocket==null || !streamOn){
+                    //disconnectnConfirm();
+                    hc05 = getHC05();
                     btSocket = hc05.createInsecureRfcommSocketToServiceRecord(mUUID);
                     btSocket.connect();
                 }
@@ -152,8 +165,16 @@ public class BTHelper {
             }
             if(!isConnected){
                 //TODO notify follower device is off
+                firebaseHelper = new FirebaseHelper();
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(firebaseHelper.getCurrentUserID())
+                        .update(FirebaseObjects.DeviceOn,"off");
             } else{
                 //TODO notify follower device is on
+                firebaseHelper = new FirebaseHelper();
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(firebaseHelper.getCurrentUserID())
+                        .update(FirebaseObjects.DeviceOn,"on");
             }
             return null;
         }
@@ -165,10 +186,46 @@ public class BTHelper {
 
             if(!isConnected){
                 popToast("Connection failed please try again");
+                if(btSocket != null){
+                    try {
+                        disconnectnConfirm();
+                        btSocket = null;
+                        hc05 = getHC05();
+                        btSocket = hc05.createInsecureRfcommSocketToServiceRecord(mUUID);
+                        btSocket.connect();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ;
+                }
             } else {
                 popToast("Device Connected");
                 streamOn = true;
             }
+        }
+
+
+    }
+
+    private class ContentAsync extends AsyncTask<Void,Void,Void>{
+
+        TextView textView;
+        boolean active;
+       Context context;
+
+        public ContentAsync(TextView textView, boolean active) {
+            this.textView = textView;
+            this.active = active;
+            //this.context = context;
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+//            Looper.prepare();
+
+            content(textView, active);
+            return null;
         }
 
 
@@ -195,23 +252,26 @@ public class BTHelper {
         }
     }
 
-    public void content(TextView textview) {
+    public void content(TextView textview, boolean active) {
 
+        if(firebaseHelper == null){
+            firebaseHelper = new FirebaseHelper();
+        }
         InputStream inputStream = null;
         String heartRate = "";
-
+        Log.d(TAG, "content: BTSOCKET" + btSocket);
         if(btSocket != null){
             if(btSocket.isConnected()) {
                 try {
                     inputStream = btSocket.getInputStream();
                     inputStream.skip(inputStream.available());
 
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < 3; i++) {
                         byte b = (byte) inputStream.read();
 
                         if (((char) b) == 'F') {
                             //TODO signal fall
-                            notificationHelper.sendOnFall("A Fall", "A fall was detected");
+                            notificationHelper.sendOnFall("A Fall", "A fall was detected", firebaseHelper.getCurrentUserID());
 
                         } else if (((char) b) == 'N'){
                             //TODO signal device off
@@ -221,6 +281,8 @@ public class BTHelper {
                                         .update(FirebaseObjects.DeviceOn, "off");
                                 firstOn = false;
                             }
+                        }else if(((char) b) == ' '){
+
                         }else {
                             heartRate += (char) b;
                         }
@@ -228,38 +290,75 @@ public class BTHelper {
 
                     if(Integer.parseInt(heartRate)!=0){
                         if(!firstOn) {
-                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
-                                    .document(FirebaseHelper.firebaseAuth.getCurrentUser().getUid())
-                                    .update(FirebaseObjects.DeviceOn, "on");
+
+                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        for(DocumentSnapshot doc : task.getResult().getDocuments()){
+                                            firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(doc.getId())
+                                                    .update(FirebaseObjects.DeviceOn, "on");
+                                        }
+                                    }
+                                }
+                            });
                             firstOn = true;
                         }
+                        final String finalHeartRate = heartRate;
+                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()){
+                                    for(DocumentSnapshot doc : task.getResult().getDocuments()){
+                                        firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(doc.getId())
+                                                .update(FirebaseObjects.Heartrate,Integer.parseInt( finalHeartRate));
+                                    }
+                                }
+                            }
+                        });
                     }
 
                     if(Integer.parseInt(heartRate) > 100){
                         highHR ++;
                         lowHR = 0;
-                        textview.setText(heartRate);
-                        //TODO send HR to followers
+                        if(active){
+//                            textview.setTextColor(Color.RED);
+//                            textview.setText(heartRate);
+                            ((HomePage_MPP_1)btContext).updateBPM(Integer.parseInt(heartRate));
+                        }
+
+
                         if(highHR > 3){
-                            notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded");
-                            //TODO send High HR notif
+
+                                notificationHelper.sendOnBpm("High BPM", "A bpm of " + heartRate + " was recorded", firebaseHelper.getCurrentUserID());
+                                highHR = 0;
                         }
 
                     } else if ( Integer.parseInt(heartRate) < 60){
                         lowHR ++;
                         highHR =0;
-                        textview.setText(heartRate);
-                        //TODO send HR to followers
+                        if(active) {
+//                            textview.setTextColor(Color.RED);
+//                            textview.setText(heartRate);
+                            ((HomePage_MPP_1)btContext).updateBPM(Integer.parseInt(heartRate));
+                        }
+
                         if(lowHR > 3){
-                            notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded");
-                            //TODO send Low HR notif
+                            notificationHelper.sendOnBpm("Low BPM", "A bpm of " + heartRate + " was recorded", firebaseHelper.getCurrentUserID());
+                            lowHR = 0;
                         }
 
                     } else {
                         highHR = 0;
                         lowHR = 0;
-                        textview.setText(heartRate);
-                        //TODO send heart rate to followers
+                        if(active) {
+//                            textview.setText(heartRate);
+//                            textview.setTextColor(Color.GREEN);
+                            ((HomePage_MPP_1)btContext).updateBPM(Integer.parseInt(heartRate));
+                        }
+
                     }
 
                 } catch (IOException e) {
@@ -269,19 +368,35 @@ public class BTHelper {
         }
 
 
-        refresh(textview);
+        refresh(textview, (btContext));
 
 
     }
 
-    private void refresh(final TextView textview){
+    private void refresh(final TextView textview, final Context context){
 
-        final Handler handler = new Handler();
+//        Looper.prepare();
+        final Handler handler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+            }
+        };
 
         final Runnable runnable = new Runnable() {
+
             @Override
             public void run() {
-                content(textview);
+                //content(textview);
+                if(((HomePage_MPP_1)context).getActive()) {
+                    ContentAsync contentAsync = new ContentAsync(textview, true);
+                    contentAsync.execute();
+                }
+                else {
+                    ContentAsync contentAsync = new ContentAsync(textview, false);
+                    contentAsync.execute();
+                }
+
             }
         };
 
