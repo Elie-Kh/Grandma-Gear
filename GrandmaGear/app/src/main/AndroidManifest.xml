@@ -61,6 +61,8 @@
         <activity
             android:name=".Patient_Main_Lobby.ReportsActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".Patient_Main_Lobby.ReportsActivity2"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashScreen"
             android:theme="@style/Theme.AppCompat.NoActionBar">

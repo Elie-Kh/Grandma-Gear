@@ -86,40 +86,69 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .document(mPatients.get(position))
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                    public void onEvent(@Nullable final DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                         if(documentSnapshot != null && documentSnapshot.exists()){
                             final FirebaseObjects.DevicesDBO device = documentSnapshot
                                     .toObject(FirebaseObjects.DevicesDBO.class);
                             Log.d(TAG, "logging");
                             holder.mHeartBeatText.setText((device.heartrate + "bpm"));
-                            if ((Integer) device.heartrate < 60) {
-                                holder.highBPM =0;
-                                holder.lowBPM++;
-                                holder.mHeartBeatText.setTextColor(Color.RED);
+                            firebaseHelper.firebaseFirestore
+                                    .collection(FirebaseHelper.userDB)
+                                    .document(device.id)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            DocumentSnapshot snapshot = task.getResult();
+                                            if (snapshot != null && snapshot.exists()) {
+                                                FirebaseObjects.UserDBO patient = snapshot
+                                                        .toObject(FirebaseObjects.UserDBO.class);
+                                                String name = (String) patient.firstName + " " + (String) patient.lastName;
+                                                if ((Integer) device.heartrate < 60) {
+                                                    holder.highBPM = 0;
+                                                    holder.lowBPM++;
+                                                    holder.mHeartBeatText.setTextColor(Color.RED);
 
-                                if(holder.lowBPM > 3) {
+                                                    if (holder.lowBPM > 3) {
 
-                                    notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for", documentSnapshot.getId());
-                                }
-                                //check = false;
-                            }else if ((Integer) device.heartrate >= 100) {
-                                holder.highBPM++;
-                                holder.lowBPM =0;
-                                holder.mHeartBeatText.setTextColor(Color.RED);
-                                if(holder.highBPM > 3){
-                                    notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded for", documentSnapshot.getId());
-                                }
-                                //check = true;
-                            } else {
-                                holder.highBPM =0;
-                                holder.lowBPM =0;
-                                holder.mHeartBeatText.setTextColor(Color.GREEN);
-                            }
+                                                        notificationHelper.sendOnBpm("Low BPM", "A bpm of " + device.heartrate + " was recorded for " + name, documentSnapshot.getId());
+                                                    }
+                                                    //check = false;
+                                                } else if ((Integer) device.heartrate >= 100) {
+                                                    holder.highBPM++;
+                                                    holder.lowBPM = 0;
+                                                    holder.mHeartBeatText.setTextColor(Color.RED);
+                                                    if (holder.highBPM > 3) {
+                                                        notificationHelper.sendOnBpm("High BPM", "A bpm of " + device.heartrate + " was recorded for " + name, documentSnapshot.getId());
+                                                    }
+                                                    //check = true;
+                                                } else {
+                                                    holder.highBPM = 0;
+                                                    holder.lowBPM = 0;
+                                                    holder.mHeartBeatText.setTextColor(Color.GREEN);
+                                                }
 
-                            if(((String) device.helpRequested).equals("yes")){
-                                notificationHelper.sendOnFall("Panic button pressed", "The panic button has been pressed by ", documentSnapshot.getId());
-                            }
+                                                if (((String) device.helpRequested).equals("yes")) {
+                                                    notificationHelper.sendOnFall("Panic button pressed", "The panic button has been pressed by " + name, documentSnapshot.getId());
+                                                }
 
+                                                if(((String) device.fall).equals("fall")){
+                                                    notificationHelper.sendOnFall("Fall", name + " has fallen!", documentSnapshot.getId());
+                                                    firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).document(documentSnapshot.getId())
+                                                            .update(FirebaseObjects.Fall, "good");
+                                                }
+
+                                                if((Integer) device.phoneBattery < 20 && holder.sendBattery){
+                                                    notificationHelper.sendOnBattery("Battery level low", "Battery level getting low for " + name, documentSnapshot.getId());
+                                                    holder.sendBattery = false;
+                                                }
+                                                if((Integer) device.phoneBattery > 20 && !holder.sendBattery){
+                                                    holder.sendBattery = true;
+                                                }
+                                            }
+
+                                        }
+                                    });
 
                             FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
                                     .document(device.id)
@@ -169,7 +198,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     }
                                 }
                             });
-                            holder.mDeviceBattery.setText((device.deviceBattery + "%"));
+                            holder.mDeviceBattery.setText((device.phoneBattery + "%"));
+
 
                             //notifyItemChanged(position);
                         }
@@ -223,6 +253,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         OnItemClickedListener onItemClickedListener;
         protected int highBPM = 0;
         protected int lowBPM = 0;
+        protected boolean sendBattery = true;
 
 
         public ViewHolder(@NonNull View itemView, OnItemClickedListener onItemClickedListener) {
