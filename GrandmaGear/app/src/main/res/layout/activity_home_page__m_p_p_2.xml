@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Patient_Main_Lobby.HomePage_MPP_2">
+
+    <TextView
+        android:id="@+id/textView_FullName_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/MPP_1_textView_FullName"
+        android:textColor="#000000"
+        app:layout_constraintStart_toEndOf="@+id/imageView_ProfilePicture_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/imageView_ProfilePicture_MPP_2" />
+
+    <TextView
+        android:id="@+id/textView_Age_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/MPP_1_textView_Age"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_ProfilePicture_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/imageView_ProfilePicture_MPP_2"
+        app:layout_constraintTop_toBottomOf="@+id/textView_FullName_MPP_2" />
+
+    <TextView
+        android:id="@+id/textView_Height_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:text="@string/MPP_1_textView_Height"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_FullName_MPP_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView_FullName_MPP_2" />
+
+    <TextView
+        android:id="@+id/textView_Weight_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/MPP_1_textView_Weight"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_Age_MPP_2"
+        app:layout_constraintStart_toStartOf="@+id/textView_Height_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_Age_MPP_2" />
+
+    <ImageView
+        android:id="@+id/imageView_BatteryLevel_MPP_2"
+        android:layout_width="71dp"
+        android:layout_height="98dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/battery"
+        app:layout_constraintBottom_toTopOf="@+id/imageView_Earth_MPP_2"
+        app:layout_constraintEnd_toEndOf="@+id/imageView_Earth_MPP_2"
+        app:layout_constraintStart_toStartOf="@+id/imageView_Earth_MPP_2" />
+
+    <ImageView
+        android:id="@+id/imageView_Earth_MPP_2"
+        android:layout_width="84dp"
+        android:layout_height="79dp"
+        android:layout_marginBottom="36dp"
+        android:src="@drawable/earth2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/hrIcon"
+        app:layout_constraintStart_toStartOf="@+id/hrIcon" />
+
+    <TextView
+        android:id="@+id/textViewFullName_Displayed_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="@string/MPP_1_textView_FullName_Displayed"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_FullName_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_FullName_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_FullName_MPP_2" />
+
+    <TextView
+        android:id="@+id/textView_Age_Displayed_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="@string/MPP_1_textView_Age_Displayed"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_Age_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_Age_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_Age_MPP_2" />
+
+    <TextView
+        android:id="@+id/textView_Height_Displayed_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="@string/MPP_1_textView_Height_Displayed"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_Height_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_Height_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_Height_MPP_2" />
+
+    <TextView
+        android:id="@+id/textView_Weight_Displayed_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:text="@string/MPP_1_textView_Weight_Displayed"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_Weight_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_Weight_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_Weight_MPP_2" />
+
+    <ImageView
+        android:id="@+id/imageView_ProfilePicture_MPP_2"
+        android:layout_width="102dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/gg_default_pic"
+        app:layout_constraintBottom_toTopOf="@+id/hrIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_BPM_Displayed_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/MPP_1_textView_BPM_value"
+        android:textColor="#000000"
+        android:textSize="80dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hrIcon"
+        app:layout_constraintEnd_toEndOf="@+id/textView_BPM_Title_MPP_2"
+        app:layout_constraintStart_toStartOf="@+id/textView_BPM_Title_MPP_2"
+        app:layout_constraintTop_toBottomOf="@+id/textView_BPM_Title_MPP_2" />
+
+    <TextView
+        android:id="@+id/textView_BPM_Title_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:text="@string/MPP_1_textView_BPM"
+        android:textColor="#000000"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/hrIcon"
+        app:layout_constraintTop_toTopOf="@+id/hrIcon" />
+
+    <TextView
+        android:id="@+id/textView_PhoneBatteryLevel_MPP_2"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:gravity="center"
+        android:text="@string/MPP_1_textView_PhoneBatteryLevel"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_BatteryLevel_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/imageView_BatteryLevel_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/imageView_BatteryLevel_MPP_2" />
+
+    <TextView
+        android:id="@+id/textView_PhoneBatteryLevel_Displayed_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textSize="28sp"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_PhoneBatteryLevel_MPP_2"
+        app:layout_constraintStart_toEndOf="@+id/textView_PhoneBatteryLevel_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/textView_PhoneBatteryLevel_MPP_2" />
+
+    <Button
+        android:id="@+id/buttonReports_MPP_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/MPP_1_ReportsButton"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/custom_button"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_Earth_MPP_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView_Earth_MPP_2"
+        app:layout_constraintTop_toTopOf="@+id/imageView_Earth_MPP_2" />
+
+    <ImageView
+        android:id="@+id/hrIcon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView_BatteryLevel_MPP_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/hr_icon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

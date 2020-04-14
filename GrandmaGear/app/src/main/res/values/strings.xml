@@ -4,15 +4,23 @@
     Meaning if a string shows in 2 pages, it will be under the first page reached below.-->
 
     <!-- activity_disclaimer_fragment xml -->
-    <string name="disclaimer_text">This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.\n
-    This is a holder for the disclaimer text.</string>
+    <string name="disclaimer_text">This Product is <b>NOT</b> a substitute for medically prescribed patient care!
+        For best results, wearers should have a loved one or care taker download this app and follow their account.
+        Also note that erroneous Heart Rate values and Fall Detections are rare but possible.
+        Please consult the owner manual for more information.</string>
     <string name="accept_disclaimer">Accept</string>
     <string name="decline_disclaimer">Decline</string>
+
+    <!-- delete_wearer_fragment xml  -->
+    <string name="delete_warn"><b>WARNING!</b></string>
+    <string name="delete_warn_wearer">Are you sure you want to delete this wearer account from your list? This action is <b>NOT</b> reversible.</string>
+    <string name="delete_warn_notif">Are you sure you want to delete this notification from your list? This action is <b>NOT</b> reversible.</string>
+    <string name="Confirm">Confirm</string>
+
+    <string name="bt_sync_warn">Please ensure that your Grandma Gear Device is sync with your phone before creating your account.
+        The device can be synced from your phone\'s Bluetooth menu in the phone Settings. Device password as well as step by step instructions
+        for syncing your device can be found in the device owner\'s manual.</string>
+    <string name="Continue_reg">Continue</string>
 
     <!-- activity_main xml -->
     <string name="patient">Login</string>
@@ -44,6 +52,7 @@
     <string name="height">Height cm</string>
     <string name="device_id">Device ID</string>
     <string name="register">Register</string>
+    <string name="syncDev">Sync Device</string>
 
     <!-- activity_user xml -->
     <string name="settings">Settings</string>
@@ -81,15 +90,15 @@
     <string name="MPP_1_textView_Weight">Weight:</string>
     <string name="MPP_1_textView_Weight_Displayed"></string>
     <string name="MPP_1_textView_BPM_value"></string>
-    <string name="MPP_1_textView_BPM">BPM</string>
+    <string name="MPP_1_textView_BPM">BPM:</string>
     <string name="MPP_1_textView_BraceletBatteryLevel">Bracelet Battery Level (%):</string>
     <string name="MPP_1_textView_PhoneBatteryLevel">Phone Battery Level (%):</string>
     <string name="MPP_1_textView_BatteryLevel_CurrentValue"></string>
-    <string name="MPP_1_PanicButton">Panic</string>
+    <string name="MPP_1_PanicButton">Panic!</string>
     <string name="MPP_1_ReportsButton">Reports</string>
     <string name="MPP_1_textView_Location_Display"></string>
 
-    <string name="btDevice">Device Select</string>
+    <string name="btDevice">Change Device</string>
 
 
     //Patient Settings
@@ -148,7 +157,6 @@
     <string name="key_location">key_give_location</string>
 
 
-
     //Location Map Key
     <string name="google_map_key">AIzaSyDVOVaUL4jt-s1wTos1jdQNNWfL28_ffJo</string>
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
@@ -178,5 +186,6 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_maps_location">Map</string>
+    <string name="title_activity_maps_tracking">Map</string>
 
 </resources>

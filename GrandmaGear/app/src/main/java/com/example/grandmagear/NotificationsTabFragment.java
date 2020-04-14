@@ -1,6 +1,8 @@
 package com.example.grandmagear;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,12 +19,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Source;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +41,7 @@ public class NotificationsTabFragment extends Fragment {
     private ArrayList<String> mNotificationTitle = new ArrayList<String>();
     private ArrayList<String> mNotificationText = new ArrayList<String>();
     private ArrayList<String> mNotificationTime = new ArrayList<String>();
+    private ArrayList<String> mDeviceIDs = new ArrayList<String >();
     private SharedPreferencesHelper mSharedPreferencesHelper;
     private FirebaseObjects.UserDBO userDBO;
     private ArrayList<FirebaseObjects.Notifications> thisNotifications;
@@ -47,7 +54,7 @@ public class NotificationsTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_tab_fragment, container, false);
         mRecyclerView = view.findViewById(R.id.notificationRecycler);
-        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime, getActivity());
+        mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText,mNotificationTime, mDeviceIDs, getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(),
@@ -60,17 +67,20 @@ public class NotificationsTabFragment extends Fragment {
                         userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
                         thisNotifications = userDBO.notifications;
                         if(userDBO.notifications.size() != 0) {
+
                             if(userDBO.notifications.size() > 1 && mNotificationText.size() < 1){
                                 for(int i = 0; i < thisNotifications.size(); i++){
                                     mNotificationTitle.add(thisNotifications.get(i).getNotificationTitle());
                                     mNotificationText.add(thisNotifications.get(i).getNotificationText());
                                     mNotificationTime.add(thisNotifications.get(i).getNotificationTime());
+                                    mDeviceIDs.add(thisNotifications.get(i).getDeviceID());
                                 }
                             }
                             else {
                                 mNotificationTitle.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTitle());
                                 mNotificationText.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationText());
                                 mNotificationTime.add(thisNotifications.get(thisNotifications.size() - 1).getNotificationTime());
+                                mDeviceIDs.add(thisNotifications.get(thisNotifications.size() - 1).getDeviceID());
                             }
 
                         }
@@ -115,6 +125,7 @@ public class NotificationsTabFragment extends Fragment {
                                                          mNotificationTitle.add(entry.getNotificationTitle());
                                                          mNotificationText.add(entry.getNotificationText());
                                                          mNotificationTime.add(entry.getNotificationTime());
+                                                         mDeviceIDs.add(entry.getDeviceID());
 //                                                         mAdapter = new NotificationsRecyclerView(mNotificationTitle, mNotificationText, mNotificationTime, getActivity());
 //                                                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //                                                         mRecyclerView.setAdapter(mAdapter);

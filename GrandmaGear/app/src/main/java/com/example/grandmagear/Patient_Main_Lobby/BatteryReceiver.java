@@ -27,7 +27,7 @@ public class BatteryReceiver extends BroadcastReceiver {
 
         firebaseHelper = new FirebaseHelper();
 
-        TextView phoneBattery = ((HomePage_MPP_1)context).findViewById(R.id.textView_PhoneBatteryLevel_Displayed);
+
 
         String action = intent.getAction();
 
@@ -35,7 +35,7 @@ public class BatteryReceiver extends BroadcastReceiver {
             int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             final int percentage = level * 100 / scale;
-            phoneBattery.setText(Integer.toString(percentage));
+
 
             firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
                     .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
