@@ -211,17 +211,24 @@ public class BTHelper {
 
         TextView textView;
         boolean active;
+       Context context;
 
         public ContentAsync(TextView textView, boolean active) {
             this.textView = textView;
             this.active = active;
+            //this.context = context;
         }
+
+
         @Override
         protected Void doInBackground(Void... voids) {
 //            Looper.prepare();
+
             content(textView, active);
             return null;
         }
+
+
     }
 
 
@@ -316,9 +323,10 @@ public class BTHelper {
                     if(Integer.parseInt(heartRate) > 100){
                         highHR ++;
                         lowHR = 0;
-                        if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1){
-                            textview.setTextColor(Color.RED);
-                            textview.setText(heartRate);
+                        if(active){
+//                            textview.setTextColor(Color.RED);
+//                            textview.setText(heartRate);
+                            ((HomePage_MPP_1)btContext).updateBPM(Integer.parseInt(heartRate));
                         }
 
 
@@ -331,9 +339,10 @@ public class BTHelper {
                     } else if ( Integer.parseInt(heartRate) < 60){
                         lowHR ++;
                         highHR =0;
-                        if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1) {
-                            textview.setTextColor(Color.RED);
-                            textview.setText(heartRate);
+                        if(active) {
+//                            textview.setTextColor(Color.RED);
+//                            textview.setText(heartRate);
+                            ((HomePage_MPP_1)btContext).updateBPM(Integer.parseInt(heartRate));
                         }
 
                         if(lowHR > 3){
@@ -344,9 +353,10 @@ public class BTHelper {
                     } else {
                         highHR = 0;
                         lowHR = 0;
-                        if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1) {
-                            textview.setText(heartRate);
-                            textview.setTextColor(Color.GREEN);
+                        if(active) {
+//                            textview.setText(heartRate);
+//                            textview.setTextColor(Color.GREEN);
+                            ((HomePage_MPP_1)btContext).updateBPM(Integer.parseInt(heartRate));
                         }
 
                     }
@@ -358,12 +368,12 @@ public class BTHelper {
         }
 
 
-        refresh(textview);
+        refresh(textview, (btContext));
 
 
     }
 
-    private void refresh(final TextView textview){
+    private void refresh(final TextView textview, final Context context){
 
 //        Looper.prepare();
         final Handler handler = new Handler(Looper.getMainLooper()){
@@ -372,11 +382,13 @@ public class BTHelper {
                 super.handleMessage(msg);
             }
         };
+
         final Runnable runnable = new Runnable() {
+
             @Override
             public void run() {
                 //content(textview);
-                if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1) {
+                if(((HomePage_MPP_1)context).getActive()) {
                     ContentAsync contentAsync = new ContentAsync(textview, true);
                     contentAsync.execute();
                 }
