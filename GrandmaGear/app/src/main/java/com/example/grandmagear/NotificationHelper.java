@@ -1,21 +1,17 @@
 package com.example.grandmagear;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.grandmagear.Patient_Main_Lobby.NotificationReceiver;
 import com.example.grandmagear.Patient_Main_Lobby.NotificationReceiverDecline;
-import com.google.firebase.firestore.auth.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +38,7 @@ public class NotificationHelper {
     public void sendOnBpm(String title, String text, String deviceID){
         Intent intent = new Intent(context, LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.gg_default_pic);
         Notification notification = new NotificationCompat.Builder(context, App.BPM_CHANNEL)
                 .setSmallIcon(R.drawable.ic_warning)
                 .setContentTitle(title)
@@ -74,7 +70,7 @@ public class NotificationHelper {
     public void sendOnFall(String title, String text, String deviceID){
         Intent intent = new Intent(context, LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.gg_default_pic);
         Notification notification = new NotificationCompat.Builder(context, App.FALL_CHANNEL)
                 .setSmallIcon(R.drawable.ic_warning)
                 .setContentTitle(title)
@@ -106,7 +102,7 @@ public class NotificationHelper {
         Intent intent = new Intent(context, LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.gg_default_pic);
         Notification notification = new NotificationCompat.Builder(context, App.BATTERY_CHANNEL)
                 .setSmallIcon(R.drawable.ic_warning)
                 .setContentTitle(title)
@@ -139,7 +135,7 @@ public class NotificationHelper {
         Intent intent = new Intent(context, LogInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.gg_default_pic);
         Notification notification = new NotificationCompat.Builder(context, App.PANIC_CHANNEL)
                 .setSmallIcon(R.drawable.ic_warning)
                 .setContentTitle(title)
@@ -180,7 +176,7 @@ public class NotificationHelper {
         Intent disableLocation = new Intent(context, NotificationReceiverDecline.class);
         PendingIntent disableLocationPendingIntent = PendingIntent.getBroadcast(context, 0, disableLocation, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.sooken);
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.gg_default_pic);
         Notification notification = new NotificationCompat.Builder(context, App.REQUEST_CHANNEL)
                 .setSmallIcon(R.drawable.ic_warning)
                 .setContentTitle(title)

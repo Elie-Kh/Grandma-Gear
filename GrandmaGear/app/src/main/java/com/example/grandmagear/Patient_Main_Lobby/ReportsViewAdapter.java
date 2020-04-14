@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
+import com.example.grandmagear.NotifDeleteFragment;
 import com.example.grandmagear.R;
+import com.example.grandmagear.UserActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,15 +30,17 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
     private ArrayList<String> reportTime;
     private FirebaseHelper firebaseHelper;
     private FirebaseObjects.UserDBO userDBO;
+    private Context context;
     private boolean check;
 
     public ReportsViewAdapter(ArrayList<String> reportTitle, ArrayList<String> reportText,
-                              ArrayList<String> reportTime, boolean check) {
+                              ArrayList<String> reportTime, boolean check, Context context) {
         this.reportTitle = reportTitle;
         this.reportText = reportText;
         this.reportTime = reportTime;
         firebaseHelper = new FirebaseHelper();
         this.check = check;
+        this.context = context;
     }
 
     @NonNull
@@ -120,9 +124,15 @@ public class ReportsViewAdapter extends RecyclerView.Adapter<ReportsViewAdapter.
             mDeleteReportImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    delete(getAdapterPosition());
+                    goToDeleteNotifView(getAdapterPosition());
                 }
             });
         }
+    }
+
+    public void goToDeleteNotifView(int position){
+        NotifDeleteFragment deleteFragment = new NotifDeleteFragment(this, position);
+        deleteFragment.setCancelable(false);
+        deleteFragment.show(((ReportsActivity)context).getSupportFragmentManager(), "NotifDeleteFragment");
     }
 }

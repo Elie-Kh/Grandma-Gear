@@ -1,6 +1,8 @@
 package com.example.grandmagear;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,12 +19,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Source;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +67,7 @@ public class NotificationsTabFragment extends Fragment {
                         userDBO = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
                         thisNotifications = userDBO.notifications;
                         if(userDBO.notifications.size() != 0) {
+
                             if(userDBO.notifications.size() > 1 && mNotificationText.size() < 1){
                                 for(int i = 0; i < thisNotifications.size(); i++){
                                     mNotificationTitle.add(thisNotifications.get(i).getNotificationTitle());

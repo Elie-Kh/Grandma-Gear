@@ -63,7 +63,7 @@ public class ReportsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.reportsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         createReports();
-        reportsViewAdapter = new ReportsViewAdapter(reportTitle, reportText, reportTime, check);
+        reportsViewAdapter = new ReportsViewAdapter(reportTitle, reportText, reportTime, check,this);
         recyclerView.setAdapter(reportsViewAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL));

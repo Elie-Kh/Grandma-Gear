@@ -1,6 +1,8 @@
 package com.example.grandmagear;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,12 +19,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.auth.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.example.grandmagear.NotificationHelper.TAG;
 
 public class NotificationsRecyclerView extends RecyclerView.Adapter<NotificationsRecyclerView.ViewHolder> {
 
@@ -58,26 +69,90 @@ public class NotificationsRecyclerView extends RecyclerView.Adapter<Notification
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.mNotificationTitle.setText(notificationTitle.get(position));
         holder.mNotificationText.setText(notificationText.get(position));
         holder.mNotificationTime.setText(notificationTime.get(position));
         holder.deviceID = deviceIDs.get(position);
+        Log.d(TAG, "onBindViewHolder: " + deviceIDs.get(position));
+//        if(notificationTitle.get(position).contains("BPM")){
+//            holder.mPatientImage.setImageResource(R.drawable.heartbeat);
+//        }
+//        if(notificationTitle.get(position).contains("Fall")){
+//            holder.mPatientImage.setImageResource(R.drawable.falling);
+//        }
+//        if (notificationTitle.get(position).contains("Battery")){
+//            holder.mPatientImage.setImageResource(R.drawable.battery);
+//        }
+//        if(notificationTitle.get(position).contains("S.O.S.")){
+//            holder.mPatientImage.setImageResource(R.drawable.sos_icon);
+//        }
+//        if(notificationTitle.get(position).contains("Offline")){
+//            holder.mPatientImage.setImageResource(R.drawable.offfline_icon);
+//        }
+        FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                .document(deviceIDs.get(position))
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    final FirebaseObjects.DevicesDBO device = task.getResult().toObject(FirebaseObjects.DevicesDBO.class);
 
-        if(notificationTitle.get(position).contains("BPM")){
-            holder.mPatientImage.setImageResource(R.drawable.heartbeat);
-        }
-        if(notificationTitle.get(position).contains("Fall")){
-            holder.mPatientImage.setImageResource(R.drawable.falling);
-        }
-        if (notificationTitle.get(position).contains("Battery")){
-            holder.mPatientImage.setImageResource(R.drawable.battery);
-        }
-        if(notificationTitle.get(position).contains("S.O.S.")){
-            holder.mPatientImage.setImageResource(R.drawable.sos_icon);
-        }
-        if(notificationTitle.get(position).contains("Offline")){
-            holder.mPatientImage.setImageResource(R.drawable.offfline_icon);
+                    FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                            .document(device.id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            FirebaseObjects.UserDBO patient = task.getResult().toObject(FirebaseObjects.UserDBO.class);
+                                if (patient.getImage()) {
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+                                    // Get image location
+
+                                    //Intent t = getIntent();
+                                    //Bundle b = t.getExtras();
+                                    String filename = "gs://grandma-gear.appspot.com/WearerProfilePicture/" + patient.getUsername();
+                                    StorageReference gsReference = storage.getReferenceFromUrl(filename);
+
+
+                                    final long ONE_MEGABYTE = 1024 * 1024;
+                                    gsReference.getBytes(ONE_MEGABYTE * 4).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] bytes) {
+                                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            storeProfilePicture(bmp);
+                                            holder.mPatientImage.setImageBitmap(bmp);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception exception) {
+                                            // Handle any errors
+                                        }
+                                    });
+                                } else {
+                                    holder.mPatientImage.setImageResource(R.drawable.gg_default_pic);
+                                }
+
+                        }
+                    });
+
+
+                }
+            }
+        });
+
+    }
+
+    public void storeProfilePicture(Bitmap bitmap){
+        FileOutputStream outStream = null;
+
+        // Write to SD Card
+
+        File file = new File(((UserActivity)context).getFilesDir(), "GrandmaGearProfilePicture");
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out); // bmp is your Bitmap instance
+            // PNG is a lossless format, the compression factor (100) is ignored
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }

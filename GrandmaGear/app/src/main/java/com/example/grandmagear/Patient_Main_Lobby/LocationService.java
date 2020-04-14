@@ -1,6 +1,7 @@
 package com.example.grandmagear.Patient_Main_Lobby;
 
 import android.app.Service;
+import android.bluetooth.BluetoothClass;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -48,10 +49,10 @@ public class LocationService extends BroadcastReceiver {
                                         if(task.isSuccessful()){
                                             for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
                                                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                                                        .document(documentSnapshot.getReference().getId())
+                                                        .document(documentSnapshot.getId())
                                                         .update(FirebaseObjects.Latitude, location.getLatitude());
                                                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                                                        .document(documentSnapshot.getReference().getId())
+                                                        .document(documentSnapshot.getId())
                                                         .update(FirebaseObjects.Longitude, location.getLongitude());
                                             }
                                         }

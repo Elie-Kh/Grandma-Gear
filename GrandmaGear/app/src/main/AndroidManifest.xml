@@ -8,7 +8,6 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <!--
@@ -27,6 +26,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
@@ -37,10 +37,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver
-            android:name=".Patient_Main_Lobby.LocationService"/>
 
-        <activity android:name=".Patient_Main_Lobby.ReportsActivity2" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -55,8 +52,8 @@
 
         <activity
             android:name=".Patient_Main_Lobby.MapsTrackingActivity"
-            android:label="@string/title_activity_maps_tracking"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_maps_tracking"/>
         <activity
             android:name=".Patient_Main_Lobby.HomePage_MPP_2"
             android:parentActivityName=".MainActivity"
@@ -113,13 +110,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".FirestoreService"
+        <service android:name=".FirestoreService"
             android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <receiver android:name=".startUpReceiver"
             android:permission="android.permission.BIND_JOB_SERVICE"
             />
         <receiver android:name="com.example.grandmagear.startUpReceiver"
@@ -130,10 +122,11 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="android.intent.action.REBOOT" />
+                <action android:name="android.intent.action.REBOOT"/>
             </intent-filter>
         </receiver>
         <receiver android:name=".Patient_Main_Lobby.NotificationReceiver"/>
+        <receiver android:name=".Patient_Main_Lobby.LocationService"/>
         <receiver android:name=".Patient_Main_Lobby.NotificationReceiverDecline"/>
     </application>
 

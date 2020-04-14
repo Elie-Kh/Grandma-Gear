@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.grandmagear.Patient_Main_Lobby.ReportsViewAdapter;
+
 public class NotifDeleteFragment extends DialogFragment {
 
     protected TextView warningHeader;
@@ -22,10 +24,16 @@ public class NotifDeleteFragment extends DialogFragment {
     protected Button cancelButton;
     private int position;
     private NotificationsRecyclerView recyclerView;
+    private ReportsViewAdapter recyclerView2;
 
     public NotifDeleteFragment(NotificationsRecyclerView recyclerView, int position) {
         this.position = position;
         this.recyclerView = recyclerView;
+    }
+
+    public NotifDeleteFragment(ReportsViewAdapter recyclerView, int position) {
+        this.position = position;
+        this.recyclerView2 = recyclerView;
     }
 
     @Nullable
@@ -51,8 +59,14 @@ public class NotifDeleteFragment extends DialogFragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerView.delete(position);
-                getDialog().dismiss();
+                if(recyclerView != null){
+                    recyclerView.delete(position);
+                    getDialog().dismiss();
+                } else if(recyclerView2 != null){
+                    recyclerView2.delete(position);
+                    getDialog().dismiss();
+                }
+
             }
         });
 

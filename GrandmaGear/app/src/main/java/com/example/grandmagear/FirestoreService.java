@@ -6,6 +6,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
@@ -16,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.example.grandmagear.Patient_Main_Lobby.BatteryReceiver;
 import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +38,9 @@ public class FirestoreService extends Service {
     FirebaseObjects.UserDBO user;
     NotificationHelper notificationHelper;
     boolean fg;
+
+    protected BatteryReceiver batteryReceiver = new BatteryReceiver();
+    protected IntentFilter intentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 
     @Override
     public void onCreate() {
@@ -87,12 +94,15 @@ public class FirestoreService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         notificationHelper = new NotificationHelper(this, user);
         Intent notificationIntent = new Intent(this, LogInActivity.class);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.gg_default_pic);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0,notificationIntent,0);
         Notification notification = new NotificationCompat.Builder(this, App.FOLLOWER_CHANNEL)
                 .setContentTitle("GrandmaGear")
                 .setContentText("Making sure you have everything up to date")
-                .setSmallIcon(R.drawable.sooken)
+                .setSmallIcon(R.drawable.gg_default_pic)
+                .setColorized(true)
+                .setLargeIcon(largeIcon)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(8,notification);
@@ -149,7 +159,8 @@ public class FirestoreService extends Service {
                                             });
                                 }
                             } else {
-                                startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
+                                registerReceiver(batteryReceiver, intentFilter);
+                                //startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                 //wearer service
                             }
 
@@ -199,9 +210,9 @@ public class FirestoreService extends Service {
                         });
             }
         } else {
-            startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
+            //startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
             //wearer service
-
+            registerReceiver(batteryReceiver, intentFilter);
         }
 
 

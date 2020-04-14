@@ -1,27 +1,12 @@
 package com.example.grandmagear;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-
-import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     protected void initializePage(){
         mPatientButton = findViewById(R.id.main_login_button);
         mLogo = findViewById(R.id.app_logo);
-        mLogo.setImageResource(R.drawable.sooken);
+        mLogo.setImageResource(R.drawable.gg_default_pic);
 
         mPatientButton.setOnClickListener(new View.OnClickListener() {
             @Override

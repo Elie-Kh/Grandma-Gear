@@ -132,6 +132,8 @@ public class LogInActivity extends AppCompatActivity {
                                                 startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                             }
                                             else {
+                                                Intent serviceIntent = new Intent(LogInActivity.this, FirestoreService.class);
+                                                startService(serviceIntent);
                                                 startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                             }
                                         }
@@ -282,6 +284,8 @@ public class LogInActivity extends AppCompatActivity {
                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                     }
                                     else {
+                                        Intent serviceIntent = new Intent(LogInActivity.this, FirestoreService.class);
+                                        startService(serviceIntent);
                                         startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                     }
                                         }
@@ -299,6 +303,8 @@ public class LogInActivity extends AppCompatActivity {
                                         startService(serviceIntent);
                                         startActivity(new Intent(getApplicationContext(), UserActivity.class));
                                     } else {
+                                        Intent serviceIntent = new Intent(LogInActivity.this, FirestoreService.class);
+                                        startService(serviceIntent);
                                         startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                     }
                                 }

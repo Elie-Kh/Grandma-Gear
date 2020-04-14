@@ -4,84 +4,44 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.preference.PreferenceManager;
-import androidx.preference.SwitchPreference;
 
-import android.app.DownloadManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.BatteryManager;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.FileUtils;
-import android.os.Handler;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.Preference;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.grandmagear.BTFragment;
 import com.example.grandmagear.BTHelper;
-import com.example.grandmagear.DisclaimerFragment;
 import com.example.grandmagear.FirebaseHelper;
 import com.example.grandmagear.FirebaseObjects;
-import com.example.grandmagear.LogInActivity;
 import com.example.grandmagear.R;
 import com.example.grandmagear.SharedPreferencesHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.example.grandmagear.UserActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import static com.example.grandmagear.Patient_Main_Lobby.PatientSettingsActivity.location;
 
 public class HomePage_MPP_2 extends AppCompatActivity {
     private static final String TAG = "HomePage_MPP_2";
@@ -291,6 +251,12 @@ public class HomePage_MPP_2 extends AppCompatActivity {
                 if(documentSnapshot != null && documentSnapshot.exists()){
                     device = documentSnapshot.toObject(FirebaseObjects.DevicesDBO.class);
                     BPM.setText(Integer.toString(device.getHeartrate()));
+                    if(device.getHeartrate() < 60 || device.getHeartrate() > 100){
+                        BPM.setTextColor(Color.RED);
+                    }
+                    else {
+                        BPM.setTextColor(Color.GREEN);
+                    }
                     phoneBattery.setText(Integer.toString(device.getPhoneBattery()));
                     String ID = device.getId();
                     Log.d(TAG,ID);
@@ -401,7 +367,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            ProfilePicture.setImageResource(R.drawable.sooken);
+                            ProfilePicture.setImageResource(R.drawable.gg_default_pic);
                         }
                     }
                 });
@@ -462,7 +428,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
             Log.d(TAG, "2nd else statement activated");
         }
         else {
-            ProfilePicture.setImageResource(R.drawable.sooken);
+            ProfilePicture.setImageResource(R.drawable.gg_default_pic);
             Log.d(TAG, "Last else statement activated");
 
         }
