@@ -1,0 +1,190 @@
+<resources>
+    <string name="app_name">Grandma Gear</string>
+    <!-- Strings are shown by the order of where they appear first and then per page.
+    Meaning if a string shows in 2 pages, it will be under the first page reached below.-->
+
+    <!-- activity_disclaimer_fragment xml -->
+    <string name="disclaimer_text">This Product is <b>NOT</b> a substitute for medically prescribed patient care!
+        For best results, wearers should have a loved one or care taker download this app and follow their account.
+        Also note that erroneous Heart Rate values and Fall Detections are rare but possible.
+        Please consult the owner manual for more information.</string>
+    <string name="accept_disclaimer">Accept</string>
+    <string name="decline_disclaimer">Decline</string>
+
+    <!-- delete_wearer_fragment xml  -->
+    <string name="delete_warn"><b>WARNING!</b></string>
+    <string name="delete_warn_wearer">Are you sure you want to delete this wearer account from your list? This action is <b>NOT</b> reversible.</string>
+    <string name="delete_warn_notif">Are you sure you want to delete this notification from your list? This action is <b>NOT</b> reversible.</string>
+    <string name="Confirm">Confirm</string>
+
+    <string name="bt_sync_warn">Please ensure that your Grandma Gear Device is sync with your phone before creating your account.
+        The device can be synced from your phone\'s Bluetooth menu in the phone Settings. Device password as well as step by step instructions
+        for syncing your device can be found in the device owner\'s manual.</string>
+    <string name="Continue_reg">Continue</string>
+
+    <!-- activity_main xml -->
+    <string name="patient">Login</string>
+    <string name="client">Client</string>
+
+    <!-- activity_log_in xml -->
+    <string name="login">Log In</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signup">Need Account? Sign Up Here</string>
+
+    <string name="forgot_password">Forgot Password?</string>
+
+    <!-- activity_patient xml -->
+    <string name="id_text">ID: </string>
+    <string name="device_id_hint">Enter Device ID</string>
+    <string name="help_button_text">"Help"</string>
+    <string name="ok_button_text">OK</string>
+
+    <!-- help fragment xml -->
+    <string name="help_text">This is a holder for the actual help text.</string>
+
+    <!-- activity_register xml -->
+    <string name="join_today">Join Today</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="weight">Weight lbs</string>
+    <string name="age">Age</string>
+    <string name="height">Height cm</string>
+    <string name="device_id">Device ID</string>
+    <string name="register">Register</string>
+    <string name="syncDev">Sync Device</string>
+
+    <!-- activity_user xml -->
+    <string name="settings">Settings</string>
+    <string name="patients">Patients</string>
+    <string name="notifications">Notifications</string>
+    <string name="reports">Reports</string>
+
+    <!-- activity_add_patient_fragment xml -->
+    <string name="cancel_button">Cancel</string>
+    <string name="add_button">Add</string>
+    <string name="id_hint">"Device ID"</string>
+
+    <!-- menu xml -->
+    <string name="logout">Logout</string>
+
+
+    <string name="title_activity_client_login">Sign in</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <string name="PC_ID">PC_ID</string> <!--string served to differentiate a Client from a Patient-->
+
+    //MPP_1 Home Page
+
+    <string name="MPP_1_textView_FullName">Full Name:</string>
+    <string name="MPP_1_textView_FullName_Displayed"></string>
+    <string name="MPP_1_textView_Age">Age:</string>
+    <string name="MPP_1_textView_Age_Displayed"></string>
+    <string name="MPP_1_textView_Height">Height:</string>
+    <string name="MPP_1_textView_Height_Displayed"></string>
+    <string name="MPP_1_textView_Weight">Weight:</string>
+    <string name="MPP_1_textView_Weight_Displayed"></string>
+    <string name="MPP_1_textView_BPM_value"></string>
+    <string name="MPP_1_textView_BPM">BPM:</string>
+    <string name="MPP_1_textView_BraceletBatteryLevel">Bracelet Battery Level (%):</string>
+    <string name="MPP_1_textView_PhoneBatteryLevel">Phone Battery Level (%):</string>
+    <string name="MPP_1_textView_BatteryLevel_CurrentValue"></string>
+    <string name="MPP_1_PanicButton">Panic!</string>
+    <string name="MPP_1_ReportsButton">Reports</string>
+    <string name="MPP_1_textView_Location_Display"></string>
+
+    <string name="btDevice">Change Device</string>
+
+
+    //Patient Settings
+    <string name="MPP_S_Category_General">General</string>
+    <string name="MPP_S_Location">Current Location</string>
+    <string name="MPP_S_Category_Advance">Advance</string>
+    <string name="MPP_S_Location_Summary">See your current location on Google Maps</string>
+    <string name="MPP_S_Share_Location">Share Location</string>
+    <string name="MPP_S_Share_Location_Summary">Enable your Followers to see your location</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_settings">Settings</string>
+    <string name="edit_Profile">Edit Profile</string>
+    <string name="help_support">Help and Support</string>
+    <string name="account_privacy">Account Privacy</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="advance_setting">Advance Settings</string>
+    <string name="key_edit_profile">key_edit_profile</string>
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+    <string name="default_gallery_storage">My Pictures</string>
+    <string name="title_auto_upload">Auto upload</string>
+    <string name="summary_upload_over_wifi">Upload the videos when wifi is available</string>
+    <string name="title_upload_quality">Upload Quality</string>
+    <string name="summary_upload_video_quality">Specify image quality for uploads</string>
+    <string name="pref_title_notifications">Notifications</string>
+    <string name="summary_choose_ringtone">Choose notification sound</string>
+    <string name="pref_header_about">About</string>
+    <string name="summary_about">GrandmaGear is an App that has for goal to monitor elders in their daily life to reassure their families of their well being from anywhere.</string>
+    <string name="app_version">1.2</string>
+    <string name="summary_support">Got any queries? We are happy to help!</string>
+    <string name="title_send_feedback">Send Feedback</string>
+    <string name="title_faq">FAQ</string>
+    <string name="summary_faq">View frequently asked questions</string>
+    <string name="url_faq">https://www.androidhive.info/privacy-policy/</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="url_privacy">https://www.androidhive.info/privacy-policy/</string>
+    <string name="title_terms">Terms &amp; Conditions</string>
+    <string name="url_terms">https://www.androidhive.info/terms-of-service/</string>
+    <string name="title_version">GrandmaGear Version</string>
+    <string name="choose_email_client">Choose email client</string>
+    <string name="title_gallery_storage">Default Storage</string>
+    <string name="title_new_notification_sound_message">New notification</string>
+    <string name="title_new_notification_sound_comment">New comment notification</string>
+    <string name="title_new_notification_sound_Like">New like notification</string>
+    <string name="title_vibrate">Vibrate</string>
+    <string name="summary_vibrate">Vibrate on new notification</string>
+    <string name="key_upload_over_wifi">key_upload_over_wifi</string>
+    <string name="key_gallery_name">key_gallery_name</string>
+    <string name="key_upload_quality">key_upload_quality</string>
+    <string name="notifications_new_message">notifications_new_message</string>
+    <string name="notifications_new_comment">notifications_new_comment</string>
+    <string name="notifications_new_like">notifications_new_like</string>
+    <string name="key_notifications_panic_ringtone">key_notifications_panic_ringtone</string>
+    <string name="key_vibrate">key_vibrate</string>
+    <string name="key_send_feedback">key_send_feedback</string>
+    <string name="key_location">key_give_location</string>
+
+
+    //Location Map Key
+    <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
+    <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
+    <string name="permission_required_toast">Location permission is required for this demo.</string>
+
+
+    //array for register spinner
+    <string-array name="selection_array">
+        <item>Wearer</item>
+        <item>Follower</item>
+    </string-array>
+    <string name="title_activity_patient_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_maps_location">Map</string>
+    <string name="title_activity_maps_tracking">Map</string>
+
+</resources>
