@@ -99,6 +99,8 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     ImageView Heart;
     ImageView Earth;
 
+    protected boolean active = false;
+
     Button PanicButton;
     String help = "no";
     Uri imageUri;
@@ -157,6 +159,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         resumeSharedLocation();
         uploadWearerInfo();
         uploadDeviceInfo();
+        active = true;
         resumeLocation(locationSwitch);
         locationStatus(locationSwitch);
         try {
@@ -172,6 +175,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
     @Override
     protected void onPause() {
         unregisterReceiver(batteryReceiver);
+        active = false;
         super.onPause();
 
     }
@@ -303,7 +307,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         btHelper = new BTHelper(this, mSharedPreferencesHelper_BT.getHC05(), thisUser);
         btHelper.btEnable(this);
         btHelper.estConnect();
-        btHelper.content(BPM);
+        btHelper.content(BPM, true);
     }
 
     @Override
