@@ -85,23 +85,29 @@ public class BTFragment extends DialogFragment {
                     btHelper.setHc05(deviceList.get(position).getAddress());
                     if(!firstSync) {
                         ((HomePage_MPP_1) getActivity()).btConnect();
+                        final String address = btHelper.getHC05().getAddress().replaceAll(":","");
                         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
                                 .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
                                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 for(DocumentSnapshot snap : task.getResult()){
-                                    FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                                            .document(snap.getId())
-                                            .delete();
+                                    if(snap.getId() == address){
+
+                                    }
+                                    else {
+                                        FirebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+                                                .document(snap.getId())
+                                                .delete();
+                                        createDevice(address);
+                                    }
                                 }
+
                             }
                         });
-                        final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(btHelper.getHC05().getAddress());
-                        firebaseHelper.addDevice(newDevice);
                     }
                     else {
-                        ((RegisterActivity)getActivity()).createDevice(btHelper.getHC05().getAddress());
+                        ((HomePage_MPP_1)getActivity()).createDevice(btHelper.getHC05().getAddress().replaceAll(":",""));
                     }
                     getDialog().dismiss();
 
@@ -114,5 +120,10 @@ public class BTFragment extends DialogFragment {
                 getDialog().dismiss();
             }
         });
+    }
+
+    public void createDevice(String deviceID){
+        final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
+        firebaseHelper.addDevice(newDevice);
     }
 }

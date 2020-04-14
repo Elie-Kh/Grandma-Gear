@@ -166,8 +166,9 @@ public class LogInActivity extends AppCompatActivity {
         ClickableSpan clickableSpan1 = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                Intent intent = new Intent(LogInActivity.this, RegisterActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(LogInActivity.this, RegisterActivity.class);
+                //startActivity(intent);
+                goToSyncDisclaimer();
             }
         };
 
@@ -276,4 +277,11 @@ public class LogInActivity extends AppCompatActivity {
         }
 
     }
+
+    public void goToSyncDisclaimer(){
+        BTSyncFrag btSyncFrag = new BTSyncFrag(this);
+        btSyncFrag.setCancelable(false);
+        btSyncFrag.show(getSupportFragmentManager(),"BTSyncFrag");
+    }
+
 }

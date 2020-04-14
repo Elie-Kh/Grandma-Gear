@@ -4,7 +4,7 @@
     Meaning if a string shows in 2 pages, it will be under the first page reached below.-->
 
     <!-- activity_disclaimer_fragment xml -->
-    <string name="disclaimer_text"><b>WARNING!</b>\n This Product is <b>NOT</b> a substitute for medically prescribed patient care!
+    <string name="disclaimer_text">This Product is <b>NOT</b> a substitute for medically prescribed patient care!
         For best results, wearers should have a loved one or care taker download this app and follow their account.
         Also note that erroneous Heart Rate values and Fall Detections are rare but possible.
         Please consult the owner manual for more information.</string>
@@ -16,6 +16,11 @@
     <string name="delete_warn_wearer">Are you sure you want to delete this wearer account from your list? This action is <b>NOT</b> reversible.</string>
     <string name="delete_warn_notif">Are you sure you want to delete this notification from your list? This action is <b>NOT</b> reversible.</string>
     <string name="Confirm">Confirm</string>
+
+    <string name="bt_sync_warn">Please ensure that your Grandma Gear Device is sync with your phone before creating your account.
+        The device can be synced from your phone\'s Bluetooth menu in the phone Settings. Device password as well as step by step instructions
+        for syncing your device can be found in the device owner\'s manual.</string>
+    <string name="Continue_reg">Continue</string>
 
     <!-- activity_main xml -->
     <string name="patient">Login</string>
