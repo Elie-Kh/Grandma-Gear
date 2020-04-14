@@ -91,13 +91,13 @@ public class RegisterActivity extends AppCompatActivity {
                     mAge.setVisibility(View.GONE);
                     mHeight.setVisibility(View.GONE);
                     mWeight.setVisibility(View.GONE);
-                    mDevice.setVisibility(View.GONE);
+       //             mDevice.setVisibility(View.GONE);
                     acc_type = true;
                 }else{
                     mAge.setVisibility(View.VISIBLE);
                     mHeight.setVisibility(View.VISIBLE);
                     mWeight.setVisibility(View.VISIBLE);
-                    mDevice.setVisibility(View.VISIBLE);
+//                    mDevice.setVisibility(View.VISIBLE);
                     acc_type = false;
                 }
 
