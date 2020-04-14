@@ -112,8 +112,7 @@ public class BTFragment extends DialogFragment {
                         });
                     }
                     else {
-
-                        ((HomePage_MPP_1)getActivity()).createDevice(btHelper.getHC05().getAddress().replaceAll(":",""));
+                        createDevice(btHelper.getHC05().getAddress().replaceAll(":",""));
                     }
                     getDialog().dismiss();
 
