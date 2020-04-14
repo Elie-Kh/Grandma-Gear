@@ -9,6 +9,7 @@ import android.Manifest;
 
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.BatteryManager;
@@ -180,6 +182,10 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
     }
 
+    public boolean getActive(){
+        return active;
+    }
+
 
     void setUpUI() {
 
@@ -205,6 +211,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         PanicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(HomePage_MPP_1.this, "Panic sent", Toast.LENGTH_SHORT).show();
                 help = "yes";
                 uploadDeviceInfo();
                 new Timer().schedule(new TimerTask() {
@@ -253,6 +260,38 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent());
+    }
+
+    public void updateBPM(final Integer val){
+        HomePage_MPP_1.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "updateBPM: " + getApplicationContext());
+                Log.d(TAG, "updateBPM: " + getThisContext());
+
+                if(getThisContext() instanceof HomePage_MPP_1){
+                    // Log.d(TAG, "updateBPM: " + getApplicationContext());
+                    Context context = getThisContext();
+                    //BPM = ((HomePage_MPP_1)context).findViewById(R.id.heart_beat_text);
+                    // BPM = findViewById();
+                    if(val != null) {
+
+                        Log.d(TAG, "updateBPM: " + BPM);
+                        ((HomePage_MPP_1)context).BPM.setText(String.valueOf(val));
+                        if (val < 60 || val > 100) {
+                            ((HomePage_MPP_1)context).BPM.setTextColor(Color.RED);
+                        } else {
+                            ((HomePage_MPP_1)context).BPM.setTextColor(Color.GREEN);
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    protected Context getThisContext(){
+        return this;
     }
 
     public void createDevice(String deviceID){
