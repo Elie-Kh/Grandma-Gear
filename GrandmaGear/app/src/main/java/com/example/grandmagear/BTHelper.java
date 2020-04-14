@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.grandmagear.Patient_Main_Lobby.HomePage_MPP_1;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -204,6 +205,22 @@ public class BTHelper {
 
     }
 
+    private class ContentAsync extends AsyncTask<Void,Void,Void>{
+
+        TextView textView;
+        boolean active;
+
+        public ContentAsync(TextView textView, boolean active) {
+            this.textView = textView;
+            this.active = active;
+        }
+        @Override
+        protected Void doInBackground(Void... voids) {
+            content(textView, active);
+            return null;
+        }
+    }
+
 
     public void disconnectnConfirm(){
         int counter = 0;
@@ -225,7 +242,7 @@ public class BTHelper {
         }
     }
 
-    public void content(TextView textview) {
+    public void content(TextView textview, boolean active) {
 
         if(firebaseHelper == null){
             firebaseHelper = new FirebaseHelper();
@@ -296,8 +313,11 @@ public class BTHelper {
                     if(Integer.parseInt(heartRate) > 100){
                         highHR ++;
                         lowHR = 0;
-                        textview.setTextColor(Color.RED);
-                        textview.setText(heartRate);
+                        if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1){
+                            textview.setTextColor(Color.RED);
+                            textview.setText(heartRate);
+                        }
+
 
                         if(highHR > 3){
 
@@ -308,8 +328,10 @@ public class BTHelper {
                     } else if ( Integer.parseInt(heartRate) < 60){
                         lowHR ++;
                         highHR =0;
-                        textview.setTextColor(Color.RED);
-                        textview.setText(heartRate);
+                        if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1) {
+                            textview.setTextColor(Color.RED);
+                            textview.setText(heartRate);
+                        }
 
                         if(lowHR > 3){
                             notificationHelper.sendOnBpm("Low BPM", "A bpm of " + heartRate + " was recorded", firebaseHelper.getCurrentUserID());
@@ -319,8 +341,10 @@ public class BTHelper {
                     } else {
                         highHR = 0;
                         lowHR = 0;
-                        textview.setText(heartRate);
-                        textview.setTextColor(Color.GREEN);
+                        if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1) {
+                            textview.setText(heartRate);
+                            textview.setTextColor(Color.GREEN);
+                        }
 
                     }
 
@@ -343,7 +367,15 @@ public class BTHelper {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                content(textview);
+
+                //content(textview);
+                if(((Activity)btContext).getApplicationContext() instanceof HomePage_MPP_1) {
+                    ContentAsync contentAsync = new ContentAsync(textview, true);
+                }
+                else {
+                    ContentAsync contentAsync = new ContentAsync(textview, false);
+                }
+
             }
         };
 
