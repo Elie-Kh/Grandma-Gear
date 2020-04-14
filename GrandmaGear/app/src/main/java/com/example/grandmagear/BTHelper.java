@@ -87,7 +87,7 @@ public class BTHelper {
         notificationHelper = new NotificationHelper(context, thisUser);
         setHc05(mac);
         firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
+                .whereEqualTo(FirebaseObjects.ID, firebaseHelper.firebaseAuth.getCurrentUser())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -105,6 +105,10 @@ public class BTHelper {
                                     }
                                 });
                             }
+                        }
+                        else {
+                            FirebaseObjects.DevicesDBO device = new FirebaseObjects.DevicesDBO(getHC05().getAddress());
+                            firebaseHelper.addDevice(device);
                         }
                     }
                 });
@@ -154,8 +158,14 @@ public class BTHelper {
             }
             if(!isConnected){
                 //TODO notify follower device is off
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(firebaseHelper.getCurrentUserID())
+                        .update(FirebaseObjects.DeviceOn,"off");
             } else{
                 //TODO notify follower device is on
+                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.userDB)
+                        .document(firebaseHelper.getCurrentUserID())
+                        .update(FirebaseObjects.DeviceOn,"on");
             }
             return null;
         }
@@ -199,6 +209,9 @@ public class BTHelper {
 
     public void content(TextView textview) {
 
+        if(firebaseHelper == null){
+            firebaseHelper = new FirebaseHelper();
+        }
         InputStream inputStream = null;
         String heartRate = "";
 
@@ -230,6 +243,7 @@ public class BTHelper {
 
                     if(Integer.parseInt(heartRate)!=0){
                         if(!firstOn) {
+
                             firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB).whereEqualTo(FirebaseObjects.ID, firebaseHelper.getCurrentUserID())
                                     .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override

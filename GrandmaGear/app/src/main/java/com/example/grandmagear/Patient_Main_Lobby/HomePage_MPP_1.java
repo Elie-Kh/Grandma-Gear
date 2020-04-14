@@ -207,7 +207,14 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
         mSharedPreferencesHelper_BT = new SharedPreferencesHelper(this, "BTList");
 
-        btConnect();
+        try {
+            btConnect();
+        }
+        catch (Exception e){
+                btHelper = new BTHelper(this, thisUser);
+                btHelper.btEnable(this);
+                goToDeviceList();
+        }
 
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +248,11 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent());
+    }
+
+    public void createDevice(String deviceID){
+        final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
+        firebaseHelper.addDevice(newDevice);
     }
 
     private PendingIntent getPendingIntent() {
