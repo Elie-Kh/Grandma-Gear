@@ -62,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    void setupUI(){
+    void setupUI() {
         mFirstName = findViewById(R.id.firstName);
         mLastName = findViewById(R.id.lastName);
         mEmail = findViewById(R.id.email);
@@ -87,13 +87,13 @@ public class RegisterActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected_item = parent.getItemAtPosition(position).toString();
 
-                if(selected_item.equals("Follower")){
+                if (selected_item.equals("Follower")) {
                     mAge.setVisibility(View.GONE);
                     mHeight.setVisibility(View.GONE);
                     mWeight.setVisibility(View.GONE);
-       //             mDevice.setVisibility(View.GONE);
+                    //             mDevice.setVisibility(View.GONE);
                     acc_type = true;
-                }else{
+                } else {
                     mAge.setVisibility(View.VISIBLE);
                     mHeight.setVisibility(View.VISIBLE);
                     mWeight.setVisibility(View.VISIBLE);
@@ -113,11 +113,10 @@ public class RegisterActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseHelper = new FirebaseHelper();
 
-        if(firebaseAuth.getCurrentUser() != null){
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), LogInActivity.class));
             finish();
         }
-
 
 
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
@@ -130,43 +129,42 @@ public class RegisterActivity extends AppCompatActivity {
                 final String age = mAge.getText().toString();
                 final String weight = mWeight.getText().toString();
                 final String height = mHeight.getText().toString();
-//                final String deviceID = mDevice.getText().toString();
                 save = true;
 
-                if(TextUtils.isEmpty(firstName) || firstName.trim().isEmpty()){
+                if (TextUtils.isEmpty(firstName) || firstName.trim().isEmpty()) {
                     mFirstName.setError("First Name is required");
                     save = false;
                 }
 
-                if(TextUtils.isEmpty(lastName) || lastName.trim().isEmpty()){
+                if (TextUtils.isEmpty(lastName) || lastName.trim().isEmpty()) {
                     mLastName.setError("Last Name is required");
                     save = false;
                 }
 
-                if(TextUtils.isEmpty(email)){
+                if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Email is required.");
                     save = false;
                     return;
                 }
 
-                if(!isValidEmail(email)){
+                if (!isValidEmail(email)) {
                     mEmail.setError("Email is not valid");
                     save = false;
                 }
 
-                if(!acc_type) {
+                if (!acc_type) {
                     if (TextUtils.isEmpty(age) && mAge.getText().toString().equals("")) {
                         mAge.setError("Age is required");
                         save = false;
-                    }else if (Integer.parseInt(age) < 12){
-                            mAge.setError("You are to young to use this app");
+                    } else if (Integer.parseInt(age) < 12) {
+                        mAge.setError("You are to young to use this app");
                         save = false;
-                        }
+                    }
 
                     if (TextUtils.isEmpty(weight) && mWeight.getText().toString().equals("")) {
                         mWeight.setError("Weight is required");
                         save = false;
-                    }else if(Integer.parseInt(weight) < 80 || Integer.parseInt(weight) > 400){
+                    } else if (Integer.parseInt(weight) < 80 || Integer.parseInt(weight) > 400) {
                         mWeight.setError("Weight must be between 80 lbs and 400 lbs");
 
                         save = false;
@@ -175,39 +173,26 @@ public class RegisterActivity extends AppCompatActivity {
                     if (TextUtils.isEmpty(height) && mHeight.getText().toString().equals("")) {
                         mHeight.setError("Height is required");
                         save = false;
-                    }else if(Integer.parseInt(height) < 120 || Integer.parseInt(height) > 250){
+                    } else if (Integer.parseInt(height) < 120 || Integer.parseInt(height) > 250) {
                         mHeight.setError("Height must be between 120 cm and 250 cm");
                         save = false;
                     }
-//                    if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
-//                        mDevice.setError("Device ID required");
-//                        save = false;
-//                    }else if(deviceID.length() < 5){
-//                        mDevice.setError("ID must be 5 digits");
-//                        save = false;
-//                    }
-//                    if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
-//                        mDevice.setError("Device ID required");
-//                        save = false;
-//                    }else if(deviceID.length() < 5){
-//                        mDevice.setError("ID must be 5 numbers");
-//                        save = false;
-//                    }
                 }
 
-                if(TextUtils.isEmpty(password)){
+
+                if (TextUtils.isEmpty(password)) {
                     mPassword.setError("Password is required.");
                     save = false;
                     return;
                 }
 
-                if(password.length() < 6){
+                if (password.length() < 6) {
                     mPassword.setError("Password must be >= 6 characters.");
                     save = false;
                     return;
                 }
 
-                if(save) {
+                if (save) {
                     mRegisterProgressBar.setVisibility(View.VISIBLE);
 
                     /*Register the user in Firebase*/
@@ -217,32 +202,15 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
-                                //TODO: Remove the ";" and the comment delimiter, and create the user.
-                                if (acc_type) {
-                                    final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false,false, false);
-                                    FirebaseHelper firebaseHelper = new FirebaseHelper();
-                                    firebaseHelper.AddUser(newUser);
-
-                                } else {
-                                    final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false, false, false, Integer.parseInt(age),
-                                            Integer.parseInt(weight), Integer.parseInt(height));
-                                    firebaseHelper.AddUser(newUser);
-                                    getBTFrag(newUser);
-                                }
-                                mSharedPreferencesHelper.saveEmail(email);
-                                mSharedPreferencesHelper.savePassword(password);
-                                mSharedPreferencesHelper.saveType(acc_type);
-                                startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
+                                        if (task.isSuccessful()) {
                                             Toast.makeText(RegisterActivity.this, "Registered Successfully! Please check email for verification.",
                                                     Toast.LENGTH_LONG).show();
                                             //TODO: Remove the ";" and the comment delimiter, and create the user.
                                             if (acc_type) {
-                                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false,false, false);
+                                                final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false, false, false);
                                                 firebaseHelper.AddUser(newUser);
 
                                             } else {
@@ -269,6 +237,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     @Override
     protected void onStart() {

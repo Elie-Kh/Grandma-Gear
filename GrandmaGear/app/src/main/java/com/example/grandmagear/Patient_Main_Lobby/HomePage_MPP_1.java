@@ -159,6 +159,14 @@ public class HomePage_MPP_1 extends AppCompatActivity {
         uploadDeviceInfo();
         resumeLocation(locationSwitch);
         locationStatus(locationSwitch);
+        try {
+            btConnect();
+        }
+        catch (Exception e){
+            btHelper = new BTHelper(this, thisUser);
+            btHelper.btEnable(this);
+            goToDeviceList();
+        }
     }
 
     @Override
@@ -207,14 +215,7 @@ public class HomePage_MPP_1 extends AppCompatActivity {
 
         mSharedPreferencesHelper_BT = new SharedPreferencesHelper(this, "BTList");
 
-        try {
-            btConnect();
-        }
-        catch (Exception e){
-                btHelper = new BTHelper(this, thisUser);
-                btHelper.btEnable(this);
-                goToDeviceList();
-        }
+
 
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -487,10 +488,10 @@ public class HomePage_MPP_1 extends AppCompatActivity {
                             for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
                                 Log.d(TAG, "docsnap " + documentSnapshot.getReference().getId());
                                 Log.d(TAG, firebaseHelper.getCurrentUserID());
-                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
-                                        .document(documentSnapshot.getReference().getId())
-                                        .update(FirebaseObjects.Heartrate, 67);
-//                                        .update(FirebaseObjects.Heartrate, Integer.parseInt(BPM.getText().toString()));
+//                                firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
+//                                        .document(documentSnapshot.getReference().getId())
+//  //                                      .update(FirebaseObjects.Heartrate, 67);
+//                                .update(FirebaseObjects.Heartrate, Integer.parseInt(BPM.getText().toString()));
                                 firebaseHelper.firebaseFirestore.collection(FirebaseHelper.deviceDB)
                                         .document(documentSnapshot.getReference().getId())
                                         .update(FirebaseObjects.Fall, "fall");

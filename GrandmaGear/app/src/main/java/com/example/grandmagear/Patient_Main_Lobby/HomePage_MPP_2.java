@@ -212,12 +212,7 @@ public class HomePage_MPP_2 extends AppCompatActivity {
 
 
 
-    public void btConnect(){
-        btHelper = new BTHelper(this, mSharedPreferencesHelper_BT.getHC05(), thisUser);
-        btHelper.btEnable(this);
-        btHelper.estConnect();
-        btHelper.content(BPM);
-    }
+
 
     @Override
     public void onBackPressed() {
