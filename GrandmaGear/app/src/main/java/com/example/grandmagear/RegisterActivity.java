@@ -130,7 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
                 final String age = mAge.getText().toString();
                 final String weight = mWeight.getText().toString();
                 final String height = mHeight.getText().toString();
-                final String deviceID = mDevice.getText().toString();
+                //final String deviceID = mDevice.getText().toString();
                 save = true;
 
                 if(TextUtils.isEmpty(firstName) || firstName.trim().isEmpty()){
@@ -179,7 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
                         mHeight.setError("Height must be between 120 cm and 250 cm");
                         save = false;
                     }
-                    if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
+                   /* if(TextUtils.isEmpty(deviceID) || deviceID.trim().isEmpty()){
                         mDevice.setError("Device ID required");
                         save = false;
                     }else if(deviceID.length() < 5){
@@ -192,7 +192,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }else if(deviceID.length() < 5){
                         mDevice.setError("ID must be 5 numbers");
                         save = false;
-                    }
+                    }*/
                 }
 
                 if(TextUtils.isEmpty(password)){
@@ -217,23 +217,6 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "User Created!", Toast.LENGTH_SHORT).show();
-                                //TODO: Remove the ";" and the comment delimiter, and create the user.
-                                if (acc_type) {
-                                    final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false,false, false);
-                                    FirebaseHelper firebaseHelper = new FirebaseHelper();
-                                    firebaseHelper.AddUser(newUser);
-
-                                } else {
-                                    final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false, false, false, Integer.parseInt(age),
-                                            Integer.parseInt(weight), Integer.parseInt(height));
-                                    firebaseHelper.AddUser(newUser);
-                                    getBTFrag(newUser);
-                                }
-                                mSharedPreferencesHelper.saveEmail(email);
-                                mSharedPreferencesHelper.savePassword(password);
-                                mSharedPreferencesHelper.saveType(acc_type);
-                                startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -249,8 +232,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                 final FirebaseObjects.UserDBO newUser = new FirebaseObjects.UserDBO(email, firstName, lastName, password, acc_type, false, false, false, Integer.parseInt(age),
                                                         Integer.parseInt(weight), Integer.parseInt(height));
                                                 firebaseHelper.AddUser(newUser);
-                                                final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
-                                                firebaseHelper.addDevice(newDevice);
+                                                //final FirebaseObjects.DevicesDBO newDevice = new FirebaseObjects.DevicesDBO(deviceID);
+                                                //firebaseHelper.addDevice(newDevice);
                                             }
                                             mSharedPreferencesHelper.saveEmail(email);
                                             mSharedPreferencesHelper.savePassword(password);

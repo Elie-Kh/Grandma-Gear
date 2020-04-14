@@ -122,7 +122,7 @@ public class LogInActivity extends AppCompatActivity {
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if(task.isSuccessful()) {
+                                                if (task.isSuccessful()) {
                                                     DocumentSnapshot documentSnapshot = task.getResult();
                                                     FirebaseObjects.UserDBO user = documentSnapshot.toObject(FirebaseObjects.UserDBO.class);
 
@@ -140,16 +140,16 @@ public class LogInActivity extends AppCompatActivity {
                                                         startService(serviceIntent);
                                                         startActivity(new Intent(getApplicationContext(), HomePage_MPP_1.class));
                                                     }
-                                                }else
-                                                {
-                                                    Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
-                                                    mLoginProgressBar.setVisibility(View.GONE);
+
                                                 }
                                             }
                                         });
-                            }
+                            }else{
+                                    Toast.makeText(LogInActivity.this, "Please Verify Email.", Toast.LENGTH_SHORT).show();
+                                    mLoginProgressBar.setVisibility(View.GONE);
+                                }
                         } else {
-                            Toast.makeText(LogInActivity.this, "Please verify email!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogInActivity.this, "Incorrect email or password!", Toast.LENGTH_SHORT).show();
                             mLoginProgressBar.setVisibility(View.GONE);
                         }
                     }
@@ -270,9 +270,6 @@ public class LogInActivity extends AppCompatActivity {
                     }
                 });
             }
-        } else {
-            Toast.makeText(LogInActivity.this, "Please verify email!", Toast.LENGTH_SHORT).show();
-            mLoginProgressBar.setVisibility(View.GONE);
         }
 
     }
